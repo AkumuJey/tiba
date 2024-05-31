@@ -109,9 +109,6 @@ export const deleteAllPrescriptionsController = async (
 ) => {
   try {
     const prescription = await prismaClient.prescription.deleteMany();
-    if (!prescription || prescription.count === 0) {
-      return res.status(400).json({ message: "Deletion failed" });
-    }
     return res.status(201).json({ prescription });
   } catch (error) {
     res.status(400).json({ error, message: "Deletion failed" });

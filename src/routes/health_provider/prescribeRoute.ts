@@ -7,7 +7,7 @@ import {
   getSinglePrescriptionController,
   postPrescriptionController,
   updatePrescriptionController,
-} from "../../controllers/health_provider/prescribControllers";
+} from "../../controllers/health_provider/prescribeControllers";
 
 const prescribeRoute = Router();
 

@@ -7,7 +7,7 @@ import {
 import { goodRoute } from "./good";
 import { healthProviderRoute } from "./health_provider";
 import { patientRoute } from "./patient";
-import { bookAppointmentRoute } from "./health_provider/bookAppointmentRoute";
+import appointmentRoute from "./health_provider/appointmentRoute";
 import providerHistoryRecordRoute from "./health_provider/providerHistoryRecordRoute";
 import prescribeRoute from "./health_provider/prescribeRoute";
 
@@ -23,6 +23,6 @@ providerIndexRoute.use("/signup", providerSignupRoute);
 providerIndexRoute.use("/good", goodRoute);
 providerIndexRoute.use("/patient", patientRoute);
 providerIndexRoute.use("/health-provider", healthProviderRoute);
-providerIndexRoute.use("/appointments", bookAppointmentRoute);
+providerIndexRoute.use("/appointments", appointmentRoute);
 providerIndexRoute.use("/medical-history", providerHistoryRecordRoute);
 providerIndexRoute.use("/prescribe", prescribeRoute);
