@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model HealthcareProvider {
+  id           Int            @id @unique @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  firstName    String
+  lastName     String
+  title        String
+  email        String
+  password     String         @unique
+  phoneNo      String
+  age          Int?
+  verified     Boolean?       @default(false)
+  Appointments Appointments[]
+  Prescription Prescription[]
+
+  @@map("healthcare_provider")
+}
+
+model Patient {
+  id                    Int              @id @unique @default(autoincrement())
+  createdAt             DateTime         @default(now())
+  firstName             String
+  lastName              String
+  dateOfBirth           DateTime         @db.Date
+  sex                   String
+  address               String?
+  email                 String           @unique
+  password              String
+  phoneNumber           String           @unique
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  Appointments          Appointments[]
+  Prescription          Prescription[]
+  MedicalHistory        MedicalHistory[]
+
+  @@map("patient") // Maps the model to the table name in the database
+}
+
+model DrugCategory {
+  id           Int      @id @unique @default(autoincrement())
+  createdAt    DateTime @default(now())
+  categoryName String
+
+  drugs Drug[]
+
+  @@map("drug_category")
+}
+
+model Drug {
+  id                 Int                  @id @unique @default(autoincrement())
+  createdAt          DateTime             @default(now())
+  categoryID         Int
+  brandName          String
+  pharmcoName        String
+  manufactureDate    DateTime             @db.Date
+  expiryDate         DateTime             @db.Date
+  batchNo            String?
+  unitsAvailable     String
+  pricePerUnit       Float
+  drugCategory       DrugCategory         @relation(fields: [categoryID], references: [id])
+  PrescriptionDetail PrescriptionDetail[]
+
+  @@map("drug")
+}
+
+model Appointments {
+  id                 Int                @id @unique @default(autoincrement())
+  createdAt          DateTime           @default(now())
+  patientID          Int
+  healthProviderID   Int
+  venue              String
+  appointmentTime    DateTime
+  amount             Float
+  description        String?
+  patient            Patient            @relation(fields: [patientID], references: [id])
+  healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
+
+  @@map("appointments")
+}
+
+model Prescription {
+  id                   Int      @id @unique
+  createdAt            DateTime @default(now())
+  patientID            Int
+  healthcareProviderID Int
+  dosage               String
+  date                 DateTime @db.Date
+  instruction          String?
+
+  patient            Patient            @relation(fields: [patientID], references: [id])
+  healthcareProvider HealthcareProvider @relation(fields: [healthcareProviderID], references: [id])
+
+  prescriptionDetails PrescriptionDetail[]
+
+  @@map("prescription")
+}
+
+model MedicalHistory {
+  id             Int      @id @unique @default(autoincrement())
+  createdAt      DateTime @default(now())
+  patientID      Int
+  presentation   String
+  medicalHistory String
+
+  patient Patient @relation(fields: [patientID], references: [id])
+
+  @@map("medical_history")
+}
+
+model PrescriptionDetail {
+  id             Int      @id @unique
+  createdAt      DateTime @default(now())
+  prescriptionID Int
+  drugID         Int
+  quantity       Int
+  durationInDays Int
+
+  prescription Prescription @relation(fields: [prescriptionID], references: [id])
+  drug         Drug         @relation(fields: [drugID], references: [id])
+
+  @@map("prescription_detail")
+}
