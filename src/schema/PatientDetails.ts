@@ -5,3 +5,8 @@ export const PatientHistorySchema = z.object({
   presentation: z.string(),
   medicalHistory: z.string(),
 });
+export const PatientHistoryUpdateSchema = z.object({
+  patientID: z.number().int().positive(),
+  presentation: z.string().optional(),
+  medicalHistory: z.string().optional(),
+});
