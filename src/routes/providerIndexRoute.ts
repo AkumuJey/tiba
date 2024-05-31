@@ -8,6 +8,7 @@ import { goodRoute } from "./good";
 import { healthProviderRoute } from "./health_provider";
 import { patientRoute } from "./patient";
 import { bookAppointmentRoute } from "./health_provider/bookAppointmentRoute";
+import providerHistoryRecordRoute from "./health_provider/providerHistoryRecordRoute";
 
 export const providerIndexRoute = Router();
 
@@ -22,3 +23,4 @@ providerIndexRoute.use("/good", goodRoute);
 providerIndexRoute.use("/patient", patientRoute);
 providerIndexRoute.use("/health-provider", healthProviderRoute);
 providerIndexRoute.use("/appointments", bookAppointmentRoute);
+providerIndexRoute.use("/medical-history", providerHistoryRecordRoute);

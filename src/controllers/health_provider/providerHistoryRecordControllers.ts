@@ -4,7 +4,7 @@ import { prismaClient } from "../../server";
 
 const patientDetailsRoute = Router();
 
-patientDetailsRoute.post("/", async (req: Request, res: Response) => {
+export const postHistoriesController = async (req: Request, res: Response) => {
   try {
     PatientHistorySchema.parse(req.body);
     const { patientID, presentation, medicalHistory } = req.body;
@@ -19,8 +19,9 @@ patientDetailsRoute.post("/", async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ error, message: "Failed to add details" });
   }
-});
-patientDetailsRoute.get("/", async (req: Request, res: Response) => {
+};
+
+export const getHistoriesController = async (req: Request, res: Response) => {
   try {
     const { patientID } = req.body;
     const histories = await prismaClient.medicalHistory.findMany({
@@ -35,9 +36,12 @@ patientDetailsRoute.get("/", async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ error });
   }
-});
+};
 
-patientDetailsRoute.get("/:id", async (req: Request, res: Response) => {
+export const getSingleHistoryController = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const id = parseInt(req.params.id, 10);
     const medicalHistory = await prismaClient.medicalHistory.findUnique({
@@ -54,8 +58,9 @@ patientDetailsRoute.get("/:id", async (req: Request, res: Response) => {
       .status(500)
       .json({ error, message: "Failed to retrieve medical history" });
   }
-});
-patientDetailsRoute.patch("/id", async (req: Request, res: Response) => {
+};
+
+export const updateHistoryController = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id, 10);
     PatientHistorySchema.parse(req.body);
@@ -72,8 +77,9 @@ patientDetailsRoute.patch("/id", async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ error, message: "Failed to add details" });
   }
-});
-patientDetailsRoute.delete("/:id", async (req: Request, res: Response) => {
+};
+
+export const deleteHistoryController = async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id, 10);
     await prismaClient.medicalHistory.delete({ where: { id } });
@@ -82,14 +88,16 @@ patientDetailsRoute.delete("/:id", async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ error, message: "Failed to delete history" });
   }
-});
+};
 
-patientDetailsRoute.get("/patient/:id", async (req: Request, res: Response) => {
+export const getSinglePatientHistories = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const id = parseInt(req.params.id, 10);
     const { patientID } = req.body;
     const medicalHistories = await prismaClient.medicalHistory.findMany({
-      where: { id, patientID },
+      where: { patientID },
       orderBy: {
         createdAt: "desc",
       },
@@ -101,4 +109,4 @@ patientDetailsRoute.get("/patient/:id", async (req: Request, res: Response) => {
       .status(500)
       .json({ error, message: "Failed to retrieve medical histories" });
   }
-});
+};
