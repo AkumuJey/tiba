@@ -93,7 +93,7 @@ model Appointments {
 }
 
 model Prescription {
-  id                   Int      @id @unique
+  id                   Int      @id @unique @default(autoincrement())
   createdAt            DateTime @default(now())
   patientID            Int
   healthcareProviderID Int
@@ -122,15 +122,14 @@ model MedicalHistory {
 }
 
 model PrescriptionDetail {
-  id             Int      @id @unique
-  createdAt      DateTime @default(now())
+  id             Int          @id @unique
+  createdAt      DateTime     @default(now())
   prescriptionID Int
   drugID         Int
   quantity       Int
   durationInDays Int
-
-  prescription Prescription @relation(fields: [prescriptionID], references: [id])
-  drug         Drug         @relation(fields: [drugID], references: [id])
+  prescription   Prescription @relation(fields: [prescriptionID], references: [id])
+  drug           Drug         @relation(fields: [drugID], references: [id])
 
   @@map("prescription_detail")
 }
