@@ -1,9 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import { prismaClient } from "../server";
+import { HealthcareProvider, Patient } from "@prisma/client";
 
-export const authMiddleWare = async (
-  req: Request,
+interface CustomRequest extends Request {
+  user?: Patient | HealthcareProvider;
+}
+
+const patientAuthMiddleWare = async (
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -15,8 +20,11 @@ export const authMiddleWare = async (
     });
   }
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRECT as string) as any;
-    const user = prismaClient.patient.findFirst({
+    const payload = jwt.verify(
+      token,
+      process.env.PATIENT_JWT_SECRET as string
+    ) as any;
+    const user = await prismaClient.patient.findFirst({
       where: { id: payload.userId },
     });
     if (!user) {
@@ -24,7 +32,7 @@ export const authMiddleWare = async (
         error: "Please authenticate using a valid token",
       });
     }
-    // req.user = user;
+    req.user = user;
     next();
   } catch (error) {
     // return error with status code
@@ -33,3 +41,5 @@ export const authMiddleWare = async (
     });
   }
 };
+
+export default patientAuthMiddleWare;

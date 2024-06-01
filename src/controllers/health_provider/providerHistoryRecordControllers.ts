@@ -7,9 +7,15 @@ const patientDetailsRoute = Router();
 export const postHistoriesController = async (req: Request, res: Response) => {
   try {
     PatientHistorySchema.parse(req.body);
-    const { patientID, presentation, medicalHistory } = req.body;
+    const { patientID, presentation, medicalHistory, healthProviderID } =
+      req.body;
     const history = await prismaClient.medicalHistory.create({
-      data: { presentation, medicalHistory, patientID: parseInt(patientID) },
+      data: {
+        presentation,
+        medicalHistory,
+        patientID: parseInt(patientID),
+        healthProviderID,
+      },
     });
 
     if (!history) {

@@ -34,7 +34,6 @@ export const patientLoginController = async (req: Request, res: Response) => {
     console.log(error);
     res.status(400).json({ message: error });
   }
-  res.send("login");
 };
 
 export const patientLogoutController = (req: Request, res: Response) => {

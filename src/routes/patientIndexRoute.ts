@@ -4,7 +4,7 @@ import {
   patientLogoutRoute,
   patientSignupRoute,
 } from "./auth/patientAuthRoute";
-import { goodRoute } from "./good";
+import { patientGood } from "./patient/patientGood";
 
 export const patientIndexRoute = Router();
 
@@ -15,4 +15,4 @@ patientIndexRoute.get("/", (req, res) => {
 patientIndexRoute.use("/login", patientLoginRoute);
 patientIndexRoute.use("/logout", patientLogoutRoute);
 patientIndexRoute.use("/signup", patientSignupRoute);
-patientIndexRoute.use("/good", goodRoute);
+patientIndexRoute.use("/good", patientGood);
