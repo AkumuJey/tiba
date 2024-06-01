@@ -13,75 +13,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model SuperUser {
+  id        Int      @id @unique @default(autoincrement())
+  createdAt DateTime @default(now())
+  firstName String
+  lastName  String
+  email     String
+  password  String   @unique
+  phoneNo   String
+}
+
 model HealthcareProvider {
-  id                  Int                   @id @unique @default(autoincrement())
-  createdAt           DateTime              @default(now())
-  firstName           String
-  lastName            String
-  title               String
-  email               String
-  password            String                @unique
-  phoneNo             String
-  age                 Int?
-  verified            Boolean?              @default(false)
-  Appointments        Appointments[]
-  Prescription        Prescription[]
-  MedicalHistory      MedicalHistory[]
-  PhysicalExamination PhysicalExamination[]
-  Vitals              Vitals[]
-  LaboratoryResults   LaboratoryResults[]
+  id             Int              @id @unique @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  firstName      String
+  lastName       String
+  title          String
+  email          String
+  password       String           @unique
+  phoneNo        String
+  age            Int?
+  verified       Boolean?         @default(false)
+  subscribed     Boolean?         @default(false)
+  Appointments   Appointments[]
+  Prescription   Prescription[]
+  MedicalHistory MedicalHistory[]
+  HospitalVitals HospitalVitals[]
+  HospitalLabs   HospitalLabs[]
 
   @@map("healthcare_provider")
 }
 
 model Patient {
-  id                    Int                   @id @unique @default(autoincrement())
-  createdAt             DateTime              @default(now())
+  id                    Int              @id @unique @default(autoincrement())
+  createdAt             DateTime         @default(now())
   firstName             String
   lastName              String
-  dateOfBirth           DateTime              @db.Date
+  dateOfBirth           DateTime         @db.Date
   sex                   String
   address               String?
-  email                 String                @unique
+  email                 String           @unique
   password              String
-  phoneNumber           String                @unique
+  phoneNumber           String           @unique
   emergencyContactName  String?
   emergencyContactPhone String?
+  subscribed            Boolean?         @default(false)
   Appointments          Appointments[]
   Prescription          Prescription[]
   MedicalHistory        MedicalHistory[]
-  PhysicalExamination   PhysicalExamination[]
-  Vitals                Vitals[]
-  LaboratoryResults     LaboratoryResults[]
+  HospitalVitals        HospitalVitals[]
+  HomeVitals            HomeVitals[]
+  HomeLabs              HomeLabs[]
+  HospitalLabs          HospitalLabs[]
 
   @@map("patient") // Maps the model to the table name in the database
-}
-
-model DrugCategory {
-  id           Int      @id @unique @default(autoincrement())
-  createdAt    DateTime @default(now())
-  categoryName String
-
-  drugs Drug[]
-
-  @@map("drug_category")
-}
-
-model Drug {
-  id                 Int                  @id @unique @default(autoincrement())
-  createdAt          DateTime             @default(now())
-  categoryID         Int
-  brandName          String
-  pharmcoName        String
-  manufactureDate    DateTime             @db.Date
-  expiryDate         DateTime             @db.Date
-  batchNo            String?
-  unitsAvailable     String
-  pricePerUnit       Float
-  drugCategory       DrugCategory         @relation(fields: [categoryID], references: [id])
-  PrescriptionDetail PrescriptionDetail[]
-
-  @@map("drug")
 }
 
 model Appointments {
@@ -99,73 +84,106 @@ model Appointments {
   @@map("appointments")
 }
 
-model Prescription {
-  id                   Int      @id @unique @default(autoincrement())
-  createdAt            DateTime @default(now())
-  patientID            Int
-  healthcareProviderID Int
-  dosage               String
-  date                 DateTime @db.Date
-  instruction          String?
-
-  patient            Patient            @relation(fields: [patientID], references: [id])
-  healthcareProvider HealthcareProvider @relation(fields: [healthcareProviderID], references: [id])
-
-  prescriptionDetails PrescriptionDetail[]
-
-  @@map("prescription")
-}
-
 model MedicalHistory {
-  id                 Int                @id @unique @default(autoincrement())
-  createdAt          DateTime           @default(now())
-  patientID          Int
-  presentation       String
-  medicalHistory     String
-  healthProviderID   Int
-  healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
-  patient            Patient            @relation(fields: [patientID], references: [id])
+  id                  Int                @id @unique @default(autoincrement())
+  createdAt           DateTime           @default(now())
+  patientID           Int
+  presentation        String
+  medicalHistory      String
+  physicalExamination String
+  Summary             String
+  healthProviderID    Int
+  healthcareProvider  HealthcareProvider @relation(fields: [healthProviderID], references: [id])
+  patient             Patient            @relation(fields: [patientID], references: [id])
+  HospitalVitals      HospitalVitals[]
+  HospitalLabs        HospitalLabs[]
 
   @@map("medical_history")
 }
 
-model Vitals {
+model HospitalVitals {
   id                 Int                @id @unique @default(autoincrement())
   createdAt          DateTime           @default(now())
   patientID          Int
-  presentation       String
-  medicalHistory     String
   healthProviderID   Int
+  medicalHistoryID   Int
+  breathingRate      Int
+  systolicBP         Int
+  diastolicBP        Int
+  pulseRate          Int
+  weightKg           Float
   healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
   patient            Patient            @relation(fields: [patientID], references: [id])
+  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id])
 
-  @@map("vitals")
+  @@map("hospital_vitals")
 }
 
-model PhysicalExamination {
-  id                 Int                @id @unique @default(autoincrement())
-  createdAt          DateTime           @default(now())
-  patientID          Int
-  presentation       String
-  medicalHistory     String
-  healthProviderID   Int
-  healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
-  patient            Patient            @relation(fields: [patientID], references: [id])
+model HomeVitals {
+  id               Int      @id @unique @default(autoincrement())
+  createdAt        DateTime @default(now())
+  patientID        Int
+  healthProviderID Int
+  breathingRate    Int
+  systolicBP       Int
+  diastolicBP      Int
+  pulseRate        Int
+  weightKg         Float
+  patient          Patient  @relation(fields: [patientID], references: [id])
 
-  @@map("physical_examination")
+  @@map("home_vitals")
 }
 
-model LaboratoryResults {
+model HospitalLabs {
   id                 Int                @id @unique @default(autoincrement())
   createdAt          DateTime           @default(now())
   patientID          Int
-  presentation       String
-  medicalHistory     String
   healthProviderID   Int
-  healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
+  medicalHistoryID   Int
+  bloodSugar         Float
+  cholesterol        Float
+  LDL                Float
+  HDL                Float
+  triglceride        Float
+  findings           String
+  labName            String
   patient            Patient            @relation(fields: [patientID], references: [id])
+  healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
+  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id])
 
-  @@map("laboratory_results")
+  @@map("hospital_labs")
+}
+
+model HomeLabs {
+  id          Int      @id @unique @default(autoincrement())
+  createdAt   DateTime @default(now())
+  patientID   Int
+  bloodSugar  Float
+  cholesterol Float
+  LDL         Float
+  HDL         Float
+  triglceride Float
+  findings    String
+  labName     String
+  patient     Patient  @relation(fields: [patientID], references: [id])
+
+  @@map("home_labs")
+}
+
+model Prescription {
+  id                   Int                @id @unique @default(autoincrement())
+  createdAt            DateTime           @default(now())
+  patientID            Int
+  healthcareProviderID Int
+  dosage               String
+  date                 DateTime           @db.Date
+  instruction          String?
+  patient              Patient            @relation(fields: [patientID], references: [id])
+  healthcareProvider   HealthcareProvider @relation(fields: [healthcareProviderID], references: [id])
+
+  prescriptionDetails PrescriptionDetail[]
+
+  @@map("prescription")
 }
 
 model PrescriptionDetail {
@@ -174,9 +192,11 @@ model PrescriptionDetail {
   prescriptionID Int
   drugID         Int
   quantity       Int
+  units          String
+  route          String
+  drugName       String
   durationInDays Int
   prescription   Prescription @relation(fields: [prescriptionID], references: [id])
-  drug           Drug         @relation(fields: [drugID], references: [id])
 
   @@map("prescription_detail")
 }

@@ -9,7 +9,9 @@ import { patientGood } from "./patient/patientGood";
 export const patientIndexRoute = Router();
 
 patientIndexRoute.get("/", (req, res) => {
-  res.send("Index Route");
+  res.json({
+    message: "Hello world. Tiba is running.",
+  });
 });
 
 patientIndexRoute.use("/login", patientLoginRoute);
