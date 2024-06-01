@@ -175,7 +175,6 @@ model Prescription {
   createdAt            DateTime           @default(now())
   patientID            Int
   healthcareProviderID Int
-  dosage               String
   date                 DateTime           @db.Date
   instruction          String?
   patient              Patient            @relation(fields: [patientID], references: [id])
@@ -190,7 +189,6 @@ model PrescriptionDetail {
   id             Int          @id @unique
   createdAt      DateTime     @default(now())
   prescriptionID Int
-  drugID         Int
   quantity       Int
   units          String
   route          String
