@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DrugSchema, PrescriptioSchema } from "../../schema/PrescriptionSchema";
+import { PrescriptioSchema } from "../../schema/PrescriptionSchema";
 import { prismaClient } from "../../server";
 
 export const postPrescriptionController = async (
@@ -79,7 +79,7 @@ export const getSinglePrescriptionController = async (
   res: Response
 ) => {
   try {
-    const id = parseInt(req.body.id, 10);
+    const id = parseInt(req.params.id, 10);
     const prescription = await prismaClient.prescription.findMany({
       where: { id },
       include: {
@@ -100,7 +100,7 @@ export const deletePrescriptionController = async (
   res: Response
 ) => {
   try {
-    const id = parseInt(req.body.id, 10);
+    const id = parseInt(req.params.id, 10);
     const prescription = await prismaClient.prescription.delete({
       where: { id },
     });
@@ -129,7 +129,7 @@ export const updatePrescriptionController = async (
 ) => {
   try {
     PrescriptioSchema.parse(req.body);
-    const id = parseInt(req.body.id, 10);
+    const id = parseInt(req.params.id, 10);
     const updatedPrescription = PrescriptioSchema.parse(req.body);
 
     const prescription = await prismaClient.prescription.update({
@@ -142,46 +142,5 @@ export const updatePrescriptionController = async (
     return res.status(201).json({ prescription });
   } catch (error) {
     res.status(400).json({ error, message: "Failed to update" });
-  }
-};
-
-export const deletePrescriptionDetailController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const id = parseInt(req.body.id, 10);
-    const deletedPrescriptionDetail =
-      await prismaClient.prescriptionDetail.delete({
-        where: {
-          id,
-        },
-      });
-    res
-      .status(200)
-      .json({ message: "Deleted successfully", deletedPrescriptionDetail });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-};
-export const updatePrescriptionDetailController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const id = parseInt(req.body.id, 10);
-    const updateData = DrugSchema.parse(req.body);
-    const updatedPrescriptionDetail =
-      await prismaClient.prescriptionDetail.update({
-        where: {
-          id,
-        },
-        data: updateData,
-      });
-    res
-      .status(200)
-      .json({ message: "Updated successfully", updatedPrescriptionDetail });
-  } catch (error) {
-    res.status(400).json({ error });
   }
 };
