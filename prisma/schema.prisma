@@ -91,7 +91,7 @@ model MedicalHistory {
   presentation        String
   medicalHistory      String
   physicalExamination String
-  Summary             String
+  summary             String
   healthProviderID    Int
   healthcareProvider  HealthcareProvider @relation(fields: [healthProviderID], references: [id])
   patient             Patient            @relation(fields: [patientID], references: [id])
@@ -106,7 +106,7 @@ model HospitalVitals {
   createdAt          DateTime           @default(now())
   patientID          Int
   healthProviderID   Int
-  medicalHistoryID   Int
+  medicalHistoryID   Int?
   breathingRate      Int
   systolicBP         Int
   diastolicBP        Int
@@ -114,7 +114,7 @@ model HospitalVitals {
   weightKg           Float
   healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
   patient            Patient            @relation(fields: [patientID], references: [id])
-  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id], onDelete: Cascade)
+  medicalHistory     MedicalHistory?    @relation(fields: [medicalHistoryID], references: [id], onDelete: Cascade)
 
   @@map("hospital_vitals")
 }
@@ -139,33 +139,33 @@ model HospitalLabs {
   createdAt          DateTime           @default(now())
   patientID          Int
   healthProviderID   Int
-  medicalHistoryID   Int
+  medicalHistoryID   Int?
   bloodSugar         Float
   cholesterol        Float
   LDL                Float
   HDL                Float
-  triglceride        Float
+  triglyceride       Float
   findings           String
   labName            String
   patient            Patient            @relation(fields: [patientID], references: [id])
   healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
-  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id], onDelete: Cascade)
+  medicalHistory     MedicalHistory?    @relation(fields: [medicalHistoryID], references: [id], onDelete: Cascade)
 
   @@map("hospital_labs")
 }
 
 model HomeLabs {
-  id          Int      @id @unique @default(autoincrement())
-  createdAt   DateTime @default(now())
-  patientID   Int
-  bloodSugar  Float
-  cholesterol Float
-  LDL         Float
-  HDL         Float
-  triglceride Float
-  findings    String
-  labName     String
-  patient     Patient  @relation(fields: [patientID], references: [id])
+  id           Int      @id @unique @default(autoincrement())
+  createdAt    DateTime @default(now())
+  patientID    Int
+  bloodSugar   Float
+  cholesterol  Float
+  LDL          Float
+  HDL          Float
+  triglyceride Float
+  findings     String
+  labName      String
+  patient      Patient  @relation(fields: [patientID], references: [id])
 
   @@map("home_labs")
 }

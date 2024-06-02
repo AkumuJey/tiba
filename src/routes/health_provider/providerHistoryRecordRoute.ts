@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import {
   deleteHistoryController,
   getHistoriesController,
@@ -7,8 +7,6 @@ import {
   postHistoriesController,
   updateHistoryController,
 } from "../../controllers/health_provider/providerHistoryRecordControllers";
-import { PatientHistorySchema } from "../../schema/PatientDetails";
-import { prismaClient } from "../../server";
 
 const providerHistoryRecordRoute = Router();
 
