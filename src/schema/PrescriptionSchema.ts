@@ -6,6 +6,7 @@ const drugSchema = z.object({
   route: z.string(),
   drugName: z.string(),
   durationInDays: z.number().int().positive(),
+  prescriptionID: z.number().int().positive().optional(),
 });
 export const PrescriptioSchema = z.object({
   patientID: z.number().int().positive(),

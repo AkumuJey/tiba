@@ -7,32 +7,27 @@ export const postPrescriptionController = async (
   res: Response
 ) => {
   try {
-    PrescriptioSchema.parse(req.body);
-    const { patientID, healthcareProviderID, date, instruction, drugs } =
-      req.body;
-    const prescription = await prismaClient.prescription.create({
-      data: {
-        patientID,
-        date,
-        healthcareProviderID,
-        instruction,
-      },
-    });
-    if (!prescription) {
-      return res.status(400).json({ message: "failed to prescribe" });
-    }
-    const { quantity, units, route, drugName, durationInDays } = drugs;
-    const prescriptionDetail = await prismaClient.prescriptionDetail.create({
-      data: {
-        drugName,
-        durationInDays,
-        quantity,
-        route,
-        units,
-        prescriptionID: prescription.id,
-      },
-    });
-    return res.status(201).json({ data: { prescription, drugs } });
+    const { drugs, ...newPrescription } = PrescriptioSchema.parse(req.body);
+
+    const [prescription, prescriptionDetail] = await prismaClient.$transaction(
+      async (prisma) => {
+        const prescription = await prisma.prescription.create({
+          data: newPrescription,
+        });
+        const drugList = drugs.map((drug) => ({
+          ...drug,
+          prescriptionID: prescription.id,
+        }));
+        const prescriptionDetail = await prisma.prescriptionDetail.createMany({
+          data: drugList,
+        });
+        return [prescription, prescriptionDetail];
+      }
+    );
+
+    return res
+      .status(201)
+      .json({ data: { prescription, drugs: prescriptionDetail } });
   } catch (error) {
     res.status(400).json({ error, message: "failed to prescribe" });
   }

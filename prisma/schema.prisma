@@ -186,7 +186,7 @@ model Prescription {
 }
 
 model PrescriptionDetail {
-  id             Int          @id @unique
+  id             Int          @id @unique @default(autoincrement())
   createdAt      DateTime     @default(now())
   prescriptionID Int
   quantity       Int
