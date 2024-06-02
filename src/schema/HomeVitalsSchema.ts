@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const HospitalVitalsSchema = z.object({
+export const HomeVitalsSchema = z.object({
   patientID: z.number().int().positive(),
   breathingRate: z.number().int(),
   systolicBP: z.number().int(),
