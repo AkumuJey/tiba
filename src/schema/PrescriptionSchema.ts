@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const drugSchema = z.object({
+export const DrugSchema = z.object({
   quantity: z.number().int().positive(),
   units: z.string(),
   route: z.string(),
@@ -13,5 +13,5 @@ export const PrescriptioSchema = z.object({
   healthcareProviderID: z.number().int().positive(),
   date: z.string(),
   instruction: z.string().nullable().optional(),
-  drugs: z.array(drugSchema),
+  drugs: z.array(DrugSchema),
 });

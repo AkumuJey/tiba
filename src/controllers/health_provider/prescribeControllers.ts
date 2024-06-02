@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PrescriptioSchema } from "../../schema/PrescriptionSchema";
+import { DrugSchema, PrescriptioSchema } from "../../schema/PrescriptionSchema";
 import { prismaClient } from "../../server";
 
 export const postPrescriptionController = async (
@@ -9,25 +9,21 @@ export const postPrescriptionController = async (
   try {
     const { drugs, ...newPrescription } = PrescriptioSchema.parse(req.body);
 
-    const [prescription, prescriptionDetail] = await prismaClient.$transaction(
-      async (prisma) => {
-        const prescription = await prisma.prescription.create({
-          data: newPrescription,
-        });
-        const drugList = drugs.map((drug) => ({
-          ...drug,
-          prescriptionID: prescription.id,
-        }));
-        const prescriptionDetail = await prisma.prescriptionDetail.createMany({
-          data: drugList,
-        });
-        return [prescription, prescriptionDetail];
-      }
-    );
+    const prescription = await prismaClient.$transaction(async (prisma) => {
+      const prescription = await prisma.prescription.create({
+        data: newPrescription,
+      });
+      const drugList = drugs.map((drug) => ({
+        ...drug,
+        prescriptionID: prescription.id,
+      }));
+      const prescriptionDetail = await prisma.prescriptionDetail.createMany({
+        data: drugList,
+      });
+      return { ...prescription, prescriptionDetail };
+    });
 
-    return res
-      .status(201)
-      .json({ data: { prescription, drugs: prescriptionDetail } });
+    return res.status(201).json({ data: { prescription } });
   } catch (error) {
     res.status(400).json({ error, message: "failed to prescribe" });
   }
@@ -40,6 +36,9 @@ export const getPrescriptionsController = async (
     const prescriptions = await prismaClient.prescription.findMany({
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        prescriptionDetails: true,
       },
     });
     if (!prescriptions || prescriptions.length === 0) {
@@ -59,6 +58,9 @@ export const getPatientSpecificPrescriptionController = async (
     const { patientID } = req.body;
     const prescriptions = await prismaClient.prescription.findMany({
       where: { patientID },
+      include: {
+        prescriptionDetails: true,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -80,6 +82,9 @@ export const getSinglePrescriptionController = async (
     const id = parseInt(req.body.id, 10);
     const prescription = await prismaClient.prescription.findMany({
       where: { id },
+      include: {
+        prescriptionDetails: true,
+      },
     });
     if (!prescription) {
       return res.status(400).json({ message: "Prescription not found" });
@@ -125,17 +130,11 @@ export const updatePrescriptionController = async (
   try {
     PrescriptioSchema.parse(req.body);
     const id = parseInt(req.body.id, 10);
-    const { patientID, healthcareProviderID, date, instruction, drugs } =
-      req.body;
+    const updatedPrescription = PrescriptioSchema.parse(req.body);
 
     const prescription = await prismaClient.prescription.update({
       where: { id },
-      data: {
-        patientID,
-        date,
-        healthcareProviderID,
-        instruction,
-      },
+      data: updatedPrescription,
     });
     if (!prescription) {
       return res.status(400).json({ message: "Failed to update" });
@@ -143,5 +142,46 @@ export const updatePrescriptionController = async (
     return res.status(201).json({ prescription });
   } catch (error) {
     res.status(400).json({ error, message: "Failed to update" });
+  }
+};
+
+export const deletePrescriptionDetailController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = parseInt(req.body.id, 10);
+    const deletedPrescriptionDetail =
+      await prismaClient.prescriptionDetail.delete({
+        where: {
+          id,
+        },
+      });
+    res
+      .status(200)
+      .json({ message: "Deleted successfully", deletedPrescriptionDetail });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+export const updatePrescriptionDetailController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = parseInt(req.body.id, 10);
+    const updateData = DrugSchema.parse(req.body);
+    const updatedPrescriptionDetail =
+      await prismaClient.prescriptionDetail.update({
+        where: {
+          id,
+        },
+        data: updateData,
+      });
+    res
+      .status(200)
+      .json({ message: "Updated successfully", updatedPrescriptionDetail });
+  } catch (error) {
+    res.status(400).json({ error });
   }
 };

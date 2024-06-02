@@ -114,7 +114,7 @@ model HospitalVitals {
   weightKg           Float
   healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
   patient            Patient            @relation(fields: [patientID], references: [id])
-  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id])
+  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id], onDelete: Cascade)
 
   @@map("hospital_vitals")
 }
@@ -149,7 +149,7 @@ model HospitalLabs {
   labName            String
   patient            Patient            @relation(fields: [patientID], references: [id])
   healthcareProvider HealthcareProvider @relation(fields: [healthProviderID], references: [id])
-  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id])
+  medicalHistory     MedicalHistory     @relation(fields: [medicalHistoryID], references: [id], onDelete: Cascade)
 
   @@map("hospital_labs")
 }
@@ -194,7 +194,7 @@ model PrescriptionDetail {
   route          String
   drugName       String
   durationInDays Int
-  prescription   Prescription @relation(fields: [prescriptionID], references: [id])
+  prescription   Prescription @relation(fields: [prescriptionID], references: [id], onDelete: Cascade)
 
   @@map("prescription_detail")
 }
