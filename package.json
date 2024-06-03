@@ -1,0 +1,8 @@
+{
+    "name": "tiba",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start-backend": "cd backend && npx nodemon"
+    }
+  }
+  
