@@ -4,11 +4,11 @@ import { prismaClient } from "../server";
 import { HealthcareProvider, Patient } from "@prisma/client";
 
 interface CustomRequest extends Request {
-  user?: Patient | HealthcareProvider;
+  user: Patient | HealthcareProvider; // Changed to non-optional
 }
 
-const patientAuthMiddleWare = async (
-  req: CustomRequest,
+const patientAuthMiddleware = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -32,7 +32,7 @@ const patientAuthMiddleWare = async (
         error: "Please authenticate using a valid token",
       });
     }
-    req.user = user;
+    (req as CustomRequest).user = user; // Use type assertion to add user
     next();
   } catch (error) {
     // return error with status code
@@ -42,4 +42,4 @@ const patientAuthMiddleWare = async (
   }
 };
 
-export default patientAuthMiddleWare;
+export default patientAuthMiddleware;
