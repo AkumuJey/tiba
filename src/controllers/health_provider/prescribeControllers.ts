@@ -1,21 +1,35 @@
 import { Request, Response } from "express";
-import { PrescriptioSchema } from "../../schema/PrescriptionSchema";
+import {
+  PrescriptionSchema,
+  UpdatePrescriptionSchema,
+} from "../../schema/PrescriptionSchema";
 import { prismaClient } from "../../server";
+import { HealthcareProvider } from "@prisma/client";
+
+interface CustomRequest extends Request {
+  user: HealthcareProvider; // Changed to non-optional
+}
 
 export const postPrescriptionController = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { drugs, ...newPrescription } = PrescriptioSchema.parse(req.body);
-
+    const customReq = req as CustomRequest;
+    const { drugs, ...newPrescription } = PrescriptionSchema.parse(
+      customReq.body
+    );
     const prescription = await prismaClient.$transaction(async (prisma) => {
       const prescription = await prisma.prescription.create({
-        data: newPrescription,
+        data: {
+          ...newPrescription,
+          healthcareProviderID: customReq.user.id,
+        },
       });
       const drugList = drugs.map((drug) => ({
         ...drug,
         prescriptionID: prescription.id,
+        healthcareProviderID: customReq.user.id,
       }));
       const prescriptionDetail = await prisma.prescriptionDetail.createMany({
         data: drugList,
@@ -50,7 +64,7 @@ export const getPrescriptionsController = async (
   }
 };
 
-export const getPatientSpecificPrescriptionController = async (
+export const getPatientSpecificPrescriptionsController = async (
   req: Request,
   res: Response
 ) => {
@@ -100,9 +114,10 @@ export const deletePrescriptionController = async (
   res: Response
 ) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const customReq = req as CustomRequest;
+    const id = parseInt(customReq.params.id, 10);
     const prescription = await prismaClient.prescription.delete({
-      where: { id },
+      where: { id, healthcareProviderID: customReq.user.id },
     });
     if (!prescription) {
       return res.status(400).json({ message: "Deletion failed" });
@@ -117,7 +132,12 @@ export const deleteAllPrescriptionsController = async (
   res: Response
 ) => {
   try {
-    const prescription = await prismaClient.prescription.deleteMany();
+    const customReq = req as CustomRequest;
+    const prescription = await prismaClient.prescription.deleteMany({
+      where: {
+        healthcareProviderID: customReq.user.id,
+      },
+    });
     return res.status(201).json({ prescription });
   } catch (error) {
     res.status(400).json({ error, message: "Deletion failed" });
@@ -128,12 +148,12 @@ export const updatePrescriptionController = async (
   res: Response
 ) => {
   try {
-    PrescriptioSchema.parse(req.body);
-    const id = parseInt(req.params.id, 10);
-    const updatedPrescription = PrescriptioSchema.parse(req.body);
+    const customReq = req as CustomRequest;
+    const id = parseInt(customReq.params.id, 10);
+    const updatedPrescription = UpdatePrescriptionSchema.parse(customReq.body);
 
     const prescription = await prismaClient.prescription.update({
-      where: { id },
+      where: { id, healthcareProviderID: customReq.user.id },
       data: updatedPrescription,
     });
     if (!prescription) {

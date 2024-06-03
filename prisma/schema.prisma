@@ -24,22 +24,23 @@ model SuperUser {
 }
 
 model HealthcareProvider {
-  id             Int              @id @unique @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  firstName      String
-  lastName       String
-  title          String
-  email          String
-  password       String           @unique
-  phoneNo        String
-  age            Int?
-  verified       Boolean?         @default(false)
-  subscribed     Boolean?         @default(false)
-  Appointments   Appointments[]
-  Prescription   Prescription[]
-  MedicalHistory MedicalHistory[]
-  HospitalVitals HospitalVitals[]
-  HospitalLabs   HospitalLabs[]
+  id                 Int                  @id @unique @default(autoincrement())
+  createdAt          DateTime             @default(now())
+  firstName          String
+  lastName           String
+  title              String
+  email              String
+  password           String               @unique
+  phoneNo            String
+  age                Int?
+  verified           Boolean?             @default(false)
+  subscribed         Boolean?             @default(false)
+  Appointments       Appointments[]
+  Prescription       Prescription[]
+  PrescriptionDetail PrescriptionDetail[]
+  MedicalHistory     MedicalHistory[]
+  HospitalVitals     HospitalVitals[]
+  HospitalLabs       HospitalLabs[]
 
   @@map("healthcare_provider")
 }
@@ -185,15 +186,17 @@ model Prescription {
 }
 
 model PrescriptionDetail {
-  id             Int          @id @unique @default(autoincrement())
-  createdAt      DateTime     @default(now())
-  prescriptionID Int
-  quantity       Int
-  units          String
-  route          String
-  drugName       String
-  durationInDays Int
-  prescription   Prescription @relation(fields: [prescriptionID], references: [id], onDelete: Cascade)
+  id                   Int                @id @unique @default(autoincrement())
+  createdAt            DateTime           @default(now())
+  prescriptionID       Int
+  healthcareProviderID Int
+  quantity             Int
+  units                String
+  route                String
+  drugName             String
+  durationInDays       Int
+  healthcareProvider   HealthcareProvider @relation(fields: [healthcareProviderID], references: [id])
+  prescription         Prescription       @relation(fields: [prescriptionID], references: [id], onDelete: Cascade)
 
   @@map("prescription_detail")
 }

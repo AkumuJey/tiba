@@ -1,17 +1,24 @@
 import { Request, Response } from "express";
-import { DrugSchema, PrescriptioSchema } from "../../schema/PrescriptionSchema";
+import { UpdateDrugSchema } from "../../schema/PrescriptionSchema";
 import { prismaClient } from "../../server";
+import { HealthcareProvider } from "@prisma/client";
+
+interface CustomRequest extends Request {
+  user: HealthcareProvider; // Changed to non-optional
+}
 
 export const deletePrescriptionDetailController = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const customReq = req as CustomRequest;
+    const id = parseInt(customReq.params.id, 10);
     const deletedPrescriptionDetail =
       await prismaClient.prescriptionDetail.delete({
         where: {
           id,
+          healthcareProviderID: customReq.user.id,
         },
       });
     res
@@ -26,11 +33,13 @@ export const deleteAllPrescriptionDetailsController = async (
   res: Response
 ) => {
   try {
-    const prescriptionID = parseInt(req.body.id, 10);
+    const customReq = req as CustomRequest;
+    const prescriptionID = parseInt(customReq.params.id, 10);
     const deletedPrescriptionDetails =
       await prismaClient.prescriptionDetail.deleteMany({
         where: {
           prescriptionID,
+          healthcareProviderID: customReq.user.id,
         },
       });
     res.status(200).json({
@@ -46,12 +55,14 @@ export const updatePrescriptionDetailController = async (
   res: Response
 ) => {
   try {
-    const id = parseInt(req.body.id, 10);
-    const updateData = DrugSchema.parse(req.body);
+    const customReq = req as CustomRequest;
+    const id = parseInt(customReq.params.id, 10);
+    const updateData = UpdateDrugSchema.parse(customReq.body);
     const updatedPrescriptionDetail =
       await prismaClient.prescriptionDetail.update({
         where: {
           id,
+          healthcareProviderID: customReq.user.id,
         },
         data: updateData,
       });

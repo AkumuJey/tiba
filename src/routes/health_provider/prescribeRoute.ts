@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   deleteAllPrescriptionsController,
   deletePrescriptionController,
-  getPatientSpecificPrescriptionController,
+  getPatientSpecificPrescriptionsController,
   getPrescriptionsController,
   getSinglePrescriptionController,
   postPrescriptionController,
@@ -19,7 +19,7 @@ const prescribeRoute = Router();
 prescribeRoute.post("/", postPrescriptionController);
 prescribeRoute.get("/", getPrescriptionsController);
 prescribeRoute.delete("/", deleteAllPrescriptionsController);
-prescribeRoute.get("/patient", getPatientSpecificPrescriptionController);
+prescribeRoute.get("/patient", getPatientSpecificPrescriptionsController);
 prescribeRoute.get("/:id", getSinglePrescriptionController);
 prescribeRoute.delete("/:id", deletePrescriptionController);
 prescribeRoute.patch("/:id", updatePrescriptionController);

@@ -6,12 +6,25 @@ export const DrugSchema = z.object({
   route: z.string(),
   drugName: z.string(),
   durationInDays: z.number().int().positive(),
-  prescriptionID: z.number().int().positive().optional(),
 });
-export const PrescriptioSchema = z.object({
+
+export const PrescriptionSchema = z.object({
   patientID: z.number().int().positive(),
-  healthcareProviderID: z.number().int().positive(),
   date: z.string(),
   instruction: z.string().nullable().optional(),
   drugs: z.array(DrugSchema),
+});
+
+export const UpdateDrugSchema = z.object({
+  quantity: z.number().int().positive().optional(),
+  units: z.string().optional(),
+  route: z.string().optional(),
+  drugName: z.string().optional(),
+  durationInDays: z.number().int().positive().optional(),
+});
+
+export const UpdatePrescriptionSchema = z.object({
+  patientID: z.number().int().positive().optional(),
+  date: z.string().optional(),
+  instruction: z.string().nullable().optional(),
 });
