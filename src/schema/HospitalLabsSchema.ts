@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const HospitalLabsSchema = z.object({
   patientID: z.number().int().positive(),
+  healthProviderID: z.number().int().positive(),
   bloodSugar: z.number(),
   cholesterol: z.number(),
   LDL: z.number(),
