@@ -120,16 +120,15 @@ model HospitalVitals {
 }
 
 model HomeVitals {
-  id               Int      @id @unique @default(autoincrement())
-  createdAt        DateTime @default(now())
-  patientID        Int
-  healthProviderID Int
-  breathingRate    Int
-  systolicBP       Int
-  diastolicBP      Int
-  pulseRate        Int
-  weightKg         Float
-  patient          Patient  @relation(fields: [patientID], references: [id])
+  id            Int      @id @unique @default(autoincrement())
+  createdAt     DateTime @default(now())
+  patientID     Int
+  breathingRate Int
+  systolicBP    Int
+  diastolicBP   Int
+  pulseRate     Int
+  weightKg      Float
+  patient       Patient  @relation(fields: [patientID], references: [id])
 
   @@map("home_vitals")
 }
