@@ -1,14 +1,25 @@
 import { Request, Response } from "express";
 import { PatientHistorySchema } from "../../schema/PatientDetails";
 import { prismaClient } from "../../server";
-import { MedicalHistorySchema } from "../../schema/MedicalHistorySchema";
+import {
+  MedicalHistorySchema,
+  UpdateMedicalHistorySchema,
+} from "../../schema/MedicalHistorySchema";
+import { HealthcareProvider } from "@prisma/client";
+
+interface CustomRequest extends Request {
+  user: HealthcareProvider; // Changed to non-optional
+}
 
 export const postHistoriesController = async (req: Request, res: Response) => {
   try {
-    // PatientHistorySchema.parse(req.body);
-    const newData = MedicalHistorySchema.parse(req.body);
+    const customReq = req as CustomRequest;
+    const newData = MedicalHistorySchema.parse(customReq.body);
     const newMedicalHistory = await prismaClient.medicalHistory.create({
-      data: newData,
+      data: {
+        ...newData,
+        healthProviderID: customReq.user.id,
+      },
     });
 
     if (!newMedicalHistory) {
@@ -22,9 +33,11 @@ export const postHistoriesController = async (req: Request, res: Response) => {
 
 export const getHistoriesController = async (req: Request, res: Response) => {
   try {
-    const { patientID } = req.body;
+    const customReq = req as CustomRequest;
     const histories = await prismaClient.medicalHistory.findMany({
-      where: { patientID },
+      where: {
+        healthProviderID: customReq.user.id,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -42,9 +55,10 @@ export const getSingleHistoryController = async (
   res: Response
 ) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const customReq = req as CustomRequest;
+    const id = parseInt(customReq.params.id, 10);
     const medicalHistory = await prismaClient.medicalHistory.findUnique({
-      where: { id },
+      where: { id, healthProviderID: customReq.user.id },
     });
     if (!medicalHistory) {
       res.status(404).json({ message: "Medical history not found" });
@@ -61,12 +75,12 @@ export const getSingleHistoryController = async (
 
 export const updateHistoryController = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    PatientHistorySchema.parse(req.body);
-    const { patientID, presentation, medicalHistory } = req.body;
+    const customReq = req as CustomRequest;
+    const id = parseInt(customReq.params.id, 10);
+    const data = UpdateMedicalHistorySchema.parse(customReq.body);
     const updatedHistory = await prismaClient.medicalHistory.update({
       where: { id },
-      data: { presentation, medicalHistory, patientID },
+      data,
     });
 
     if (!updatedHistory) {
@@ -80,9 +94,10 @@ export const updateHistoryController = async (req: Request, res: Response) => {
 
 export const deleteHistoryController = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const customReq = req as CustomRequest;
+    const id = parseInt(customReq.params.id, 10);
     const deletedMedicalHistory = await prismaClient.medicalHistory.delete({
-      where: { id },
+      where: { id, healthProviderID: customReq.user.id },
     });
     res
       .status(204)
@@ -98,16 +113,16 @@ export const getSinglePatientHistories = async (
   res: Response
 ) => {
   try {
-    const { patientID } = req.body;
+    const customReq = req as CustomRequest;
+    const { patientID } = customReq.body;
     const medicalHistories = await prismaClient.medicalHistory.findMany({
-      where: { patientID },
+      where: { patientID, healthProviderID: customReq.user.id },
       orderBy: {
         createdAt: "desc",
       },
     });
     res.status(200).json(medicalHistories);
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ error, message: "Failed to retrieve medical histories" });
