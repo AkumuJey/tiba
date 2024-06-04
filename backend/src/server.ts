@@ -1,14 +1,15 @@
-import express from "express";
-import { patientIndexRoute } from "./routes/patientIndexRoute";
 import { PrismaClient } from "@prisma/client";
-import { providerIndexRoute } from "./routes/providerIndexRoute";
+import express from "express";
+import rootRoute from "../rootRoute";
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/patient", patientIndexRoute);
-app.use("/provider", providerIndexRoute);
+// app.get("/", (req, res) => {
+//   console.log("working at server");
+// });
+app.use("/", rootRoute);
 
 export const prismaClient = new PrismaClient({
   log: ["query"],

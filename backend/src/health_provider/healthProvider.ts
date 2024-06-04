@@ -1,14 +1,29 @@
 import { HealthcareProvider } from "@prisma/client";
 import { Request, Response, Router } from "express";
 import { prismaClient } from "../server";
+import {
+  providerLoginRoute,
+  providerLogoutRoute,
+  providerSignupRoute,
+} from "../routes/auth/providerAuthRoute";
+import selectedPatients from "./schemas/selectedPatients";
+import providerProfile from "./routes/providerProfile";
 
 interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 const healthProvider = Router();
+healthProvider.get("/", (req, res) => {
+  res.json({
+    message: "Hello Provider. Tiba is running.",
+  });
+});
 
-healthProvider.use("/profile");
-healthProvider.use("/:patientID");
+healthProvider.use("/login", providerLoginRoute);
+healthProvider.use("/logout", providerLogoutRoute);
+healthProvider.use("/signup", providerSignupRoute);
+healthProvider.use("/profile", providerProfile);
+healthProvider.use("/:patientID", selectedPatients);
 healthProvider.get("/appointment", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;

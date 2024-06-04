@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   patientLoginController,
   patientSignupController,
-} from "../../controllers/auth/patientAuthController";
+} from "../../controllers/patientAuthController";
 
 export const patientLoginRoute = Router();
 

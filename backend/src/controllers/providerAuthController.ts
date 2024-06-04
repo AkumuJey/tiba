@@ -1,10 +1,10 @@
 import { compareSync, hashSync } from "bcrypt";
 import { Request, Response } from "express";
-import { prismaClient } from "../../server";
+import { prismaClient } from "../server";
 import * as jwt from "jsonwebtoken";
 
-import { LoginSchema } from "../../schema/LoginSchema";
-import { ProviderSignupSchema } from "../../schema/ProviderSignUpSchema";
+import { LoginSchema } from "../schema/LoginSchema";
+import { ProviderSignupSchema } from "../schema/ProviderSignUpSchema";
 
 export const providerLoginController = async (req: Request, res: Response) => {
   try {

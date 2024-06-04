@@ -3,7 +3,7 @@ import {
   providerLoginController,
   providerLogoutController,
   providerSignupController,
-} from "../../controllers/auth/providerAuthController";
+} from "../../controllers/providerAuthController";
 
 export const providerLoginRoute = Router();
 
