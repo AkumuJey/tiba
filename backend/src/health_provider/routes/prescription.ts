@@ -1,21 +1,24 @@
-import { Request, Response } from "express";
+import { HealthcareProvider } from "@prisma/client";
+import { Request, Response, Router } from "express";
+import { prismaClient } from "../../server";
 import {
   PrescriptionSchema,
   UpdatePrescriptionSchema,
-} from "../../health_provider/schemas/PrescriptionSchema";
-import { prismaClient } from "../../server";
-import { HealthcareProvider } from "@prisma/client";
+} from "../schemas/PrescriptionSchema";
+import details from "./prescriptionDetails";
 
 interface CustomRequest extends Request {
-  user: HealthcareProvider; // Changed to non-optional
+  user: HealthcareProvider;
 }
 
-export const postPrescriptionController = async (
-  req: Request,
-  res: Response
-) => {
+const prescription = Router();
+
+prescription.use("/details", details);
+
+prescription.post("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.id);
     const { drugs, ...newPrescription } = PrescriptionSchema.parse(
       customReq.body
     );
@@ -23,6 +26,7 @@ export const postPrescriptionController = async (
       const prescription = await prisma.prescription.create({
         data: {
           ...newPrescription,
+          patientID,
           healthcareProviderID: customReq.user.id,
         },
       });
@@ -39,37 +43,14 @@ export const postPrescriptionController = async (
 
     return res.status(201).json({ data: { prescription } });
   } catch (error) {
-    res.status(400).json({ error, message: "failed to prescribe" });
+    return res.status(400).json({ error, message: "failed to prescribe" });
   }
-};
-export const getPrescriptionsController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const prescriptions = await prismaClient.prescription.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        prescriptionDetails: true,
-      },
-    });
-    if (!prescriptions || prescriptions.length === 0) {
-      return res.status(400).json({ message: "No prescriptions available" });
-    }
-    return res.status(201).json({ prescriptions });
-  } catch (error) {
-    res.status(400).json({ error, message: "Failed to fetch prescriptions" });
-  }
-};
+});
 
-export const getPatientSpecificPrescriptionsController = async (
-  req: Request,
-  res: Response
-) => {
+prescription.get("/", async (req: Request, res: Response) => {
   try {
-    const { patientID } = req.body;
+    const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.id);
     const prescriptions = await prismaClient.prescription.findMany({
       where: { patientID },
       include: {
@@ -86,38 +67,32 @@ export const getPatientSpecificPrescriptionsController = async (
   } catch (error) {
     res.status(400).json({ error, message: "Failed to fetch prescriptions" });
   }
-};
+});
 
-export const getSinglePrescriptionController = async (
-  req: Request,
-  res: Response
-) => {
+prescription.get("/:id", async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    const prescription = await prismaClient.prescription.findMany({
-      where: { id },
+    const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.id);
+    const id = parseInt(customReq.params.id, 10);
+    const prescription = await prismaClient.prescription.findFirstOrThrow({
+      where: { id, patientID },
       include: {
         prescriptionDetails: true,
       },
     });
-    if (!prescription) {
-      return res.status(400).json({ message: "Prescription not found" });
-    }
     return res.status(201).json({ prescription });
   } catch (error) {
     res.status(400).json({ error, message: "Failed to fetch prescription" });
   }
-};
+});
 
-export const deletePrescriptionController = async (
-  req: Request,
-  res: Response
-) => {
+prescription.delete("/:id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.id);
     const id = parseInt(customReq.params.id, 10);
     const prescription = await prismaClient.prescription.delete({
-      where: { id, healthcareProviderID: customReq.user.id },
+      where: { id, healthcareProviderID: customReq.user.id, patientID },
     });
     if (!prescription) {
       return res.status(400).json({ message: "Deletion failed" });
@@ -126,11 +101,29 @@ export const deletePrescriptionController = async (
   } catch (error) {
     res.status(400).json({ error, message: "Deletion failed" });
   }
-};
-export const deleteAllPrescriptionsController = async (
-  req: Request,
-  res: Response
-) => {
+});
+
+prescription.patch("/", async (req: Request, res: Response) => {
+  try {
+    const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.id);
+    const id = parseInt(customReq.params.id, 10);
+    const updatedPrescription = UpdatePrescriptionSchema.parse(customReq.body);
+
+    const prescription = await prismaClient.prescription.update({
+      where: { id, healthcareProviderID: customReq.user.id, patientID },
+      data: updatedPrescription,
+    });
+    if (!prescription) {
+      return res.status(400).json({ message: "Failed to update" });
+    }
+    return res.status(201).json({ prescription });
+  } catch (error) {
+    res.status(400).json({ error, message: "Failed to update" });
+  }
+});
+
+prescription.delete("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const prescription = await prismaClient.prescription.deleteMany({
@@ -142,25 +135,6 @@ export const deleteAllPrescriptionsController = async (
   } catch (error) {
     res.status(400).json({ error, message: "Deletion failed" });
   }
-};
-export const updatePrescriptionController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const customReq = req as CustomRequest;
-    const id = parseInt(customReq.params.id, 10);
-    const updatedPrescription = UpdatePrescriptionSchema.parse(customReq.body);
+});
 
-    const prescription = await prismaClient.prescription.update({
-      where: { id, healthcareProviderID: customReq.user.id },
-      data: updatedPrescription,
-    });
-    if (!prescription) {
-      return res.status(400).json({ message: "Failed to update" });
-    }
-    return res.status(201).json({ prescription });
-  } catch (error) {
-    res.status(400).json({ error, message: "Failed to update" });
-  }
-};
+export default prescription;

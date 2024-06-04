@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { HospitalLabsSchema } from "../../schema/HospitalLabsSchema";
+import { HospitalLabsSchema } from "../../health_provider/schemas/HospitalLabsSchema";
 import { prismaClient } from "../../server";
 
 const labRoutes = Router();

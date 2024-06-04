@@ -9,7 +9,6 @@ export const DrugSchema = z.object({
 });
 
 export const PrescriptionSchema = z.object({
-  patientID: z.number().int().positive(),
   date: z.string(),
   instruction: z.string().nullable().optional(),
   drugs: z.array(DrugSchema),
@@ -24,7 +23,6 @@ export const UpdateDrugSchema = z.object({
 });
 
 export const UpdatePrescriptionSchema = z.object({
-  patientID: z.number().int().positive().optional(),
   date: z.string().optional(),
   instruction: z.string().nullable().optional(),
 });

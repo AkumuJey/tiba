@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UpdateDrugSchema } from "../../schema/PrescriptionSchema";
+import { UpdateDrugSchema } from "../../health_provider/schemas/PrescriptionSchema";
 import { prismaClient } from "../../server";
 import { HealthcareProvider } from "@prisma/client";
 

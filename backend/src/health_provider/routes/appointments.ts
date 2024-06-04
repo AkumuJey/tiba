@@ -1,39 +1,41 @@
-import { Request, Response } from "express";
+import { HealthcareProvider } from "@prisma/client";
+import { Request, Response, Router } from "express";
+import { prismaClient } from "../../server";
 import {
   AppointmentSchema,
   UpdateAppointmentSchema,
-} from "../../health_provider/schemas/AppointmentSchema";
-import { prismaClient } from "../../server";
-import { HealthcareProvider } from "@prisma/client";
+} from "../schemas/AppointmentSchema";
 
 interface CustomRequest extends Request {
-  user: HealthcareProvider; // Changed to non-optional
+  user: HealthcareProvider;
 }
 
-export const bookAppointmentController = async (
-  req: Request,
-  res: Response
-) => {
+const appointments = Router();
+
+appointments.post("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.patientID, 10);
     const data = AppointmentSchema.parse(customReq.body);
     const appointment = await prismaClient.appointments.create({
-      data: { ...data, healthProviderID: customReq.user.id },
+      data: { ...data, healthProviderID: customReq.user.id, patientID },
     });
-    return res.status(201).json({ appointment });
+
+    if (!appointment) {
+      return res.status(400).json({ message: "Failed to book appointment" });
+    }
+    return res.status(201).json({ message: "Success", appointment });
   } catch (error) {
     return res.json({ error });
   }
-};
+});
 
-export const getAppointmentsController = async (
-  req: Request,
-  res: Response
-) => {
+appointments.get("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.patientID, 10);
     const appointments = await prismaClient.appointments.findMany({
-      where: { healthProviderID: customReq.user.id },
+      where: { healthProviderID: customReq.user.id, patientID },
       orderBy: {
         createdAt: "desc",
       },
@@ -45,56 +47,50 @@ export const getAppointmentsController = async (
   } catch (error) {
     res.status(400).json({ error: error });
   }
-};
+});
 
-export const getSingleAppointmentController = async (
-  req: Request,
-  res: Response
-) => {
+appointments.get("/:id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.patientID, 10);
     const id = parseInt(customReq.params.id, 10);
-    const appointment = await prismaClient.appointments.findFirst({
-      where: { id, patientID: customReq.user.id },
+    const appointment = await prismaClient.appointments.findFirstOrThrow({
+      where: { id, patientID, healthProviderID: customReq.user.id },
     });
-    if (!appointment) {
-      return res.json({ message: "No appointment found" });
-    }
     return res.json({ appointment });
   } catch (error) {
     res.status(400).json({ error: error });
   }
-};
+});
 
-export const updateAppointmentController = async (
-  req: Request,
-  res: Response
-) => {
+appointments.patch("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.patientID, 10);
     const id = parseInt(customReq.params.id, 10);
     const data = UpdateAppointmentSchema.parse(customReq.body);
     const updatedAppointment = await prismaClient.appointments.update({
-      where: { id, healthProviderID: customReq.user.id },
+      where: { id, healthProviderID: customReq.user.id, patientID },
       data,
     });
+    if (!updatedAppointment) {
+      return res.status(400).json({ message: "Failed to update" });
+    }
     return res
       .status(200)
       .json({ message: "Updated Successfully", updatedAppointment });
   } catch (error) {
-    return res.json({ error });
+    return res.json({ error, message: "Failed to update" });
   }
-};
+});
 
-export const deleteAppointmentController = async (
-  req: Request,
-  res: Response
-) => {
+appointments.delete("/id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const patientID = parseInt(customReq.params.patientID, 10);
     const id = parseInt(customReq.params.id, 10);
     const deletedAppointment = await prismaClient.appointments.delete({
-      where: { id, healthProviderID: customReq.user.id },
+      where: { id, healthProviderID: customReq.user.id, patientID },
     });
     return res
       .status(200)
@@ -102,12 +98,9 @@ export const deleteAppointmentController = async (
   } catch (error) {
     res.status(400).json({ error: error });
   }
-};
+});
 
-export const deleteAllAppointmentsController = async (
-  req: Request,
-  res: Response
-) => {
+appointments.delete("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const deletedAppointment = await prismaClient.appointments.deleteMany({
@@ -121,4 +114,6 @@ export const deleteAllAppointmentsController = async (
   } catch (error) {
     res.status(400).json({ error: error });
   }
-};
+});
+
+export default appointments;
