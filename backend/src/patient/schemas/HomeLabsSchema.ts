@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const HomeLabsSchema = z.object({
-  patientID: z.number().int().positive(),
   medicalHistoryID: z.number().int().optional(),
   bloodSugar: z.number(),
   cholesterol: z.number(),

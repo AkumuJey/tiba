@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { HomeVitalsSchema } from "../../schema/HomeVitalsSchema";
+import { HomeVitalsSchema } from "../../patient/schemas/HomeVitalsSchema";
 import { prismaClient } from "../../server";
 
 const homeVitalsRoute = Router();
