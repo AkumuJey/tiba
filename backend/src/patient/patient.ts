@@ -10,6 +10,7 @@ import {
   patientLogoutRoute,
   patientSignupRoute,
 } from "../routes/auth/patientAuthRoute";
+import patientAuthMiddleware from "../middlewares/patientAuthMiddleWare";
 
 const patient = Router();
 
@@ -22,11 +23,11 @@ patient.get("/", (req, res) => {
 patient.use("/login", patientLoginRoute);
 patient.use("/logout", patientLogoutRoute);
 patient.use("/signup", patientSignupRoute);
-patient.use("/profile", patientProfile);
-patient.use("/prescription", patientPrescription);
-patient.use("/appointment", patientAppointment);
-patient.use("/histories", patienthistory);
-patient.use("/vitals", patientVitals);
-patient.use("/labs", patientLabs);
+patient.use("/profile", [patientAuthMiddleware], patientProfile);
+patient.use("/prescription", [patientAuthMiddleware], patientPrescription);
+patient.use("/appointment", [patientAuthMiddleware], patientAppointment);
+patient.use("/histories", [patientAuthMiddleware], patienthistory);
+patient.use("/vitals", [patientAuthMiddleware], patientVitals);
+patient.use("/labs", [patientAuthMiddleware], patientLabs);
 
 export default patient;

@@ -1,8 +1,6 @@
 import { Router } from "express";
 import healthProvider from "./src/health_provider/healthProvider";
 import patient from "./src/patient/patient";
-import patientAuthMiddleware from "./src/middlewares/patientAuthMiddleWare";
-import providerAuthMiddleWare from "./src/middlewares/providerAuthMiddleware";
 
 const rootRoute = Router();
 
@@ -12,7 +10,7 @@ rootRoute.get("/", (req, res) => {
     message: "Hello world. Tiba is running.",
   });
 });
-rootRoute.use("/provider", providerAuthMiddleWare, healthProvider);
-rootRoute.use("/patient", patientAuthMiddleware, patient);
+rootRoute.use("/provider", healthProvider);
+rootRoute.use("/patient", patient);
 
 export default rootRoute;
