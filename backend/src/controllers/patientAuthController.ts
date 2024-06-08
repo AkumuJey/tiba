@@ -25,6 +25,9 @@ export const patientLoginController = async (req: Request, res: Response) => {
         userId: patient.id,
       },
       process.env.PATIENT_JWT_SECRET as string
+      // {
+      //   expiresIn: "1hr",
+      // }
     );
     return res.status(201).json({
       patient,
