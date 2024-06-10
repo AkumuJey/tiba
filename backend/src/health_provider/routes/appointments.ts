@@ -10,13 +10,15 @@ interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 
-const appointments = Router();
+const appointments = Router({ mergeParams: true });
 
 appointments.post("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
+    console.log(req.params);
     const data = AppointmentSchema.parse(customReq.body);
+    console.log(data);
     const appointment = await prismaClient.appointments.create({
       data: { ...data, healthProviderID: customReq.user.id, patientID },
     });
@@ -51,6 +53,7 @@ appointments.get("/", async (req: Request, res: Response) => {
 
 appointments.get("/:id", async (req: Request, res: Response) => {
   try {
+    console.log(req.params);
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
     const id = parseInt(customReq.params.id, 10);

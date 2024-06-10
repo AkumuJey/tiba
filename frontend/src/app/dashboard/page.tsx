@@ -11,6 +11,7 @@ const fetchProfile = async () => {
       "Content-Type": "application/json",
       authorization: `Bearers ${token}`,
     },
+    next: { revalidate: 0 },
   });
   if (!response.ok) {
     console.log("Failed");
@@ -26,13 +27,14 @@ const fetchAppointments = async () => {
       "Content-Type": "application/json",
       authorization: `Bearers ${token}`,
     },
+    next: { revalidate: 0 },
   });
   if (!response.ok) {
     console.log("Failed");
     return;
   }
   const data = await response.json();
-  return data.appointments;
+  return data;
 };
 const fetchPatients = async () => {
   const response = await fetch("http://localhost:4000/provider/patients/", {
@@ -41,6 +43,7 @@ const fetchPatients = async () => {
       "Content-Type": "application/json",
       authorization: `Bearers ${token}`,
     },
+    next: { revalidate: 0 },
   });
   if (!response.ok) {
     console.log("Failed");
@@ -60,10 +63,20 @@ const Dashboard = async () => {
   const patients: Patient[] = await fetchPatients();
   const profile = await fetchProfile();
   const appointments = await fetchAppointments();
-  console.log(patients);
+  console.log("Here: ", appointments);
   return (
     <div>
       <h2>Dashboard</h2>
+      <div>
+        <h3>Profile</h3>
+        <div>
+          {profile && (
+            <>
+              {profile.title + " " + profile.firstName + " " + profile.lastName}
+            </>
+          )}
+        </div>
+      </div>
       <div className="flex flex-col">
         <div className="w-1/2">
           <h2>Patients</h2>

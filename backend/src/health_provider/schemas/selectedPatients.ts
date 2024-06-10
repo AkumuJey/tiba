@@ -10,8 +10,12 @@ interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 
-const selectedPatients = Router();
+const selectedPatients = Router({ mergeParams: true });
 
+selectedPatients.get("/", (req, res) => {
+  console.log("Here it is: ", req.params);
+  res.json({ params: req.params });
+});
 selectedPatients.use("/histories", history);
 selectedPatients.use("/vitals", vitals);
 selectedPatients.use("/labs", labs);

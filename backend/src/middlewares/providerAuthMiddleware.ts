@@ -12,6 +12,8 @@ const providerAuthMiddleWare = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("Here", req.params);
+  const params = req.params;
   const token = req.headers.authorization?.split(" ")[1];
   //   if no token response
   if (!token) {
@@ -33,6 +35,7 @@ const providerAuthMiddleWare = async (
       });
     }
     req.user = user;
+    console.log(req.params);
     next();
   } catch (error) {
     // return error with status code
