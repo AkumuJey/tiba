@@ -1,7 +1,4 @@
 "use client";
-import React, { FormEvent } from "react";
-import { z } from "zod";
-import Image from "next/image";
 
 // types.ts
 export interface Patient {
