@@ -9,16 +9,13 @@ import {
 import selectedPatients from "./schemas/selectedPatients";
 import providerProfile from "./routes/providerProfile";
 import providerAuthMiddleWare from "../middlewares/providerAuthMiddleware";
+import getPatients from "./routes/getPatients";
 
 interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 const healthProvider = Router();
-healthProvider.get("/", (req, res) => {
-  res.json({
-    message: "Hello Provider. Tiba is running.",
-  });
-});
+healthProvider.use("/patients", [providerAuthMiddleWare], getPatients);
 
 healthProvider.use("/login", providerLoginRoute);
 healthProvider.use("/logout", providerLogoutRoute);
@@ -26,7 +23,7 @@ healthProvider.use("/signup", providerSignupRoute);
 healthProvider.use("/profile", [providerAuthMiddleWare], providerProfile);
 healthProvider.use("/:patientID", [providerAuthMiddleWare], selectedPatients);
 healthProvider.get(
-  "/appointment",
+  "/appointments",
   [providerAuthMiddleWare],
   async (req: Request, res: Response) => {
     try {
