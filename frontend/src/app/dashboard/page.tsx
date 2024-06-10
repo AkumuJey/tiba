@@ -1,3 +1,4 @@
+import AppointmentsDash from "@/components/Appointments";
 import DashboardProfile from "@/components/DashboardProfile";
 import PatientsDash from "@/components/PatientsDash";
 
@@ -9,6 +10,7 @@ const Dashboard = async () => {
         <DashboardProfile />
         <div>
           <PatientsDash />
+          <AppointmentsDash />
         </div>
       </div>
     </div>

@@ -40,13 +40,22 @@ healthProvider.get(
         orderBy: {
           createdAt: "desc",
         },
+        include: {
+          patient: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
       });
       if (!appointments) {
         return res
           .status(400)
           .json({ message: "Failed to fetch appointments" });
       }
-      res.status(200).json({ message: "Success", appointments, rr: "my God" });
+      console.log(appointments);
+      res.status(200).json({ message: "Success", appointments });
     } catch (error) {
       return res
         .status(400)
@@ -63,6 +72,14 @@ healthProvider.get("/prescription", async (req: Request, res: Response) => {
       },
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        patient: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
     });
     if (!prescriptions) {
