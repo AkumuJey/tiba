@@ -14,6 +14,13 @@ providerProfile.get("/", async (req: Request, res: Response) => {
       where: {
         id: customReq.user.id,
       },
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        title: true,
+        verified: true,
+      },
     });
     res.status(200).json({ message: "success", profile });
   } catch (error) {

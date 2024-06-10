@@ -1,6 +1,5 @@
-import PatientCard from "@/components/Patientcard";
-import Link from "next/link";
-import React from "react";
+import { CancelOutlined, CheckCircleOutline } from "@mui/icons-material/";
+import { Chip, Paper } from "@mui/material";
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
@@ -20,72 +19,66 @@ const fetchProfile = async () => {
   const data = await response.json();
   return data.profile;
 };
-const fetchAppointments = async () => {
-  const response = await fetch("http://localhost:4000/provider/appointments/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearers ${token}`,
-    },
-    next: { revalidate: 0 },
-  });
-  if (!response.ok) {
-    console.log("Failed");
-    return;
-  }
-  const data = await response.json();
-  return data;
-};
-const fetchPatients = async () => {
-  const response = await fetch("http://localhost:4000/provider/patients/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearers ${token}`,
-    },
-    next: { revalidate: 0 },
-  });
-  if (!response.ok) {
-    console.log("Failed");
-    return;
-  }
-  const data = await response.json();
-  return data.patients;
-};
 
-interface Patient {
-  id: number;
+interface Profile {
   firstName: string;
-  lastName: string; // Include lastName to use it in concatenation
-  sex: string;
+  lastName: string;
+  email: string;
+  title: string;
+  verified: boolean;
 }
 const Dashboard = async () => {
-  const patients: Patient[] = await fetchPatients();
-  const profile = await fetchProfile();
-  const appointments = await fetchAppointments();
-  console.log("Here: ", appointments);
+  const profile: Profile = await fetchProfile();
+  console.log(profile);
   return (
     <div>
       <h2>Dashboard</h2>
       <div>
         <h3>Profile</h3>
         <div>
+          <Paper elevation={1}></Paper>
+          <Paper elevation={1}></Paper>
+          <Paper elevation={1}></Paper>
+          <Paper elevation={1}></Paper>
+        </div>
+        <div className="flex flex-col">
           {profile && (
             <>
-              {profile.title + " " + profile.firstName + " " + profile.lastName}
+              <h5>
+                Name:
+                {profile.title +
+                  " " +
+                  profile.firstName +
+                  " " +
+                  profile.lastName}
+              </h5>
+              <div className="flex justify-between">
+                <h5>Email: {profile.email}</h5>
+                <Chip
+                  label={profile.verified ? "Verified" : "Unverified"}
+                  color={profile.verified ? "success" : "default"}
+                  icon={
+                    profile.verified ? (
+                      <CheckCircleOutline />
+                    ) : (
+                      <CancelOutlined />
+                    )
+                  }
+                />
+                <Chip
+                  label={profile.verified ? "Unverified" : "Verified"}
+                  color={profile.verified ? "default" : "success"}
+                  icon={
+                    profile.verified ? (
+                      <CancelOutlined />
+                    ) : (
+                      <CheckCircleOutline />
+                    )
+                  }
+                />
+              </div>
             </>
           )}
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <div className="w-1/2">
-          <h2>Patients</h2>
-          <div className="flex flex-col gap-2">
-            {patients &&
-              patients.map((patient) => (
-                <PatientCard key={patient.id} patient={patient} />
-              ))}
-          </div>
         </div>
       </div>
     </div>
