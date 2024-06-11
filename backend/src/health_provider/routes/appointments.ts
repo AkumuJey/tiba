@@ -59,6 +59,14 @@ appointments.get("/:id", async (req: Request, res: Response) => {
     const id = parseInt(customReq.params.id, 10);
     const appointment = await prismaClient.appointments.findFirstOrThrow({
       where: { id, patientID, healthProviderID: customReq.user.id },
+      include: {
+        patient: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
     });
     return res.json({ appointment });
   } catch (error) {

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { SyntheticEvent } from "react";
 
 const Navbar = () => {
@@ -7,20 +8,40 @@ const Navbar = () => {
     event.preventDefault();
     alert("Logged out");
   }
+
+  const pathname = usePathname();
   return (
     <nav className="flex flex-row gap-4 shadow-sm bg px-[2rem] py-[1rem] justify-between font-bold">
       <div className="flex gap-[3rem]">
         <Link href={`/`}>Logo</Link>
         <div className="flex flex-row gap-2">
-          <Link href={"/"}>Home</Link>
-          <Link href={"/dashboard"}>Dashboard</Link>
-          <Link href={"/appointments"}>Appointment</Link>
+          <Link href={"/"} className={pathname === "/" ? "text-blue-800" : ""}>
+            Home
+          </Link>
+          <Link
+            href={"/dashboard"}
+            className={pathname === "/dashboard" ? "text-blue-800" : ""}
+            prefetch={true}
+          >
+            Dashboard
+          </Link>
+          <Link
+            href={"/appointments"}
+            className={pathname === "/appointments" ? "text-blue-800" : ""}
+            prefetch={true}
+          >
+            Appointment
+          </Link>
         </div>
       </div>
       <div className="flex flex-row gap-2">
         <div className="flex flex-row gap-2">
-          <Link href={"/signup"}>Signup</Link>
-          <Link href={"/login"}>Login</Link>
+          <Link href={"/signup"} prefetch={true}>
+            Signup
+          </Link>
+          <Link href={"/login"} prefetch={true}>
+            Login
+          </Link>
         </div>
         <Link href={"/logout"} onClick={handleLogout}>
           Logout

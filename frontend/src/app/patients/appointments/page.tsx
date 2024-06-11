@@ -38,11 +38,10 @@ const fetchAppointments = async () => {
   return data.appointments;
 };
 
-const AppointmentsDash = async () => {
+const Appointments = async () => {
   const appointments: AppointmentDetails[] = await fetchAppointments();
-  console.log(appointments);
   return (
-    <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-1/2">
+    <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-2/3">
       {appointments && (
         <>
           {appointments.map((appointment, index) => (
@@ -73,4 +72,4 @@ const AppointmentsDash = async () => {
   );
 };
 
-export default AppointmentsDash;
+export default Appointments;
