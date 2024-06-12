@@ -1,14 +1,14 @@
+import AppointmentForm from "@/components/AppointmentForm";
 import React from "react";
 
-const AppointmentsPage = ({ params }: { params: { patientID: string } }) => {
+const NewAppointmentsPage = ({ params }: { params: { patientID: string } }) => {
   const { patientID } = params;
   console.log(patientID);
   return (
     <div>
-      Page
-      <strong>{patientID}</strong>
+      <AppointmentForm />
     </div>
   );
 };
 
-export default AppointmentsPage;
+export default NewAppointmentsPage;

@@ -40,6 +40,7 @@ const fetchAppointments = async () => {
 
 const AppointmentsDash = async () => {
   const appointments: AppointmentDetails[] = await fetchAppointments();
+
   return (
     <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-1/2">
       {appointments && (
@@ -47,7 +48,7 @@ const AppointmentsDash = async () => {
           {appointments.map((appointment, index) => (
             <>
               <Link
-                href={`/patients/${appointment.patientID}/appointments/${appointment.id}`}
+                href={`/patients/${appointment.patientID}/appointments/${appointment.id}/`}
                 key={appointment.id}
                 className="w-full h-full"
               >

@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, List, ListItem, Paper } from "@mui/material";
+import { Divider, List, ListItem, Paper, Typography } from "@mui/material";
 import Link from "next/link";
 
 interface PatientDetails {
@@ -54,36 +54,68 @@ const SingleAppointment = async ({
     appointmentID
   );
   const { patient } = appointment;
-  console.log(appointment);
+  // console.log(appointment);
   return (
-    <Paper elevation={2} className="w-1/2 mx-auto">
-      <div>
-        <div>
-          <strong>AppointmentTime:</strong>
-          <span>
-            Date: {new Date(appointment.appointmentTime).toLocaleDateString()}
-          </span>
-          <span>
-            Time: {new Date(appointment.appointmentTime).toLocaleTimeString()}
-          </span>
-        </div>
-        <div>
-          <span> Venue: {appointment.venue}</span>
-          <span>Reason for visit: {appointment.description}</span>
-          <span>
-            Patient Name: {`${patient.firstName} ${patient.lastName}`}
-          </span>
-        </div>
-        <div>
-          <strong>Created at:</strong>
-          <span>
-            Date: {new Date(appointment.createdAt).toLocaleDateString()}
-          </span>
-          <span>
-            Time: {new Date(appointment.createdAt).toLocaleTimeString()}
-          </span>
-        </div>
+    <Paper elevation={2} className="w-full max-w-lg mx-auto p-6 my-4">
+      <Typography variant="h6" component="div" className="mb-4 text-center">
+        Appointment Details
+      </Typography>
+      <div className="mb-4">
+        <Typography variant="subtitle1" component="div" className="font-bold">
+          Appointment Time:
+        </Typography>
+        <Typography variant="body2">
+          Date: {new Date(appointment.appointmentTime).toLocaleDateString()}
+        </Typography>
+        <Typography variant="body2">
+          Time: {new Date(appointment.appointmentTime).toLocaleTimeString()}
+        </Typography>
       </div>
+      <div className="mb-4">
+        <Typography variant="subtitle1" component="div" className="font-bold">
+          Venue:
+        </Typography>
+        <Typography variant="body2">{appointment.venue}</Typography>
+      </div>
+      <div className="mb-4">
+        <Typography variant="subtitle1" component="div" className="font-bold">
+          Reason for visit:
+        </Typography>
+        <Typography variant="body2">{appointment.description}</Typography>
+      </div>
+      <div className="mb-4">
+        <Typography variant="subtitle1" component="div" className="font-bold">
+          Patient Name:
+        </Typography>
+        <Typography variant="body2">
+          {`${patient.firstName} ${patient.lastName}`}
+        </Typography>
+      </div>
+      <div className="mb-4">
+        <Typography variant="subtitle1" component="div" className="font-bold">
+          Created at:
+        </Typography>
+        <Typography variant="body2">
+          Date: {new Date(appointment.createdAt).toLocaleDateString()}
+        </Typography>
+        <Typography variant="body2">
+          Time: {new Date(appointment.createdAt).toLocaleTimeString()}
+        </Typography>
+      </div>
+      <Link
+        href={{
+          pathname: `/patients/${appointment.patientID}/appointments/${appointment.id}/edit`,
+          query: {
+            venue: appointment.venue,
+            appointmentTime: appointment.appointmentTime,
+            amount: appointment.amount,
+            description: appointment.description,
+          },
+        }}
+        className="block p-2 bg-green-500 text-white text-center rounded hover:bg-green-600 transition"
+      >
+        Edit
+      </Link>
     </Paper>
   );
 };
