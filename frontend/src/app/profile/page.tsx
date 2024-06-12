@@ -59,12 +59,15 @@ const Profile = async () => {
   } = profile;
   console.log(profile);
   return (
-    <Container component="main" maxWidth="md" sx={{ mt: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+    <Container
+      component="main"
+      maxWidth="md"
+      sx={{ mt: 4 }}
+      className="w-[95%] mx-auto flex justify-center items-center min-h-screen"
+    >
+      <Paper elevation={3} sx={{ p: 4 }} className="w-full">
+        <Box sx={{ display: "flex", alignItems: "center", mb: 4 }} className="">
           <Avatar sx={{ width: 100, height: 100, mr: 4 }}>
-            {" "}
-            {/* Placeholder Avatar */}
             <Person />
           </Avatar>
           <Box>
