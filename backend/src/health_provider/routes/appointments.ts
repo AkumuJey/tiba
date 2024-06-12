@@ -16,9 +16,7 @@ appointments.post("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
-    console.log(req.params);
     const data = AppointmentSchema.parse(customReq.body);
-    console.log(data);
     const appointment = await prismaClient.appointments.create({
       data: { ...data, healthProviderID: customReq.user.id, patientID },
     });

@@ -10,6 +10,9 @@ const getPatients = Router();
 getPatients.get("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
+    const limit = customReq.query.limit
+      ? parseInt(req.query.limit as string, 10)
+      : undefined;
     const patients = await prismaClient.patient.findMany({
       select: {
         id: true,
@@ -18,6 +21,7 @@ getPatients.get("/", async (req: Request, res: Response) => {
         sex: true,
         dateOfBirth: true,
       },
+      take: limit,
     });
     res.status(200).json({ message: "success", patients });
   } catch (error) {

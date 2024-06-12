@@ -20,14 +20,17 @@ interface Patient {
   dateOfBirth: string;
 }
 const fetchPatients = async () => {
-  const response = await fetch("http://localhost:4000/provider/patients/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearers ${token}`,
-    },
-    next: { revalidate: 0 },
-  });
+  const response = await fetch(
+    "http://localhost:4000/provider/patients/?limit=5",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearers ${token}`,
+      },
+      next: { revalidate: 0 },
+    }
+  );
   if (!response.ok) {
     console.log("Failed");
     return;

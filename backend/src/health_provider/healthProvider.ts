@@ -26,8 +26,10 @@ healthProvider.get(
   [providerAuthMiddleWare],
   async (req: Request, res: Response) => {
     try {
-      console.log("I was hit");
       const customReq = req as CustomRequest;
+      const limit = customReq.query.limit
+        ? parseInt(req.query.limit as string, 10)
+        : undefined;
       const appointments = await prismaClient.appointments.findMany({
         where: {
           healthProviderID: customReq.user.id,
@@ -43,6 +45,7 @@ healthProvider.get(
             },
           },
         },
+        take: limit,
       });
       if (!appointments) {
         return res
