@@ -40,7 +40,6 @@ const fetchAppointments = async () => {
 
 const AppointmentsDash = async () => {
   const appointments: AppointmentDetails[] = await fetchAppointments();
-  console.log(appointments);
   return (
     <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-1/2">
       {appointments && (

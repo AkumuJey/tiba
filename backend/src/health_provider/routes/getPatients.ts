@@ -34,6 +34,7 @@ getPatients.get("/:id", async (req: Request, res: Response) => {
         id: true,
         firstName: true,
         lastName: true,
+        dateOfBirth: true,
         sex: true,
       },
     });
