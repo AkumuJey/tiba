@@ -1,18 +1,14 @@
 "use client";
-
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { LoadingButton } from "@mui/lab";
-import { Container, Grid, TextField, Typography } from "@mui/material";
+import { TextField, Button, Grid, Container, Typography } from "@mui/material";
 
-const CreateLabsPage = () => {
+const HospitalVitalsForm = () => {
   const [formData, setFormData] = useState({
-    bloodSugar: "",
-    cholesterol: "",
-    LDL: "",
-    HDL: "",
-    triglyceride: "",
-    findings: "",
-    labName: "",
+    breathingRate: "",
+    systolicBP: "",
+    diastolicBP: "",
+    pulseRate: "",
+    weightKg: "",
   });
 
   const handleChange = (
@@ -25,21 +21,23 @@ const CreateLabsPage = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
+    // Handle form submission logic
   };
+
   return (
     <Container maxWidth="sm" component={`form`} onSubmit={handleSubmit}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Lab Data Form
+        Hospital Vitals Form
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
             required
             fullWidth
-            name="bloodSugar"
-            label="Blood Sugar"
+            name="breathingRate"
+            label="Breathing Rate"
             type="number"
-            value={formData.bloodSugar}
+            value={formData.breathingRate}
             onChange={handleChange}
             variant="outlined"
           />
@@ -48,10 +46,10 @@ const CreateLabsPage = () => {
           <TextField
             required
             fullWidth
-            name="cholesterol"
-            label="Cholesterol"
+            name="systolicBP"
+            label="Systolic Blood Pressure"
             type="number"
-            value={formData.cholesterol}
+            value={formData.systolicBP}
             onChange={handleChange}
             variant="outlined"
           />
@@ -60,10 +58,10 @@ const CreateLabsPage = () => {
           <TextField
             required
             fullWidth
-            name="LDL"
-            label="LDL"
+            name="diastolicBP"
+            label="Diastolic Blood Pressure"
             type="number"
-            value={formData.LDL}
+            value={formData.diastolicBP}
             onChange={handleChange}
             variant="outlined"
           />
@@ -72,10 +70,10 @@ const CreateLabsPage = () => {
           <TextField
             required
             fullWidth
-            name="HDL"
-            label="HDL"
+            name="pulseRate"
+            label="Pulse Rate"
             type="number"
-            value={formData.HDL}
+            value={formData.pulseRate}
             onChange={handleChange}
             variant="outlined"
           />
@@ -84,51 +82,22 @@ const CreateLabsPage = () => {
           <TextField
             required
             fullWidth
-            name="triglyceride"
-            label="Triglyceride"
+            name="weightKg"
+            label="Weight (Kg)"
             type="number"
-            value={formData.triglyceride}
+            value={formData.weightKg}
             onChange={handleChange}
             variant="outlined"
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
-            required
-            fullWidth
-            name="findings"
-            label="Findings"
-            type="text"
-            value={formData.findings}
-            onChange={handleChange}
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            fullWidth
-            name="labName"
-            label="Lab Name"
-            type="text"
-            value={formData.labName}
-            onChange={handleChange}
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth>
             Submit
-          </LoadingButton>
+          </Button>
         </Grid>
       </Grid>
     </Container>
   );
 };
 
-export default CreateLabsPage;
+export default HospitalVitalsForm;
