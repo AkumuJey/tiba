@@ -1,7 +1,26 @@
 "use client";
-import { LoadingButton } from "@mui/lab";
-import { Paper, TextField } from "@mui/material";
-import { FormEvent, useState } from "react";
+import React, { useState } from "react";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  IconButton,
+  InputAdornment,
+  Snackbar,
+  CircularProgress,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import GoogleIcon from "@mui/icons-material/Google";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { z } from "zod";
 
 // types.ts
@@ -52,56 +71,175 @@ const loginFunction = async ({
     console.error("Error logging in:", error);
   }
 };
-export default function Login() {
+
+const theme = createTheme();
+
+const LoginPage = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const result = loginDataSchema.safeParse({ email, password });
-    if (!result.success) {
-      console.error("Validation error:", result.error.errors);
-      alert(
-        "Validation error: " +
-          result.error.errors.map((err) => err.message).join(", ")
-      );
-      return;
-    }
-    await loginFunction(result.data);
-    setLoading(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
   };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setOpen(true);
+    }, 2000); // Simulate a login delay
+    // Handle form submission logic here
+  };
+
+  const handleGoogleLogin = () => {
+    console.log("Google login clicked");
+    // Handle Google login logic here
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <div className="flex justify-center items-center w-full min-h-screen">
-      <Paper
-        elevation={2}
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ padding: "1rem" }}
-        className="flex flex-col gap-[1.5rem] text-black"
-      >
-        <TextField
-          name="email"
-          label="Email"
-          type="email"
-          autoComplete="current-password"
-        />
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-        />
-        <LoadingButton
-          loading={loading}
-          disabled={loading}
-          sx={{ bgcolor: "#D5BDBD" }}
-          type="submit"
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          Sign in
-        </LoadingButton>
-      </Paper>
-    </div>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={handleEmailChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={handlePasswordChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
+              startIcon={loading ? <CircularProgress size={20} /> : null}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              sx={{ mt: 3, mb: 2 }}
+              startIcon={<GoogleIcon />}
+              onClick={handleGoogleLogin}
+            >
+              Sign in with Google
+            </Button>
+          </Box>
+        </Box>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Logged in successfully"
+          action={
+            <>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+              >
+                <CheckCircleIcon />
+              </IconButton>
+            </>
+          }
+          sx={{
+            "& .MuiSnackbarContent-root": {
+              backgroundColor: "green",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+            },
+          }}
+        />
+      </Container>
+    </ThemeProvider>
   );
-}
+};
+
+export default LoginPage;
