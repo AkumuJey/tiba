@@ -1,4 +1,14 @@
-import { Divider, List, ListItem, Paper } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import {
+  Divider,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
 import Link from "next/link";
 
 interface PatientDetails {
@@ -42,34 +52,38 @@ const AppointmentsDash = async () => {
   const appointments: AppointmentDetails[] = await fetchAppointments();
 
   return (
-    <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-1/2">
-      {appointments && (
-        <>
-          {appointments.map((appointment, index) => (
-            <>
-              <Link
-                href={`/patients/${appointment.patientID}/appointments/${appointment.id}/`}
-                key={appointment.id}
-                className="w-full h-full"
-              >
-                <ListItem className="flex w-full justify-between hover:bg-[#C1BABA]">
-                  <div className="w-[10%]">{appointment.id}</div>
-                  <div className="w-[70%]">
-                    {appointment.patient.firstName +
-                      " " +
-                      appointment.patient.lastName}
-                  </div>
-                  <div className="w-[20%]">{appointment.venue}</div>
+    <>
+      {/* Appointments */}
+      <Grid item xs={12} md={6}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Appointments
+          </Typography>
+          <List>
+            {appointments.map((appointment) => (
+              <>
+                <ListItem key={appointment.id}>
+                  <ListItemText
+                    primary={appointment.appointmentTime}
+                    secondary={`Time: ${appointment.appointmentTime}, Venue: ${appointment.venue}`}
+                  />
+                  <IconButton edge="end">
+                    <Edit />
+                  </IconButton>
+                  <IconButton edge="end">
+                    <Delete />
+                  </IconButton>
                 </ListItem>
-              </Link>
-              {index !== appointments.length - 1 && (
-                <Divider variant="middle" component="li" />
-              )}
-            </>
-          ))}
-        </>
-      )}
-    </List>
+                <Divider variant="middle" component="li" key={appointment.id} />
+              </>
+            ))}
+            <ListItem>
+              <Link href="/appointments">Click to view more</Link>
+            </ListItem>
+          </List>
+        </Paper>
+      </Grid>
+    </>
   );
 };
 

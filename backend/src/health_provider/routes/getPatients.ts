@@ -16,6 +16,7 @@ getPatients.get("/", async (req: Request, res: Response) => {
         firstName: true,
         lastName: true,
         sex: true,
+        dateOfBirth: true,
       },
     });
     res.status(200).json({ message: "success", patients });

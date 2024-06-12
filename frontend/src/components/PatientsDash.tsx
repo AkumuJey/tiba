@@ -1,4 +1,12 @@
-import { Divider, List, ListItem, Paper } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
 import Link from "next/link";
 
 const token =
@@ -9,6 +17,7 @@ interface Patient {
   firstName: string;
   lastName: string; // Include lastName to use it in concatenation
   sex: string;
+  dateOfBirth: string;
 }
 const fetchPatients = async () => {
   const response = await fetch("http://localhost:4000/provider/patients/", {
@@ -29,33 +38,37 @@ const fetchPatients = async () => {
 
 const PatientsDash = async () => {
   const patients: Patient[] = await fetchPatients();
+  console.log(patients[1]);
   return (
-    <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-1/4">
-      {patients && (
-        <>
-          {patients.map((patient, index) => (
-            <>
-              <Link
-                href={`/patients/${patient.id}`}
-                key={patient.id}
-                className="w-full h-full"
-              >
-                <ListItem className="flex w-full justify-between hover:bg-[#C1BABA]">
-                  <div className="w-[10%]">{patient.id}</div>
-                  <div className="w-[70%]">
-                    {patient.firstName + " " + patient.lastName}
-                  </div>
-                  <div className="w-[20%]">{patient.sex}</div>
+    <>
+      {/* Patients */}
+      <Grid item xs={12} md={6}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Patients
+          </Typography>
+          <List>
+            {patients.map((patient) => (
+              <>
+                <ListItem key={patient.id}>
+                  <ListItemText
+                    primary={patient.firstName + " " + patient.lastName}
+                    secondary={`Sex: ${patient.sex}, Sex: ${
+                      new Date().getFullYear() -
+                      new Date(patient.dateOfBirth).getFullYear()
+                    } Years`}
+                  />
                 </ListItem>
-              </Link>
-              {index !== patients.length - 1 && (
-                <Divider variant="middle" component="li" />
-              )}
-            </>
-          ))}
-        </>
-      )}
-    </List>
+                <Divider variant="middle" component="li" key={patient.id} />
+              </>
+            ))}
+            <ListItem>
+              <Link href="/patients">Click to view more</Link>
+            </ListItem>
+          </List>
+        </Paper>
+      </Grid>
+    </>
   );
 };
 

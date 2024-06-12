@@ -1,19 +1,17 @@
 import AppointmentsDash from "@/components/Appointments";
 import DashboardProfile from "@/components/DashboardProfile";
 import PatientsDash from "@/components/PatientsDash";
+import { Container } from "@mui/material";
 
 const Dashboard = async () => {
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <div>
-        <DashboardProfile />
-        <div>
-          <PatientsDash />
-          <AppointmentsDash />
-        </div>
-      </div>
-    </div>
+    <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
+      <DashboardProfile />
+      {/* <div> */}
+      <PatientsDash />
+      <AppointmentsDash />
+      {/* </div> */}
+    </Container>
   );
 };
 

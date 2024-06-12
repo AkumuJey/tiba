@@ -16,11 +16,6 @@ interface CustomRequest extends Request {
 }
 const healthProvider = Router();
 healthProvider.use("/patients", [providerAuthMiddleWare], getPatients);
-// healthProvider.use(
-//   "/provider/:patientID",
-//   [providerAuthMiddleWare],
-//   selectedPatients
-// );
 healthProvider.use("/login", providerLoginRoute);
 healthProvider.use("/logout", providerLogoutRoute);
 healthProvider.use("/signup", providerSignupRoute);

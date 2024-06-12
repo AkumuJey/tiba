@@ -1,5 +1,11 @@
-import { CancelOutlined, CheckCircleOutline } from "@mui/icons-material/";
-import { Chip, Paper } from "@mui/material";
+import {
+  CancelOutlined,
+  CheckCircleOutline,
+  Email,
+  Person,
+  VerifiedUser,
+} from "@mui/icons-material/";
+import { Avatar, Box, Chip, Container, Paper, Typography } from "@mui/material";
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
@@ -33,50 +39,37 @@ interface Profile {
 const DashboardProfile = async () => {
   const profile: Profile = await fetchProfile();
   return (
-    <Paper
-      className="flex flex-col gap-3 w-full md:w-2/3 mx-[1rem] md:mx-auto bg-[#D8D9E0] p-[1rem]"
-      elevation={1}
-    >
+    <>
       {profile && (
-        <>
-          <div className="flex">
-            <div className="w-1/2 flex gap-3">
-              <h5>
-                <strong>ID: </strong>
-                {profile.id}
-              </h5>
-              <h5>
-                <strong>Name: </strong>
-                {profile.title +
-                  " " +
-                  profile.firstName +
-                  " " +
-                  profile.lastName}
-              </h5>
-            </div>
-            <div className="w-1/2 flex justify-end">
-              <Chip
-                label={profile.verified ? "Verified" : "Unverified"}
-                color={profile.verified ? "success" : "default"}
-                icon={
-                  profile.verified ? <CheckCircleOutline /> : <CancelOutlined />
-                }
-              />
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <h5>
-              <strong>Email: </strong>
-              {profile.email}
-            </h5>
-            <h5>
-              <strong>Phone no: </strong>
-              {profile.phoneNo}
-            </h5>
-          </div>
-        </>
+        <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
+          {/* Profile Summary */}
+          <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+              <Avatar sx={{ width: 100, height: 100, mr: 4 }}>
+                <Person />
+              </Avatar>
+              <Box>
+                <Typography variant="h4" gutterBottom>
+                  {profile.firstName + " " + profile.lastName}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  <Email sx={{ mr: 1 }} />
+                  {profile.email}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                  <VerifiedUser sx={{ mr: 1 }} />
+                  {profile.verified ? "Verified" : "Not Verified"}
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+        </Container>
       )}
-    </Paper>
+    </>
   );
 };
 
