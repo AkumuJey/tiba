@@ -1,3 +1,17 @@
+import { Edit, Email, Person, Phone, VerifiedUser } from "@mui/icons-material";
+import {
+  Avatar,
+  Box,
+  Container,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
 import React from "react";
 
 const token =
@@ -9,6 +23,7 @@ const fetchProfile = async () => {
       "Content-Type": "application/json",
       authorization: `Bearers ${token}`,
     },
+    next: { revalidate: 0 },
   });
   if (!response.ok) {
     console.log("Failed");
@@ -17,9 +32,133 @@ const fetchProfile = async () => {
   const data = await response.json();
   return data.profile;
 };
+
+interface Profile {
+  createdAt: string;
+  firstName: string;
+  lastName: string;
+  title: string;
+  email: string;
+  phoneNo: string;
+  age: number | null;
+  verified: boolean;
+  subscribed: boolean;
+}
 const Profile = async () => {
-  const profile = await fetchProfile();
-  return <div>Profile</div>;
+  const profile: Profile = await fetchProfile();
+  const {
+    age,
+    createdAt,
+    email,
+    firstName,
+    lastName,
+    phoneNo,
+    subscribed,
+    title,
+    verified,
+  } = profile;
+  console.log(profile);
+  return (
+    <Container component="main" maxWidth="md" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+          <Avatar sx={{ width: 100, height: 100, mr: 4 }}>
+            {" "}
+            {/* Placeholder Avatar */}
+            <Person />
+          </Avatar>
+          <Box>
+            <Typography variant="h4" gutterBottom>
+              {title} {firstName} {lastName}
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              Joined on {new Date(createdAt).toLocaleDateString()}
+            </Typography>
+          </Box>
+        </Box>
+        <Divider sx={{ mb: 4 }} />
+        <List>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "primary.main" }}>
+                <Email />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Email"
+              secondary={email}
+              primaryTypographyProps={{ variant: "subtitle1" }}
+            />
+            <IconButton edge="end">
+              <Edit />
+            </IconButton>
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "secondary.main" }}>
+                <Phone />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Phone Number"
+              secondary={phoneNo}
+              primaryTypographyProps={{ variant: "subtitle1" }}
+            />
+            <IconButton edge="end">
+              <Edit />
+            </IconButton>
+          </ListItem>
+          {age && (
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: "success.main" }}>
+                  <VerifiedUser />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="Age"
+                secondary={age}
+                primaryTypographyProps={{ variant: "subtitle1" }}
+              />
+              <IconButton edge="end">
+                <Edit />
+              </IconButton>
+            </ListItem>
+          )}
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "warning.main" }}>
+                <VerifiedUser />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Verified"
+              secondary={verified ? "Yes" : "No"}
+              primaryTypographyProps={{ variant: "subtitle1" }}
+            />
+            <IconButton edge="end">
+              <Edit />
+            </IconButton>
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "info.main" }}>
+                <VerifiedUser />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Subscribed"
+              secondary={subscribed ? "Yes" : "No"}
+              primaryTypographyProps={{ variant: "subtitle1" }}
+            />
+            <IconButton edge="end">
+              <Edit />
+            </IconButton>
+          </ListItem>
+        </List>
+      </Paper>
+    </Container>
+  );
 };
 
 export default Profile;

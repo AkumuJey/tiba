@@ -15,13 +15,16 @@ providerProfile.get("/", async (req: Request, res: Response) => {
         id: customReq.user.id,
       },
       select: {
-        id: true,
+        createdAt: true,
         firstName: true,
         lastName: true,
+        title: true,
         email: true,
         phoneNo: true,
-        title: true,
+        age: true,
         verified: true,
+        subscribed: true,
+        password: false,
       },
     });
     res.status(200).json({ message: "success", profile });
