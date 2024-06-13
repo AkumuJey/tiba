@@ -3,12 +3,6 @@ import { LoadingButton } from "@mui/lab";
 import { Grid, Paper, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 
-interface Appointment {
-  venue: string;
-  appointmentTime: string;
-  amount: number;
-  description?: string | undefined;
-}
 interface AppointmentData {
   venue: string;
   appointmentTime: string;

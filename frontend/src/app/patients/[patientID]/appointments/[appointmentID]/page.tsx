@@ -19,6 +19,20 @@ interface AppointmentDetails {
   patient: PatientDetails;
 }
 
+const formatForInput = (isoString: string) => {
+  const date = new Date(isoString);
+
+  const pad = (number: number) => (number < 10 ? `0${number}` : number);
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // Months are zero-based
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
@@ -54,7 +68,6 @@ const SingleAppointment = async ({
     appointmentID
   );
   const { patient } = appointment;
-  // console.log(appointment);
   return (
     <Paper elevation={2} className="w-full max-w-lg mx-auto p-6 my-4">
       <Typography variant="h6" component="div" className="mb-4 text-center">
@@ -107,7 +120,7 @@ const SingleAppointment = async ({
           pathname: `/patients/${appointment.patientID}/appointments/${appointment.id}/edit`,
           query: {
             venue: appointment.venue,
-            appointmentTime: appointment.appointmentTime,
+            appointmentTime: formatForInput(appointment.appointmentTime),
             amount: appointment.amount,
             description: appointment.description,
           },
