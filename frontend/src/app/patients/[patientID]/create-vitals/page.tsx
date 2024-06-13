@@ -1,31 +1,71 @@
 "use client";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { TextField, Button, Grid, Container, Typography } from "@mui/material";
+import { Button, Grid, Container, Typography, TextField } from "@mui/material";
+
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+
+interface VitalsResults {
+  breathingRate: number;
+  systolicBP: number;
+  diastolicBP: number;
+  pulseRate: number;
+  weightKg: number;
+}
+
+const addVitalsResults = async ({
+  patientID,
+  vitals,
+}: {
+  patientID: number;
+  vitals: VitalsResults;
+}) => {
+  const response = await fetch(
+    `http://localhost:4000/provider/${patientID}/vitals/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(vitals),
+    }
+  );
+  if (!response.ok) {
+    console.log("Failed", response);
+    return;
+  }
+  const data = await response.json();
+  return data;
+};
 
 const HospitalVitalsForm = () => {
-  const [formData, setFormData] = useState({
-    breathingRate: "",
-    systolicBP: "",
-    diastolicBP: "",
-    pulseRate: "",
-    weightKg: "",
+  const [formData, setFormData] = useState<VitalsResults>({
+    breathingRate: 0,
+    systolicBP: 0,
+    diastolicBP: 0,
+    pulseRate: 0,
+    weightKg: 0,
   });
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: Number(value), // Convert to number
+    }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
+    const results = await addVitalsResults({ patientID: 1, vitals: formData });
+    console.log(results);
     // Handle form submission logic
   };
 
   return (
-    <Container maxWidth="sm" component={`form`} onSubmit={handleSubmit}>
+    <Container maxWidth="sm" component="form" onSubmit={handleSubmit}>
       <Typography variant="h4" component="h1" gutterBottom>
         Hospital Vitals Form
       </Typography>
