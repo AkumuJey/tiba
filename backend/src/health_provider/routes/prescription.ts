@@ -55,8 +55,7 @@ prescription.post("/", async (req: Request, res: Response) => {
 
 prescription.get("/", async (req: Request, res: Response) => {
   try {
-    const customReq = req as CustomRequest;
-    const patientID = parseInt(customReq.params.id);
+    const patientID = parseInt(req.params.patientID, 10);
     const prescriptions = await prismaClient.prescription.findMany({
       where: { patientID },
       include: {
@@ -71,6 +70,7 @@ prescription.get("/", async (req: Request, res: Response) => {
     }
     return res.status(201).json({ prescriptions });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error, message: "Failed to fetch prescriptions" });
   }
 });

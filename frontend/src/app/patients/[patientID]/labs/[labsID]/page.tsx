@@ -11,9 +11,15 @@ interface VitalsResults {
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
-const fetchLabResults = async (patientID: string) => {
+const fetchLabResults = async ({
+  patientID,
+  labsID,
+}: {
+  patientID: string;
+  labsID: string;
+}) => {
   const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/labs/`,
+    `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
     {
       method: "GET",
       headers: {
@@ -30,14 +36,15 @@ const fetchLabResults = async (patientID: string) => {
   const data = await response.json();
   return data;
 };
-const LabResultsPage = async ({
+const SingleLabResultPage = async ({
   params,
 }: {
-  params: { patientID: string };
+  params: { patientID: string; labsID: string };
 }) => {
-  const results = await fetchLabResults(params.patientID);
+  const { patientID, labsID } = params;
+  const results = await fetchLabResults({ labsID, patientID });
   console.log(results);
-  return <div>LabResultsPage</div>;
+  return <div>SingleLabResultPage</div>;
 };
 
-export default LabResultsPage;
+export default SingleLabResultPage;

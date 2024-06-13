@@ -49,6 +49,7 @@ history.get("/", async (req: Request, res: Response) => {
       include: {
         HospitalLabs: true,
         HospitalVitals: true,
+        Prescription: true,
       },
       orderBy: {
         createdAt: "desc",

@@ -42,7 +42,6 @@ labs.get("/", async (req: Request, res: Response) => {
     const hospitalLabsResultsList = await prismaClient.hospitalLabs.findMany({
       where: {
         patientID,
-        healthProviderID: customReq.user.id,
       },
       orderBy: {
         createdAt: "desc",

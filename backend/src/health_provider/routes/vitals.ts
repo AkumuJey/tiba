@@ -30,12 +30,46 @@ vitals.post("/", async (req: Request, res: Response) => {
   }
 });
 
+vitals.get("/", async (req: Request, res: Response) => {
+  try {
+    console.log("got here");
+    const patientID = parseInt(req.params.patientID, 10);
+    console.log("Patient: ", patientID);
+    const hospitalVitalsList = await prismaClient.hospitalVitals.findMany({
+      where: {
+        patientID,
+      },
+    });
+    if (!hospitalVitalsList) {
+      return res.status(400).json({ message: "Failed to fetch vitals" });
+    }
+    res.status(201).json({ hospitalVitalsList });
+  } catch (error) {
+    return res.status(400).json({ message: "Failed to fetch vitals", error });
+  }
+});
+vitals.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const patientID = parseInt(req.params.patientID, 10);
+    const id = parseInt(req.params.id);
+    const hospitalVitals = await prismaClient.hospitalVitals.findUniqueOrThrow({
+      where: {
+        id,
+        patientID,
+      },
+    });
+    res.status(201).json({ message: "Success", hospitalVitals });
+  } catch (error) {
+    return res.status(400).json({ message: "Failed to fetch vitals", error });
+  }
+});
+
 vitals.patch("/:id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
     const data = HospitalVitalsSchema.parse(req.body);
-    const id = parseInt(req.params.id);
+    const id = parseInt(customReq.params.id);
     const newHospitalVitals = await prismaClient.hospitalVitals.update({
       where: {
         id,

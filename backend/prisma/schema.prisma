@@ -98,6 +98,7 @@ model MedicalHistory {
   patient             Patient            @relation(fields: [patientID], references: [id])
   HospitalVitals      HospitalVitals[]
   HospitalLabs        HospitalLabs[]
+  Prescription        Prescription[]
 
   @@map("medical_history")
 }
@@ -171,16 +172,17 @@ model HomeLabs {
 }
 
 model Prescription {
-  id                   Int                @id @unique @default(autoincrement())
-  createdAt            DateTime           @default(now())
+  id                   Int                  @id @unique @default(autoincrement())
+  createdAt            DateTime             @default(now())
   patientID            Int
   healthcareProviderID Int
-  date                 DateTime           @db.Date
+  medicalHistoryID     Int?
+  date                 DateTime             @db.Date
   instruction          String?
-  patient              Patient            @relation(fields: [patientID], references: [id])
-  healthcareProvider   HealthcareProvider @relation(fields: [healthcareProviderID], references: [id])
-
-  prescriptionDetails PrescriptionDetail[]
+  patient              Patient              @relation(fields: [patientID], references: [id])
+  healthcareProvider   HealthcareProvider   @relation(fields: [healthcareProviderID], references: [id])
+  medicalHistory       MedicalHistory?      @relation(fields: [medicalHistoryID], references: [id], onDelete: Cascade)
+  prescriptionDetails  PrescriptionDetail[]
 
   @@map("prescription")
 }

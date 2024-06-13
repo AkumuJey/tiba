@@ -79,9 +79,15 @@ const prescription = {
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
-const fetchHistories = async (patientID: string) => {
+const fetchHistories = async ({
+  patientID,
+  medicalHistorID,
+}: {
+  patientID: string;
+  medicalHistorID: string;
+}) => {
   const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/histories/`,
+    `http://localhost:4000/provider/${patientID}/histories/${medicalHistorID}`,
     {
       method: "GET",
       headers: {
@@ -99,13 +105,13 @@ const fetchHistories = async (patientID: string) => {
   return data;
 };
 
-const MedicalHistoriesPage = async ({
+const SingleMedicalHistoryPage = async ({
   params,
 }: {
-  params: { patientID: string };
+  params: { patientID: string; medicalHistorID: string };
 }) => {
-  const { patientID } = params;
-  const results = await fetchHistories(patientID);
+  const { patientID, medicalHistorID } = params;
+  const results = await fetchHistories({ patientID, medicalHistorID });
   console.log(results);
   return (
     <Container component="main" maxWidth="md" sx={{ mt: 4 }}>
@@ -369,4 +375,4 @@ const MedicalHistoriesPage = async ({
   );
 };
 
-export default MedicalHistoriesPage;
+export default SingleMedicalHistoryPage;

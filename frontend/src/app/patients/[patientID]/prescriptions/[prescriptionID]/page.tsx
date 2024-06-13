@@ -1,19 +1,17 @@
 import React from "react";
 
-interface VitalsResults {
-  breathingRate: number;
-  systolicBP: number;
-  diastolicBP: number;
-  pulseRate: number;
-  weightKg: number;
-}
-
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
-const fetchLabResults = async (patientID: string) => {
+const fetchPrescriptions = async ({
+  patientID,
+  prescriptionID,
+}: {
+  patientID: string;
+  prescriptionID: string;
+}) => {
   const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/labs/`,
+    `http://localhost:4000/provider/${patientID}/prescription/${prescriptionID}`,
     {
       method: "GET",
       headers: {
@@ -30,14 +28,16 @@ const fetchLabResults = async (patientID: string) => {
   const data = await response.json();
   return data;
 };
-const LabResultsPage = async ({
+
+const SinglePrescriptionsPage = async ({
   params,
 }: {
-  params: { patientID: string };
+  params: { patientID: string; prescriptionID: string };
 }) => {
-  const results = await fetchLabResults(params.patientID);
+  const { patientID, prescriptionID } = params;
+  const results = await fetchPrescriptions({ patientID, prescriptionID });
   console.log(results);
-  return <div>LabResultsPage</div>;
+  return <div>SinglePrescriptionsPage</div>;
 };
 
-export default LabResultsPage;
+export default SinglePrescriptionsPage;
