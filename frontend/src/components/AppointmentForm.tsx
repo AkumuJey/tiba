@@ -9,8 +9,50 @@ interface Appointment {
   amount: number;
   description?: string | undefined;
 }
+interface AppointmentData {
+  venue: string;
+  appointmentTime: string;
+  amount: string;
+  description?: string | undefined;
+}
 
-const AppointmentForm = ({ appointment }: { appointment?: Appointment }) => {
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+
+const bookAppointments = async ({
+  patientID,
+  details,
+}: {
+  patientID: number;
+  details: AppointmentData;
+}) => {
+  const response = await fetch(
+    `http://localhost:4000/provider/${patientID}/appointments/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearers ${token}`,
+      },
+      body: JSON.stringify({
+        ...details,
+        amount: parseInt(details.amount, 10),
+      }),
+    }
+  );
+  if (!response.ok) {
+    console.log("Failed");
+    return;
+  }
+  const data = await response.json();
+  return data;
+};
+
+const AppointmentForm = ({
+  appointment,
+}: {
+  appointment?: AppointmentData;
+}) => {
   const initialAppointment = {
     venue: appointment?.venue || "",
     appointmentTime: appointment?.appointmentTime || "",
@@ -28,9 +70,14 @@ const AppointmentForm = ({ appointment }: { appointment?: Appointment }) => {
       [name]: value,
     }));
   };
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formState);
+    const result = await bookAppointments({
+      patientID: 2,
+      details: formState as AppointmentData,
+    });
+    console.log(result);
   };
   return (
     <Paper
@@ -89,7 +136,7 @@ const AppointmentForm = ({ appointment }: { appointment?: Appointment }) => {
             required
           />
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={12}>
           <LoadingButton
             type="submit"
             variant="contained"

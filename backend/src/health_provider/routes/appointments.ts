@@ -10,6 +10,11 @@ interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 
+const convertToISO = (dateTimeString: string) => {
+  const date = new Date(dateTimeString);
+  return date.toISOString();
+};
+
 const appointments = Router({ mergeParams: true });
 
 appointments.post("/", async (req: Request, res: Response) => {
@@ -18,7 +23,12 @@ appointments.post("/", async (req: Request, res: Response) => {
     const patientID = parseInt(customReq.params.patientID, 10);
     const data = AppointmentSchema.parse(customReq.body);
     const appointment = await prismaClient.appointments.create({
-      data: { ...data, healthProviderID: customReq.user.id, patientID },
+      data: {
+        ...data,
+        appointmentTime: convertToISO(data.appointmentTime),
+        healthProviderID: customReq.user.id,
+        patientID,
+      },
     });
 
     if (!appointment) {
@@ -80,7 +90,10 @@ appointments.patch("/", async (req: Request, res: Response) => {
     const data = UpdateAppointmentSchema.parse(customReq.body);
     const updatedAppointment = await prismaClient.appointments.update({
       where: { id, healthProviderID: customReq.user.id, patientID },
-      data,
+      data: {
+        ...data,
+        appointmentTime: convertToISO(data?.appointmentTime as string),
+      },
     });
     if (!updatedAppointment) {
       return res.status(400).json({ message: "Failed to update" });

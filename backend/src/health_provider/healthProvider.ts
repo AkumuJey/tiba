@@ -9,7 +9,6 @@ import {
 import { prismaClient } from "../server";
 import getPatients from "./routes/getPatients";
 import providerProfile from "./routes/providerProfile";
-import selectedPatients from "./schemas/selectedPatients";
 
 interface CustomRequest extends Request {
   user: HealthcareProvider;

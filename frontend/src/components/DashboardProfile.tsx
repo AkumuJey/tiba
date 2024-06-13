@@ -5,7 +5,15 @@ import {
   Person,
   VerifiedUser,
 } from "@mui/icons-material/";
-import { Avatar, Box, Chip, Container, Paper, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Chip,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
@@ -41,7 +49,8 @@ const DashboardProfile = async () => {
   return (
     <>
       {profile && (
-        <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
+        // <Container component="main" maxWidth="lg" sx={{ mt: 4 }} >
+        <Grid item xs={12} md={6}>
           {/* Profile Summary */}
           <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
@@ -67,7 +76,7 @@ const DashboardProfile = async () => {
               </Box>
             </Box>
           </Paper>
-        </Container>
+        </Grid>
       )}
     </>
   );

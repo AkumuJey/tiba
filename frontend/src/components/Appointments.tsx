@@ -18,11 +18,11 @@ interface PatientDetails {
 
 interface AppointmentDetails {
   id: number;
-  createdAt: string; // ISO 8601 date string
+  createdAt: string;
   patientID: number;
   healthProviderID: number;
   venue: string;
-  appointmentTime: string; // ISO 8601 date string
+  appointmentTime: string;
   amount: number;
   description: string;
   patient: PatientDetails;
@@ -31,18 +31,16 @@ interface AppointmentDetails {
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
+const url = "http://localhost:4000/provider/appointments/?limit=5";
 const fetchAppointments = async () => {
-  const response = await fetch(
-    "http://localhost:4000/provider/appointments/?limit=5",
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      next: { revalidate: 0 },
-    }
-  );
+  const response = await fetch("http://localhost:4000/provider/appointments/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearers ${token}`,
+    },
+    next: { revalidate: 0 },
+  });
   if (!response.ok) {
     console.log("Failed");
     return;
@@ -54,6 +52,20 @@ const fetchAppointments = async () => {
 const AppointmentsDash = async () => {
   const appointments: AppointmentDetails[] = await fetchAppointments();
 
+  const formatDateTime = (dateTimeString: string) => {
+    const date = new Date(dateTimeString);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    });
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return { formattedDate, formattedTime };
+  };
   return (
     <>
       {/* Appointments */}
@@ -65,19 +77,30 @@ const AppointmentsDash = async () => {
           <List>
             {appointments.map((appointment) => (
               <>
-                <ListItem key={appointment.id}>
-                  <ListItemText
-                    primary={appointment.appointmentTime}
-                    secondary={`Time: ${appointment.appointmentTime}, Venue: ${appointment.venue}`}
-                  />
-                  <IconButton edge="end">
-                    <Edit />
-                  </IconButton>
-                  <IconButton edge="end">
-                    <Delete />
-                  </IconButton>
-                </ListItem>
-                <Divider variant="middle" component="li" key={appointment.id} />
+                <Link
+                  href={`patients/${appointment.patientID}/appointments/${appointment.id}`}
+                  key={appointment.id}
+                >
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        formatDateTime(appointment.appointmentTime)
+                          .formattedDate
+                      }
+                      secondary={`Time: ${
+                        formatDateTime(appointment.appointmentTime)
+                          .formattedTime
+                      }, Venue: ${appointment.venue}`}
+                    />
+                    <IconButton edge="end">
+                      <Edit />
+                    </IconButton>
+                    <IconButton edge="end">
+                      <Delete />
+                    </IconButton>
+                  </ListItem>
+                  <Divider variant="middle" component="li" />
+                </Link>
               </>
             ))}
             <ListItem>
