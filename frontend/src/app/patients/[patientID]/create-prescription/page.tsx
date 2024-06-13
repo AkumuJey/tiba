@@ -12,11 +12,11 @@ import {
 import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
 
 interface Drug {
-  quantity: number | string;
+  quantity: number;
   units: string;
   route: string;
   drugName: string;
-  durationInDays: number | string;
+  durationInDays: number;
 }
 
 interface FormData {
@@ -25,12 +25,41 @@ interface FormData {
   drugs: Drug[];
 }
 
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+
+const addPrescription = async ({
+  patientID,
+  prescription,
+}: {
+  patientID: number;
+  prescription: FormData;
+}) => {
+  const response = await fetch(
+    `http://localhost:4000/provider/${patientID}/prescription/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearers ${token}`,
+      },
+      body: JSON.stringify(prescription),
+    }
+  );
+  if (!response.ok) {
+    console.log("Failed", response);
+    return;
+  }
+  const data = await response.json();
+  return data;
+};
+
 const CreatePrescriptionPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     date: "",
     instruction: "",
     drugs: [
-      { quantity: "", units: "", route: "", drugName: "", durationInDays: "" },
+      { quantity: 0, units: "", route: "", drugName: "", durationInDays: 0 },
     ],
   });
 
@@ -41,7 +70,11 @@ const CreatePrescriptionPage: React.FC = () => {
   ) => {
     const { value } = e.target;
     const newDrugs = [...formData.drugs];
-    newDrugs[index][field] = value;
+    if (field === "quantity" || field === "durationInDays") {
+      newDrugs[index][field] = Number(value);
+    } else {
+      newDrugs[index][field] = value;
+    }
     setFormData({ ...formData, drugs: newDrugs });
   };
 
@@ -51,11 +84,11 @@ const CreatePrescriptionPage: React.FC = () => {
       drugs: [
         ...formData.drugs,
         {
-          quantity: "",
+          quantity: 0,
           units: "",
           route: "",
           drugName: "",
-          durationInDays: "",
+          durationInDays: 0,
         },
       ],
     });
@@ -74,10 +107,14 @@ const CreatePrescriptionPage: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
-    // Handle form submission logic
+    const results = await addPrescription({
+      patientID: 1,
+      prescription: formData,
+    });
+    console.log("Results: ", results);
   };
 
   return (

@@ -10,7 +10,7 @@ interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 
-const labs = Router();
+const labs = Router({ mergeParams: true });
 
 labs.post("/", async (req: Request, res: Response) => {
   try {

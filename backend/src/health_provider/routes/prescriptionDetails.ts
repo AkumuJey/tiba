@@ -11,7 +11,7 @@ interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 
-const details = Router();
+const details = Router({ mergeParams: true });
 
 details.patch("/", async (req: Request, res: Response) => {
   try {

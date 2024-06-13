@@ -1,11 +1,11 @@
 import { HealthcareProvider } from "@prisma/client";
 import { Request, Response, Router } from "express";
 import { prismaClient } from "../../server";
-import history from "../routes/history";
-import labs from "../routes/labs";
-import prescription from "../routes/prescription";
-import appointments from "../routes/appointments";
-import vitals from "../routes/vitals";
+import history from "./history";
+import labs from "./labs";
+import prescription from "./prescription";
+import appointments from "./appointments";
+import vitals from "./vitals";
 interface CustomRequest extends Request {
   user: HealthcareProvider;
 }

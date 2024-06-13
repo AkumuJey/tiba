@@ -11,14 +11,19 @@ interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 
-const prescription = Router();
+const convertToISO = (dateTimeString: string) => {
+  const date = new Date(dateTimeString);
+  return date.toISOString();
+};
+
+const prescription = Router({ mergeParams: true });
 
 prescription.use("/details", details);
 
 prescription.post("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
-    const patientID = parseInt(customReq.params.id);
+    const patientID = parseInt(customReq.params.patientID);
     const { drugs, ...newPrescription } = PrescriptionSchema.parse(
       customReq.body
     );
@@ -26,6 +31,7 @@ prescription.post("/", async (req: Request, res: Response) => {
       const prescription = await prisma.prescription.create({
         data: {
           ...newPrescription,
+          date: convertToISO(newPrescription.date),
           patientID,
           healthcareProviderID: customReq.user.id,
         },
@@ -112,7 +118,10 @@ prescription.patch("/", async (req: Request, res: Response) => {
 
     const prescription = await prismaClient.prescription.update({
       where: { id, healthcareProviderID: customReq.user.id, patientID },
-      data: updatedPrescription,
+      data: {
+        ...updatedPrescription,
+        date: convertToISO(updatedPrescription?.date as string),
+      },
     });
     if (!prescription) {
       return res.status(400).json({ message: "Failed to update" });
