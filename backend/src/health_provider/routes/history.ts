@@ -10,13 +10,15 @@ interface CustomRequest extends Request {
   user: HealthcareProvider;
 }
 
-const history = Router();
+const history = Router({ mergeParams: true });
 
 history.post("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const patientID = parseInt(req.params.patientID, 10);
     const newData = MedicalHistorySchema.parse(customReq.body);
+    console.log(customReq.user);
+    console.log("New Dat: ", newData);
     const newMedicalHistory = await prismaClient.medicalHistory.create({
       data: {
         ...newData,
@@ -30,6 +32,7 @@ history.post("/", async (req: Request, res: Response) => {
     }
     return res.status(201).json({ newMedicalHistory });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error, message: "Failed to add details" });
   }
 });
