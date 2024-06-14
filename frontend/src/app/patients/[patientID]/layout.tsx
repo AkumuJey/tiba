@@ -1,4 +1,5 @@
-import { Box, Divider, Paper, Typography } from "@mui/material";
+import { Box, Container, Divider, Paper, Typography } from "@mui/material";
+import Link from "next/link";
 import React from "react";
 
 const token =
@@ -9,6 +10,7 @@ interface Patient {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
+  sex: string;
   address: string;
   phoneNumber: string;
   emergencyContactName: string;
@@ -50,23 +52,40 @@ const layout = async ({
     new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
   return (
     <>
-      {/* Patient Details */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          {patient.firstName} {patient.lastName}
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          Age: {age}
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          Address: {patient.address}
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          Last Visit: Today
-        </Typography>
-      </Box>
-      <Divider sx={{ mb: 4 }} />
-      {children}
+      <Container component="main" maxWidth="md" sx={{ mt: 4 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          {/* Patient Details */}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              {patient.firstName} {patient.lastName}
+            </Typography>
+            <div className="flex">
+              <Typography variant="subtitle1" color="textSecondary">
+                Age: {age}
+              </Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                Address: {patient.address}
+              </Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                Last Visit: Today
+              </Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                Sex: {patient.sex}
+              </Typography>
+            </div>
+            <div>
+              <Link href={`/patients/2/`}>Patient Infor</Link>
+              <Link href={`/patients/2/medical-histories`}>Histories</Link>
+              <Link href={`/patients/2/vitals`}>Vitals</Link>
+              <Link href={`/patients/2/labs`}>Labs</Link>
+              <Link href={`/patients/2/prescriptions`}>Prescription</Link>
+              <Link href={`/patients/2/appointments`}>Appointments</Link>
+            </div>
+          </Box>
+          <Divider sx={{ mb: 4 }} />
+          <>{children}</>
+        </Paper>
+      </Container>
     </>
   );
 };

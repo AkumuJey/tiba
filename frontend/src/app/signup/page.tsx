@@ -112,6 +112,11 @@ const Signup = () => {
         style={{
           color: req.test(password, confirmPassword) ? "green" : "red",
         }}
+        className={`text-[10px] ${
+          req.test(password, confirmPassword)
+            ? "text-green-700"
+            : "text-red-600"
+        }`}
       >
         {req.label}
       </li>

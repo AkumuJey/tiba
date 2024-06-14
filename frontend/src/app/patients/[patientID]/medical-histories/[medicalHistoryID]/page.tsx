@@ -114,264 +114,221 @@ const SingleMedicalHistoryPage = async ({
   const results = await fetchHistories({ patientID, medicalHistorID });
   console.log(results);
   return (
-    <Container component="main" maxWidth="md" sx={{ mt: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        {/* Patient Details */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" gutterBottom>
-            {patientDetails.firstName} {patientDetails.lastName}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            Age: {patientDetails.age}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            Address: {patientDetails.address}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            Last Visit: {patientDetails.lastVisit}
-          </Typography>
-        </Box>
-        <Divider sx={{ mb: 4 }} />
+    <>
+      {/* Medical History */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h6" gutterBottom className="flex justify-between">
+          Medical History
+          <IconButton sx={{ ml: 2 }}>
+            <Edit />
+          </IconButton>
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "primary.main" }}>
+                <Info />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Presentation"
+              secondary={medicalHistory.presentation}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "secondary.main" }}>
+                <Description />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Medical History"
+              secondary={medicalHistory.medicalHistory}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "success.main" }}>
+                <Description />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Physical Examination"
+              secondary={medicalHistory.physicalExamination}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "info.main" }}>
+                <Description />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Summary"
+              secondary={medicalHistory.summary}
+            />
+          </ListItem>
+        </List>
+      </Box>
+      <Divider sx={{ mb: 4 }} />
 
-        {/* Medical History */}
-        {/* Medical History */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            className="flex justify-between"
-          >
-            Medical History
-            <IconButton sx={{ ml: 2 }}>
-              <Edit />
-            </IconButton>
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "primary.main" }}>
-                  <Info />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Presentation"
-                secondary={medicalHistory.presentation}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "secondary.main" }}>
-                  <Description />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Medical History"
-                secondary={medicalHistory.medicalHistory}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "success.main" }}>
-                  <Description />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Physical Examination"
-                secondary={medicalHistory.physicalExamination}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "info.main" }}>
-                  <Description />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Summary"
-                secondary={medicalHistory.summary}
-              />
-            </ListItem>
-          </List>
-        </Box>
-        <Divider sx={{ mb: 4 }} />
+      {/* Vitals */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h6" gutterBottom className="flex justify-between">
+          Vitals
+          <IconButton sx={{ ml: 2 }}>
+            <Edit />
+          </IconButton>
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "primary.main" }}>
+                <AccessTime />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Breathing Rate"
+              secondary={vitals.breathingRate}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "secondary.main" }}>
+                <LocalHospital />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Systolic BP" secondary={vitals.systolicBP} />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "success.main" }}>
+                <LocalHospital />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Diastolic BP"
+              secondary={vitals.diastolicBP}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "info.main" }}>
+                <AccessTime />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Pulse Rate" secondary={vitals.pulseRate} />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "warning.main" }}>
+                <Favorite />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
+          </ListItem>
+        </List>
+      </Box>
+      <Divider sx={{ mb: 4 }} />
 
-        {/* Vitals */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            className="flex justify-between"
-          >
-            Vitals
-            <IconButton sx={{ ml: 2 }}>
-              <Edit />
-            </IconButton>
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "primary.main" }}>
-                  <AccessTime />
-                </Avatar>
-              </ListItemAvatar>
+      {/* Labs */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h6" gutterBottom className="flex justify-between">
+          Laboratory Results
+          <IconButton sx={{ ml: 2 }}>
+            <Edit />
+          </IconButton>
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "primary.main" }}>
+                <LocalHospital />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Blood Sugar" secondary={labs.bloodSugar} />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "secondary.main" }}>
+                <LocalHospital />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Cholesterol" secondary={labs.cholesterol} />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "success.main" }}>
+                <LocalHospital />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="LDL" secondary={labs.LDL} />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "info.main" }}>
+                <LocalHospital />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="HDL" secondary={labs.HDL} />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "warning.main" }}>
+                <LocalHospital />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Triglyceride"
+              secondary={labs.triglyceride}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Findings"
+              secondary={labs.findings}
+              secondaryTypographyProps={{ color: "textSecondary" }}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Lab Name"
+              secondary={labs.labName}
+              secondaryTypographyProps={{ color: "textSecondary" }}
+            />
+          </ListItem>
+        </List>
+      </Box>
+      <Divider sx={{ mb: 4 }} />
+      {/* Prescription */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h6" gutterBottom className="flex justify-between">
+          Prescription
+          <IconButton sx={{ ml: 2 }}>
+            <Edit />
+          </IconButton>
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemText primary="Date" secondary={prescription.date} />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Instruction"
+              secondary={prescription.instruction || "N/A"}
+            />
+          </ListItem>
+          {prescription.drugs.map((drug, index) => (
+            <ListItem key={index}>
               <ListItemText
-                primary="Breathing Rate"
-                secondary={vitals.breathingRate}
+                primary={`${drug.drugName} (${drug.quantity} ${drug.units})`}
+                secondary={`Route: ${drug.route}, Duration: ${drug.durationInDays} days`}
               />
             </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "secondary.main" }}>
-                  <LocalHospital />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Systolic BP"
-                secondary={vitals.systolicBP}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "success.main" }}>
-                  <LocalHospital />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Diastolic BP"
-                secondary={vitals.diastolicBP}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "info.main" }}>
-                  <AccessTime />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Pulse Rate" secondary={vitals.pulseRate} />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "warning.main" }}>
-                  <Favorite />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
-            </ListItem>
-          </List>
-        </Box>
-        <Divider sx={{ mb: 4 }} />
-
-        {/* Labs */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            className="flex justify-between"
-          >
-            Laboratory Results
-            <IconButton sx={{ ml: 2 }}>
-              <Edit />
-            </IconButton>
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "primary.main" }}>
-                  <LocalHospital />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Blood Sugar" secondary={labs.bloodSugar} />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "secondary.main" }}>
-                  <LocalHospital />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Cholesterol"
-                secondary={labs.cholesterol}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "success.main" }}>
-                  <LocalHospital />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="LDL" secondary={labs.LDL} />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "info.main" }}>
-                  <LocalHospital />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="HDL" secondary={labs.HDL} />
-            </ListItem>
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: "warning.main" }}>
-                  <LocalHospital />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary="Triglyceride"
-                secondary={labs.triglyceride}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Findings"
-                secondary={labs.findings}
-                secondaryTypographyProps={{ color: "textSecondary" }}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Lab Name"
-                secondary={labs.labName}
-                secondaryTypographyProps={{ color: "textSecondary" }}
-              />
-            </ListItem>
-          </List>
-        </Box>
-        <Divider sx={{ mb: 4 }} />
-
-        {/* Prescription */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            className="flex justify-between"
-          >
-            Prescription
-            <IconButton sx={{ ml: 2 }}>
-              <Edit />
-            </IconButton>
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemText primary="Date" secondary={prescription.date} />
-            </ListItem>
-            <ListItem>
-              <ListItemText
-                primary="Instruction"
-                secondary={prescription.instruction || "N/A"}
-              />
-            </ListItem>
-            {prescription.drugs.map((drug, index) => (
-              <ListItem key={index}>
-                <ListItemText
-                  primary={`${drug.drugName} (${drug.quantity} ${drug.units})`}
-                  secondary={`Route: ${drug.route}, Duration: ${drug.durationInDays} days`}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Paper>
-    </Container>
+          ))}
+        </List>
+      </Box>
+    </>
   );
 };
 
