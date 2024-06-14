@@ -1,4 +1,28 @@
+import { AccessTime, Edit, Favorite, LocalHospital } from "@mui/icons-material";
+import {
+  Avatar,
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import React from "react";
+
+interface Vitals {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthProviderID: number;
+  medicalHistoryID: number | null;
+  breathingRate: number;
+  systolicBP: number;
+  diastolicBP: number;
+  pulseRate: number;
+  weightKg: number;
+}
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
@@ -25,8 +49,8 @@ const fetchVitalsResults = async ({
     console.log("Failed", response);
     return;
   }
-  const data = await response.json();
-  return data;
+  const { hospitalVitals } = await response.json();
+  return hospitalVitals;
 };
 const SingleVitalsPage = async ({
   params,
@@ -34,9 +58,63 @@ const SingleVitalsPage = async ({
   params: { patientID: string; vitalsID: string };
 }) => {
   const { patientID, vitalsID } = params;
-  const results = await fetchVitalsResults({ patientID, vitalsID });
-  console.log(results);
-  return <div>SingleVitalsPage{patientID + " " + vitalsID}</div>;
+  const vitals: Vitals = await fetchVitalsResults({ patientID, vitalsID });
+  console.log(vitals);
+  return (
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="h6" gutterBottom className="flex justify-between">
+        Vitals
+        <IconButton sx={{ ml: 2 }}>
+          <Edit />
+        </IconButton>
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "primary.main" }}>
+              <AccessTime />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="Breathing Rate"
+            secondary={vitals.breathingRate}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              <LocalHospital />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Systolic BP" secondary={vitals.systolicBP} />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "success.main" }}>
+              <LocalHospital />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Diastolic BP" secondary={vitals.diastolicBP} />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "info.main" }}>
+              <AccessTime />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Pulse Rate" secondary={vitals.pulseRate} />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "warning.main" }}>
+              <Favorite />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
+        </ListItem>
+      </List>
+    </Box>
+  );
 };
 
 export default SingleVitalsPage;

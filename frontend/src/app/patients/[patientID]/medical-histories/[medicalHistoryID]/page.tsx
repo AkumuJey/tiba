@@ -20,13 +20,17 @@ import {
   Info,
   LocalHospital,
 } from "@mui/icons-material";
-const patientDetails = {
-  firstName: "John",
-  lastName: "Doe",
-  age: 45,
-  address: "123 Main St, Anytown, USA",
-  lastVisit: "2024-05-15",
-};
+
+interface MedicalHistory {
+  id: 1;
+  healthProviderID: number | null;
+  createdAt: string;
+  patientID: number;
+  presentation: string;
+  medicalHistory: string;
+  physicalExamination: string;
+  summary: string;
+}
 
 const medicalHistory = {
   presentation: "Patient presented with acute chest pain.",
@@ -229,77 +233,7 @@ const SingleMedicalHistoryPage = async ({
           </ListItem>
         </List>
       </Box>
-      <Divider sx={{ mb: 4 }} />
 
-      {/* Labs */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" gutterBottom className="flex justify-between">
-          Laboratory Results
-          <IconButton sx={{ ml: 2 }}>
-            <Edit />
-          </IconButton>
-        </Typography>
-        <List>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "primary.main" }}>
-                <LocalHospital />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Blood Sugar" secondary={labs.bloodSugar} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "secondary.main" }}>
-                <LocalHospital />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Cholesterol" secondary={labs.cholesterol} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "success.main" }}>
-                <LocalHospital />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="LDL" secondary={labs.LDL} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "info.main" }}>
-                <LocalHospital />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="HDL" secondary={labs.HDL} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "warning.main" }}>
-                <LocalHospital />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary="Triglyceride"
-              secondary={labs.triglyceride}
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemText
-              primary="Findings"
-              secondary={labs.findings}
-              secondaryTypographyProps={{ color: "textSecondary" }}
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemText
-              primary="Lab Name"
-              secondary={labs.labName}
-              secondaryTypographyProps={{ color: "textSecondary" }}
-            />
-          </ListItem>
-        </List>
-      </Box>
-      <Divider sx={{ mb: 4 }} />
       {/* Prescription */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" gutterBottom className="flex justify-between">
