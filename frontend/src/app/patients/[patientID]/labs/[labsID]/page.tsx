@@ -1,13 +1,5 @@
 import React from "react";
 
-interface VitalsResults {
-  breathingRate: number;
-  systolicBP: number;
-  diastolicBP: number;
-  pulseRate: number;
-  weightKg: number;
-}
-
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 

@@ -36,9 +36,15 @@ const formatForInput = (isoString: string) => {
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
-const fetchAppointment = async (patientID: string, id: string) => {
+const fetchAppointment = async ({
+  appointmentID,
+  patientID,
+}: {
+  appointmentID: string;
+  patientID: string;
+}) => {
   const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/appointments/${id}`,
+    `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}`,
     {
       method: "GET",
       headers: {
@@ -62,11 +68,10 @@ const SingleAppointment = async ({
   params: { appointmentID: string; patientID: string };
 }) => {
   const { patientID, appointmentID } = params;
-  console.log(appointmentID);
-  const appointment: AppointmentDetails = await fetchAppointment(
+  const appointment: AppointmentDetails = await fetchAppointment({
+    appointmentID,
     patientID,
-    appointmentID
-  );
+  });
   const { patient } = appointment;
   return (
     <Paper elevation={2} className="w-full max-w-lg mx-auto p-6 my-4">

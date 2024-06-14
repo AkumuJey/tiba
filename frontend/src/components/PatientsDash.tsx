@@ -53,16 +53,18 @@ const PatientsDash = async () => {
           <List>
             {patients.map((patient) => (
               <>
-                <ListItem key={patient.id}>
-                  <ListItemText
-                    primary={patient.firstName + " " + patient.lastName}
-                    secondary={`Sex: ${patient.sex}, Sex: ${
-                      new Date().getFullYear() -
-                      new Date(patient.dateOfBirth).getFullYear()
-                    } Years`}
-                  />
-                </ListItem>
-                <Divider variant="middle" component="li" key={patient.id} />
+                <Link href={`/patients/${patient.id}`} key={patient.id}>
+                  <ListItem>
+                    <ListItemText
+                      primary={patient.firstName + " " + patient.lastName}
+                      secondary={`Sex: ${patient.sex}, Sex: ${
+                        new Date().getFullYear() -
+                        new Date(patient.dateOfBirth).getFullYear()
+                      } Years`}
+                    />
+                  </ListItem>
+                  <Divider variant="middle" component="li" />
+                </Link>
               </>
             ))}
             <ListItem>
