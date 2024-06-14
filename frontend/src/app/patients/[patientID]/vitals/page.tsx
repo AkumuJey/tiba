@@ -1,4 +1,26 @@
+import {
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import Link from "next/link";
 import React from "react";
+
+interface Vitals {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthProviderID: number;
+  medicalHistoryID: number | null;
+  breathingRate: number;
+  systolicBP: number;
+  diastolicBP: number;
+  pulseRate: number;
+  weightKg: number;
+}
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
@@ -19,13 +41,56 @@ const fetchVitalsResults = async (patientID: string) => {
     console.log("Failed", response);
     return;
   }
-  const data = await response.json();
-  return data;
+  const { hospitalVitalsList } = await response.json();
+  return hospitalVitalsList;
+};
+
+const formatDateTime = (dateTimeString: string) => {
+  const date = new Date(dateTimeString);
+  const formattedDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  });
+  const formattedTime = date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  return { formattedDate, formattedTime };
 };
 const VitalsPage = async ({ params }: { params: { patientID: string } }) => {
   const { patientID } = params;
-  const results = await fetchVitalsResults(patientID);
-  return <div>VitalsPage</div>;
+  const hospitalVitalsList: Vitals[] = await fetchVitalsResults(patientID);
+
+  console.log(hospitalVitalsList);
+  return (
+    <Grid item xs={12} md={6}>
+      <Typography variant="h6" gutterBottom>
+        Vitals reading
+      </Typography>
+      <List>
+        {hospitalVitalsList.map((vitals) => (
+          <>
+            <Link
+              href={`/patients/${patientID}/vitals/${vitals.id}`}
+              key={vitals.id}
+            >
+              <ListItem>
+                <ListItemText
+                  primary={`Date: ${
+                    formatDateTime(vitals.createdAt).formattedDate
+                  } Time: ${formatDateTime(vitals.createdAt).formattedTime}`}
+                  secondary={`Display Vitals`}
+                />
+              </ListItem>
+              <Divider variant="middle" component="li" />
+            </Link>
+          </>
+        ))}
+      </List>
+    </Grid>
+  );
 };
 
 export default VitalsPage;

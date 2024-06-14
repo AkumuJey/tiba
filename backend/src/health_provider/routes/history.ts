@@ -46,11 +46,6 @@ history.get("/", async (req: Request, res: Response) => {
         healthProviderID: customReq.user.id,
         patientID,
       },
-      include: {
-        HospitalLabs: true,
-        HospitalVitals: true,
-        Prescription: true,
-      },
       orderBy: {
         createdAt: "desc",
       },
@@ -70,10 +65,6 @@ history.get("/all", async (req: Request, res: Response) => {
     const histories = await prismaClient.medicalHistory.findMany({
       where: {
         patientID,
-      },
-      include: {
-        HospitalLabs: true,
-        HospitalVitals: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -96,6 +87,11 @@ history.get("/:id", async (req: Request, res: Response) => {
     const id = parseInt(customReq.params.id, 10);
     const medicalHistory = await prismaClient.medicalHistory.findUnique({
       where: { id, healthProviderID: customReq.user.id, patientID },
+      include: {
+        HospitalLabs: true,
+        HospitalVitals: true,
+        Prescription: true,
+      },
     });
     if (!medicalHistory) {
       res.status(404).json({ message: "Medical history not found" });

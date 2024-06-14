@@ -74,12 +74,18 @@ const layout = async ({
               </Typography>
             </div>
             <div>
-              <Link href={`/patients/2/`}>Patient Infor</Link>
-              <Link href={`/patients/2/medical-histories`}>Histories</Link>
-              <Link href={`/patients/2/vitals`}>Vitals</Link>
-              <Link href={`/patients/2/labs`}>Labs</Link>
-              <Link href={`/patients/2/prescriptions`}>Prescription</Link>
-              <Link href={`/patients/2/appointments`}>Appointments</Link>
+              <Link href={`/patients/${patientID}/`}>Patient Infor</Link>
+              <Link href={`/patients/${patientID}/medical-histories`}>
+                Histories
+              </Link>
+              <Link href={`/patients/${patientID}/vitals`}>Vitals</Link>
+              <Link href={`/patients/${patientID}/labs`}>Labs</Link>
+              <Link href={`/patients/${patientID}/prescriptions`}>
+                Prescription
+              </Link>
+              <Link href={`/patients/${patientID}/appointments`}>
+                Appointments
+              </Link>
             </div>
           </Box>
           <Divider sx={{ mb: 4 }} />

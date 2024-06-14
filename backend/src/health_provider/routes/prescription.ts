@@ -58,14 +58,11 @@ prescription.get("/", async (req: Request, res: Response) => {
     const patientID = parseInt(req.params.patientID, 10);
     const prescriptions = await prismaClient.prescription.findMany({
       where: { patientID },
-      include: {
-        prescriptionDetails: true,
-      },
       orderBy: {
         createdAt: "desc",
       },
     });
-    if (!prescriptions || prescriptions.length === 0) {
+    if (!prescriptions) {
       return res.status(400).json({ message: "No prescriptions available" });
     }
     return res.status(201).json({ prescriptions });
@@ -80,7 +77,7 @@ prescription.get("/:id", async (req: Request, res: Response) => {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.id);
     const id = parseInt(customReq.params.id, 10);
-    const prescription = await prismaClient.prescription.findFirstOrThrow({
+    const prescription = await prismaClient.prescription.findFirst({
       where: { id, patientID },
       include: {
         prescriptionDetails: true,
