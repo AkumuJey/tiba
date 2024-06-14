@@ -75,15 +75,18 @@ prescription.get("/", async (req: Request, res: Response) => {
 prescription.get("/:id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
-    const patientID = parseInt(customReq.params.id);
+    const patientID = parseInt(customReq.params.patientID);
     const id = parseInt(customReq.params.id, 10);
-    const prescription = await prismaClient.prescription.findFirst({
+    const prescription = await prismaClient.prescription.findUnique({
       where: { id, patientID },
       include: {
         prescriptionDetails: true,
       },
     });
-    return res.status(201).json({ prescription });
+    console.log("Prescription");
+    return res
+      .status(201)
+      .json({ message: "Success", prescription, trivia: "Yes I got here" });
   } catch (error) {
     res.status(400).json({ error, message: "Failed to fetch prescription" });
   }

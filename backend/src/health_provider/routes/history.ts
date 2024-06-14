@@ -82,21 +82,21 @@ history.get("/all", async (req: Request, res: Response) => {
 
 history.get("/:id", async (req: Request, res: Response) => {
   try {
-    const customReq = req as CustomRequest;
     const patientID = parseInt(req.params.patientID, 10);
-    const id = parseInt(customReq.params.id, 10);
+    const id = parseInt(req.params.id, 10);
     const medicalHistory = await prismaClient.medicalHistory.findUnique({
-      where: { id, healthProviderID: customReq.user.id, patientID },
+      where: { id, patientID },
       include: {
         HospitalLabs: true,
         HospitalVitals: true,
         Prescription: true,
       },
     });
+    console.log("History 1: ", medicalHistory);
     if (!medicalHistory) {
       res.status(404).json({ message: "Medical history not found" });
     } else {
-      res.status(200).json(medicalHistory);
+      res.status(200).json({ message: "Success", medicalHistory });
     }
   } catch (error) {
     console.error(error);

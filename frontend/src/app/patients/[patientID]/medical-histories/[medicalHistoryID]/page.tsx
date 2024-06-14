@@ -21,6 +21,44 @@ import {
   LocalHospital,
 } from "@mui/icons-material";
 
+interface Prescription {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthcareProviderID: number;
+  medicalHistoryID: number | null;
+  date: string;
+  instruction: string;
+}
+
+interface Labresults {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthProviderID: number | null;
+  medicalHistoryID: number | null;
+  bloodSugar: number;
+  cholesterol: number;
+  LDL: number;
+  HDL: number;
+  triglyceride: number;
+  findings: string;
+  labName: string;
+}
+
+interface Vitals {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthProviderID: number;
+  medicalHistoryID: number | null;
+  breathingRate: number;
+  systolicBP: number;
+  diastolicBP: number;
+  pulseRate: number;
+  weightKg: number;
+}
+
 interface MedicalHistory {
   id: 1;
   healthProviderID: number | null;
@@ -30,68 +68,23 @@ interface MedicalHistory {
   medicalHistory: string;
   physicalExamination: string;
   summary: string;
+  HospitalLabs: Labresults[] | [];
+  HospitalVitals: Vitals[] | [];
+  Prescription: Prescription[] | [];
 }
-
-const medicalHistory = {
-  presentation: "Patient presented with acute chest pain.",
-  medicalHistory: "Hypertension, Hyperlipidemia.",
-  physicalExamination:
-    "BP: 140/90, Pulse: 78 bpm, Respiration: 16 breaths/min.",
-  summary:
-    "Patient has a history of hypertension and hyperlipidemia. Stable condition on examination.",
-};
-
-const vitals = {
-  breathingRate: 16,
-  systolicBP: 120,
-  diastolicBP: 80,
-  pulseRate: 72,
-  weightKg: 75,
-};
-
-const labs = {
-  bloodSugar: 90,
-  cholesterol: 200,
-  LDL: 120,
-  HDL: 45,
-  triglyceride: 150,
-  findings: "Elevated cholesterol levels",
-  labName: "Standard Labs",
-};
-
-const prescription = {
-  date: "2024-06-10",
-  instruction: "Take with meals",
-  drugs: [
-    {
-      quantity: 30,
-      units: "mg",
-      route: "Oral",
-      drugName: "Aspirin",
-      durationInDays: 10,
-    },
-    {
-      quantity: 20,
-      units: "mg",
-      route: "Oral",
-      drugName: "Atorvastatin",
-      durationInDays: 30,
-    },
-  ],
-};
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
 const fetchHistories = async ({
   patientID,
-  medicalHistorID,
+  medicalHistoryID,
 }: {
   patientID: string;
-  medicalHistorID: string;
+  medicalHistoryID: string;
 }) => {
   const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/histories/${medicalHistorID}`,
+    `http://localhost:4000/provider/${patientID}/histories/${medicalHistoryID}`,
     {
       method: "GET",
       headers: {
@@ -105,21 +98,25 @@ const fetchHistories = async ({
     console.log("Failed", response);
     return;
   }
-  const data = await response.json();
-  return data;
+  const { medicalHistory } = await response.json();
+  return medicalHistory;
 };
 
 const SingleMedicalHistoryPage = async ({
   params,
 }: {
-  params: { patientID: string; medicalHistorID: string };
+  params: { patientID: string; medicalHistoryID: string };
 }) => {
-  const { patientID, medicalHistorID } = params;
-  const results = await fetchHistories({ patientID, medicalHistorID });
-  console.log(results);
+  const { patientID, medicalHistoryID } = params;
+  medicalHistoryID;
+  console.log("PatientID: ", patientID, "ID@: ", medicalHistoryID);
+  const medicalHistory: MedicalHistory = await fetchHistories({
+    patientID,
+    medicalHistoryID,
+  });
+  console.log(medicalHistory);
   return (
     <>
-      {/* Medical History */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" gutterBottom className="flex justify-between">
           Medical History
@@ -172,94 +169,6 @@ const SingleMedicalHistoryPage = async ({
               secondary={medicalHistory.summary}
             />
           </ListItem>
-        </List>
-      </Box>
-      <Divider sx={{ mb: 4 }} />
-
-      {/* Vitals */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" gutterBottom className="flex justify-between">
-          Vitals
-          <IconButton sx={{ ml: 2 }}>
-            <Edit />
-          </IconButton>
-        </Typography>
-        <List>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "primary.main" }}>
-                <AccessTime />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary="Breathing Rate"
-              secondary={vitals.breathingRate}
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "secondary.main" }}>
-                <LocalHospital />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Systolic BP" secondary={vitals.systolicBP} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "success.main" }}>
-                <LocalHospital />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary="Diastolic BP"
-              secondary={vitals.diastolicBP}
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "info.main" }}>
-                <AccessTime />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Pulse Rate" secondary={vitals.pulseRate} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "warning.main" }}>
-                <Favorite />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
-          </ListItem>
-        </List>
-      </Box>
-
-      {/* Prescription */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" gutterBottom className="flex justify-between">
-          Prescription
-          <IconButton sx={{ ml: 2 }}>
-            <Edit />
-          </IconButton>
-        </Typography>
-        <List>
-          <ListItem>
-            <ListItemText primary="Date" secondary={prescription.date} />
-          </ListItem>
-          <ListItem>
-            <ListItemText
-              primary="Instruction"
-              secondary={prescription.instruction || "N/A"}
-            />
-          </ListItem>
-          {prescription.drugs.map((drug, index) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={`${drug.drugName} (${drug.quantity} ${drug.units})`}
-                secondary={`Route: ${drug.route}, Duration: ${drug.durationInDays} days`}
-              />
-            </ListItem>
-          ))}
         </List>
       </Box>
     </>
