@@ -1,9 +1,9 @@
-import React from "react";
+import PrescriptionForm from "@/components/PrescriptionForm";
 
 const EditPrescription = () => {
   return (
     <>
-      <EditPrescription />
+      <PrescriptionForm />
     </>
   );
 };

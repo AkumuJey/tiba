@@ -46,6 +46,9 @@ appointments.get("/", async (req: Request, res: Response) => {
     const patientID = parseInt(customReq.params.patientID, 10);
     const appointments = await prismaClient.appointments.findMany({
       where: { healthProviderID: customReq.user.id, patientID },
+      include: {
+        patient: true,
+      },
       orderBy: {
         createdAt: "desc",
       },
