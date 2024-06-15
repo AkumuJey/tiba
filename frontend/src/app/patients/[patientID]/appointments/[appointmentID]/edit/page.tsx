@@ -1,6 +1,4 @@
-// "use client";
 import AppointmentForm from "@/components/AppointmentForm";
-import { useRouter } from "next/router";
 
 interface AppointmentSchema {
   venue: string;
@@ -9,16 +7,16 @@ interface AppointmentSchema {
   description?: string | undefined;
 }
 
-// const useAppointmentData = () => {
-//   const router = useRouter()
-//   const query = JSON.parse(router.query)
-// }
-const Page = ({ searchParams }: { searchParams: AppointmentSchema }) => {
+const EditAppointment = ({
+  searchParams,
+}: {
+  searchParams: AppointmentSchema;
+}) => {
   return (
     <>
-      <AppointmentForm appointment={{ ...searchParams }} />
+      <AppointmentForm />
     </>
   );
 };
 
-export default Page;
+export default EditAppointment;
