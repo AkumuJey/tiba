@@ -1,15 +1,14 @@
-import { Edit, LocalHospital } from "@mui/icons-material";
+import LinkToEdit from "@/components/LinkToEdit";
+import { LocalHospital } from "@mui/icons-material";
 import {
   Avatar,
   Box,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Typography,
 } from "@mui/material";
-import React from "react";
 
 interface Labresults {
   id: number;
@@ -54,6 +53,7 @@ const fetchLabResults = async ({
   const { hospitalLabsResults } = await response.json();
   return hospitalLabsResults;
 };
+
 const SingleLabResultPage = async ({
   params,
 }: {
@@ -62,13 +62,12 @@ const SingleLabResultPage = async ({
   const { patientID, labsID } = params;
   const labResults: Labresults = await fetchLabResults({ labsID, patientID });
   console.log(labResults);
+
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" gutterBottom className="flex justify-between">
         Laboratory Results
-        <IconButton sx={{ ml: 2 }}>
-          <Edit />
-        </IconButton>
+        <LinkToEdit path={`/patients/${patientID}/labs/${labsID}/edit`} />
       </Typography>
       <List>
         <ListItem>

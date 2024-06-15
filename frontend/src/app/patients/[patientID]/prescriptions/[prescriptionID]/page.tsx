@@ -1,3 +1,4 @@
+import LinkToEdit from "@/components/LinkToEdit";
 import { Edit } from "@mui/icons-material";
 import {
   Box,
@@ -95,9 +96,9 @@ const SinglePrescriptionsPage = async ({
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" gutterBottom className="flex justify-between">
           Prescription
-          <IconButton sx={{ ml: 2 }}>
-            <Edit />
-          </IconButton>
+          <LinkToEdit
+            path={`/patients/${patientID}/prescriptions/${prescriptionID}/edit`}
+          />
         </Typography>
         <List>
           <ListItem>

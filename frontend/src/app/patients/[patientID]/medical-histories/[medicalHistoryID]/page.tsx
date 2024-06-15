@@ -1,25 +1,14 @@
-import React from "react";
+import LinkToEdit from "@/components/LinkToEdit";
+import { Description, Info } from "@mui/icons-material";
 import {
-  Container,
-  Paper,
+  Avatar,
   Box,
-  Typography,
   List,
   ListItem,
-  ListItemText,
   ListItemAvatar,
-  Avatar,
-  Divider,
-  IconButton,
+  ListItemText,
+  Typography,
 } from "@mui/material";
-import {
-  AccessTime,
-  Description,
-  Edit,
-  Favorite,
-  Info,
-  LocalHospital,
-} from "@mui/icons-material";
 
 interface Prescription {
   id: number;
@@ -120,9 +109,9 @@ const SingleMedicalHistoryPage = async ({
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" gutterBottom className="flex justify-between">
           Medical History
-          <IconButton sx={{ ml: 2 }}>
-            <Edit />
-          </IconButton>
+          <LinkToEdit
+            path={`/patients/${patientID}/medical-histories/${medicalHistoryID}/edit`}
+          />
         </Typography>
         <List>
           <ListItem>

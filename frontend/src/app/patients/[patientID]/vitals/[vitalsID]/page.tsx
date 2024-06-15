@@ -1,15 +1,14 @@
-import { AccessTime, Edit, Favorite, LocalHospital } from "@mui/icons-material";
+import LinkToEdit from "@/components/LinkToEdit";
+import { AccessTime, Favorite, LocalHospital } from "@mui/icons-material";
 import {
   Avatar,
   Box,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Typography,
 } from "@mui/material";
-import React from "react";
 
 interface Vitals {
   id: number;
@@ -64,9 +63,7 @@ const SingleVitalsPage = async ({
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" gutterBottom className="flex justify-between">
         Vitals
-        <IconButton sx={{ ml: 2 }}>
-          <Edit />
-        </IconButton>
+        <LinkToEdit path={`/patients/${patientID}/vitals/${vitalsID}/edit`} />
       </Typography>
       <List>
         <ListItem>
