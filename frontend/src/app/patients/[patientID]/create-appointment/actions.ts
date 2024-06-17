@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
-
-interface AppointmentData {
+export interface AppointmentData {
   venue: string;
   appointmentTime: string;
   amount: string;
   description?: string | undefined;
 }
 
+export interface Params {
+  patientID: string;
+}
+export interface AppointmentCreationProps {
+  params: Params;
+}
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
-const bookAppointment = async ({
+export const bookAppointments = async ({
   patientID,
   details,
 }: {
-  patientID: number;
+  patientID: string;
   details: AppointmentData;
 }) => {
   const response = await fetch(
@@ -32,16 +36,8 @@ const bookAppointment = async ({
     }
   );
   if (!response.ok) {
-    console.log("Failed");
-    return;
+    throw new Error("Falied");
   }
   const data = await response.json();
   return data;
-};
-
-const useBookAppointment = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [appointment, setAppointment] = useState<AppointmentData>();
-  useEffect(() => {});
 };
