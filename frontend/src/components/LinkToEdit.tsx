@@ -4,10 +4,16 @@ import Link from "next/link";
 
 interface PropTypes {
   path: string;
+  query?: any;
 }
-const LinkToEdit = ({ path }: PropTypes) => {
+const LinkToEdit = ({ path, query }: PropTypes) => {
   return (
-    <Link href={path}>
+    <Link
+      href={{
+        pathname: path,
+        query,
+      }}
+    >
       <IconButton sx={{ ml: 2 }}>
         <Edit />
       </IconButton>

@@ -43,8 +43,12 @@ const addLaboratoryResults = async ({
   return data;
 };
 
-const LabsForm = () => {
-  const [formData, setFormData] = useState<LabResults>({
+interface LabFormProps {
+  labResults?: LabResults;
+  handlerFunction: (data: LabResults) => void;
+}
+const LabsForm = ({ labResults, handlerFunction }: LabFormProps) => {
+  const initialResuts = {
     bloodSugar: 0,
     cholesterol: 0,
     LDL: 0,
@@ -52,7 +56,10 @@ const LabsForm = () => {
     triglyceride: 0,
     findings: "",
     labName: "",
-  });
+  };
+  const [formData, setFormData] = useState<LabResults>(
+    labResults ? labResults : initialResuts
+  );
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -60,18 +67,14 @@ const LabsForm = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "findings" || name === "labName" ? value : Number(value),
+      [name]:
+        name === "findings" || name === "labName" ? value : parseInt(value, 10),
     }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    const results = await addLaboratoryResults({
-      patientID: 1,
-      prescription: formData,
-    });
-    console.log("Results: ", results);
+    handlerFunction(formData);
   };
 
   return (
