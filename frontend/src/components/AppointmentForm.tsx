@@ -10,43 +10,14 @@ interface AppointmentData {
   description?: string | undefined;
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-
-const bookAppointments = async ({
-  patientID,
-  details,
-}: {
-  patientID: number;
-  details: AppointmentData;
-}) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/appointments/`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      body: JSON.stringify({
-        ...details,
-        amount: parseInt(details.amount, 10),
-      }),
-    }
-  );
-  if (!response.ok) {
-    console.log("Failed");
-    return;
-  }
-  const data = await response.json();
-  return data;
-};
-
+interface AppointmentFormProps {
+  appointment?: AppointmentData;
+  handlerFunction: (data: AppointmentData) => void;
+}
 const AppointmentForm = ({
   appointment,
-}: {
-  appointment?: AppointmentData;
-}) => {
+  handlerFunction,
+}: AppointmentFormProps) => {
   const initialAppointment = {
     venue: appointment?.venue || "",
     appointmentTime: appointment?.appointmentTime || "",
@@ -54,7 +25,9 @@ const AppointmentForm = ({
     description: appointment?.description || "",
   };
 
-  const [formState, setFormState] = useState(initialAppointment);
+  const [formState, setFormState] = useState(
+    appointment ? appointment : initialAppointment
+  );
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -66,12 +39,7 @@ const AppointmentForm = ({
   };
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formState);
-    const result = await bookAppointments({
-      patientID: 2,
-      details: formState as AppointmentData,
-    });
-    console.log(result);
+    handlerFunction(formState as AppointmentData);
   };
   return (
     <Paper
