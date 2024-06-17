@@ -25,43 +25,25 @@ interface FormData {
   drugs: Drug[];
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+interface PrescriptionFormProps {
+  prescription?: FormData;
+  handlerFunction: (data: FormData) => void;
+}
 
-const addPrescription = async ({
-  patientID,
+const PrescriptionForm = ({
   prescription,
-}: {
-  patientID: number;
-  prescription: FormData;
-}) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/prescription/`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      body: JSON.stringify(prescription),
-    }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
-  }
-  const data = await response.json();
-  return data;
-};
-
-const PrescriptionForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
+  handlerFunction,
+}: PrescriptionFormProps) => {
+  const initialPrescription = {
     date: "",
     instruction: "",
     drugs: [
       { quantity: 0, units: "", route: "", drugName: "", durationInDays: 0 },
     ],
-  });
+  };
+  const [formData, setFormData] = useState<FormData>(
+    prescription ? prescription : initialPrescription
+  );
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -110,11 +92,7 @@ const PrescriptionForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
-    const results = await addPrescription({
-      patientID: 1,
-      prescription: formData,
-    });
-    console.log("Results: ", results);
+    handlerFunction(formData);
   };
 
   return (

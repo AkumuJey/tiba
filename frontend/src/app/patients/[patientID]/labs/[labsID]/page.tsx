@@ -61,27 +61,14 @@ const SingleLabResultPage = async ({
 }) => {
   const { patientID, labsID } = params;
   const labResults: Labresults = await fetchLabResults({ labsID, patientID });
-  console.log(labResults);
 
-  const { bloodSugar, cholesterol, LDL, HDL, triglyceride, findings, labName } =
-    labResults;
-
-  const query = {
-    bloodSugar,
-    cholesterol,
-    LDL,
-    HDL,
-    triglyceride,
-    findings,
-    labName,
-  };
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" gutterBottom className="flex justify-between">
         Laboratory Results
         <LinkToEdit
           path={`/patients/${patientID}/labs/${labsID}/edit`}
-          query={query}
+          query={labResults}
         />
       </Typography>
       <List>

@@ -37,6 +37,7 @@ const addLaboratoryResults = async ({
     return;
   }
   const data = await response.json();
+  console.log(data);
   return data;
 };
 interface CreateLabsProps {

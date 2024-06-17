@@ -111,6 +111,7 @@ const SingleMedicalHistoryPage = async ({
           Medical History
           <LinkToEdit
             path={`/patients/${patientID}/medical-histories/${medicalHistoryID}/edit`}
+            query={medicalHistory}
           />
         </Typography>
         <List>
