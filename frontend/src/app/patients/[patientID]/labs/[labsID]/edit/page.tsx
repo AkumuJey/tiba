@@ -10,24 +10,24 @@ interface LabResults {
   labName: string;
 }
 const token =
-  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+
 const updateLabResults = async ({
   patientID,
   labResults,
   labsID,
 }: {
   patientID: string;
-  labResults: LabResults;
   labsID: string;
+  labResults: LabResults;
 }) => {
-  console.log(labResults);
   const response = await fetch(
     `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
     {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
+        authorization: `Bearers ${token}`,
       },
       body: JSON.stringify(labResults),
     }
@@ -37,9 +37,9 @@ const updateLabResults = async ({
     return;
   }
   const data = await response.json();
+  console;
   return data;
 };
-
 interface EditLabsProps {
   params: { labsID: string; patientID: string };
   searchParams: LabResults;

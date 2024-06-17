@@ -67,14 +67,20 @@ const LabsForm = ({ labResults, handlerFunction }: LabFormProps) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]:
-        name === "findings" || name === "labName" ? value : parseInt(value, 10),
+      [name]: name === "findings" || name === "labName" ? value : Number(value),
     }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handlerFunction(formData);
+    handlerFunction({
+      ...formData,
+      bloodSugar: Number(formData.bloodSugar),
+      cholesterol: Number(formData.cholesterol),
+      HDL: Number(formData.HDL),
+      LDL: Number(formData.LDL),
+      triglyceride: Number(formData.triglyceride),
+    });
   };
 
   return (
