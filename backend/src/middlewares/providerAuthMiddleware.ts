@@ -7,26 +7,28 @@ interface CustomRequest extends Request {
   user?: Patient | HealthcareProvider;
 }
 
-const providerAuthMiddleWare = async (
+const providerAuthMiddleware = async (
   req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
   console.log("Here", req.params);
   const params = req.params;
-  const token = req.headers.authorization?.split(" ")[1];
-  //   if no token response
+  const token = req.cookies.token; // Retrieve the token from cookies
+
+  // If no token, respond with an error
   if (!token) {
     return res.status(401).json({
       error: "Please authenticate using a valid token",
     });
   }
+
   try {
     const payload = jwt.verify(
       token,
       process.env.PROVIDER_JWT_SECRET as string
     ) as any;
-    const user = await prismaClient.patient.findFirst({
+    const user = await prismaClient.healthcareProvider.findFirst({
       where: { id: payload.userId },
     });
     if (!user) {
@@ -38,11 +40,11 @@ const providerAuthMiddleWare = async (
     console.log(req.params);
     next();
   } catch (error) {
-    // return error with status code
+    // Return error with status code
     res.status(401).json({
-      error,
+      error: "Token verification failed",
     });
   }
 };
 
-export default providerAuthMiddleWare;
+export default providerAuthMiddleware;

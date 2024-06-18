@@ -11,7 +11,7 @@ export const patientLoginController = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     let patient = await prismaClient.patient.findFirst({ where: { email } });
     if (!patient) {
-      return res.status(400).json({ message: "User does not exists." });
+      return res.status(400).json({ message: "User does not exist." });
     }
     const checkPassword = compareSync(
       password + process.env.SECRET_HASH_PHRASE,
@@ -24,8 +24,16 @@ export const patientLoginController = async (req: Request, res: Response) => {
       {
         userId: patient.id,
       },
-      process.env.PATIENT_JWT_SECRET as string
+      process.env.PATIENT_JWT_SECRET as string,
+      { expiresIn: "1h" }
     );
+
+    // Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
     return res.status(201).json({
       patient,
       token,
@@ -37,7 +45,9 @@ export const patientLoginController = async (req: Request, res: Response) => {
 };
 
 export const patientLogoutController = (req: Request, res: Response) => {
-  res.send("login");
+  // Clear the cookie
+  res.clearCookie("token");
+  return res.status(200).json({ message: "Logged out successfully" });
 };
 
 export const patientSignupController = async (req: Request, res: Response) => {
@@ -80,6 +90,6 @@ export const patientSignupController = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: error });
+    return res.status(400).json({ error: error });
   }
 };

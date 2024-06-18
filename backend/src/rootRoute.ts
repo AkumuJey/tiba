@@ -1,8 +1,8 @@
 import { Router } from "express";
-import healthProvider from "./src/health_provider/healthProvider";
-import patient from "./src/patient/patient";
-import providerAuthMiddleWare from "./src/middlewares/providerAuthMiddleware";
-import selectedPatients from "./src/health_provider/routes/selectedPatients";
+import healthProvider from "./health_provider/healthProvider";
+import providerAuthMiddleWare from "./middlewares/providerAuthMiddleware";
+import selectedPatients from "./health_provider/routes/selectedPatients";
+import patient from "./patient/patient";
 
 const rootRoute = Router();
 

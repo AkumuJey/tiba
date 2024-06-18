@@ -2,7 +2,6 @@ import { compareSync, hashSync } from "bcrypt";
 import { Request, Response } from "express";
 import { prismaClient } from "../server";
 import * as jwt from "jsonwebtoken";
-
 import { LoginSchema } from "../schema/LoginSchema";
 import { ProviderSignupSchema } from "../schema/ProviderSignUpSchema";
 
@@ -14,34 +13,43 @@ export const providerLoginController = async (req: Request, res: Response) => {
       where: { email },
     });
     if (!provider) {
-      return res.status(400).json({ message: "User does not exists." });
+      return res.status(400).json({ message: "User does not exist." });
     }
     const checkPassword = compareSync(
       password + process.env.SECRET_HASH_PHRASE,
       provider.password
     );
     if (!checkPassword) {
-      res.status(400).json({ message: "Invalid password" });
+      return res.status(400).json({ message: "Invalid password" });
     }
     const token = jwt.sign(
       {
         userId: provider.id,
       },
-      process.env.PROVIDER_JWT_SECRET as string
+      process.env.PROVIDER_JWT_SECRET as string,
+      { expiresIn: "1h" }
     );
+
+    // Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
     return res.status(201).json({
       provider,
       token,
     });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ message: error });
+    return res.status(400).json({ message: error });
   }
-  res.send("login");
 };
 
 export const providerLogoutController = (req: Request, res: Response) => {
-  res.send("login");
+  // Clear the cookie
+  res.clearCookie("token");
+  return res.status(200).json({ message: "Logged out successfully" });
 };
 
 export const providerSignupController = async (req: Request, res: Response) => {
@@ -76,6 +84,6 @@ export const providerSignupController = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: error });
+    return res.status(400).json({ error: error });
   }
 };

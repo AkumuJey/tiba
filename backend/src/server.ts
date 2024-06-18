@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 import cors from "cors";
-import rootRoute from "../rootRoute";
+import rootRoute from "./rootRoute";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -13,6 +14,7 @@ const corsOptions = {
 };
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(cors(corsOptions));
 
