@@ -18,16 +18,13 @@ export const patientLoginController = async (req: Request, res: Response) => {
       patient.password
     );
     if (!checkPassword) {
-      res.status(400).json({ message: "Invalid password" });
+      return res.status(400).json({ message: "Invalid password" });
     }
     const token = jwt.sign(
       {
         userId: patient.id,
       },
       process.env.PATIENT_JWT_SECRET as string
-      // {
-      //   expiresIn: "1hr",
-      // }
     );
     return res.status(201).json({
       patient,
@@ -35,7 +32,7 @@ export const patientLoginController = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ message: error });
+    return res.status(400).json({ message: error });
   }
 };
 

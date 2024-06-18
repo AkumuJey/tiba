@@ -44,8 +44,7 @@ const PatientsDash = async () => {
   console.log(patients[1]);
   return (
     <>
-      {/* Patients */}
-      <Grid item xs={12} md={6}>
+      <Grid className="w-full md:w-1/2">
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h6" gutterBottom>
             Patients

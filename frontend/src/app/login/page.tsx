@@ -53,7 +53,7 @@ const loginFunction = async ({
   password: string;
 }) => {
   try {
-    const response = await fetch("http://localhost:4000/patient/login", {
+    const response = await fetch("http://localhost:4000/provider/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const loginFunction = async ({
       const data: Patient = await response.json();
       console.log(data);
     } else {
-      console.error("Failed to log in:", response.statusText);
+      console.error("Failed to log in:", response);
     }
   } catch (error) {
     console.error("Error logging in:", error);
@@ -96,8 +96,11 @@ const LoginPage = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const data = loginDataSchema.parse({ email, password });
+    await loginFunction(data);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);

@@ -1,26 +1,12 @@
-import React from "react";
+import { AddCircleOutline } from "@mui/icons-material";
 import {
-  Container,
-  Paper,
-  Box,
-  Typography,
+  Divider,
+  Grid,
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Divider,
-  IconButton,
-  Grid,
+  Typography,
 } from "@mui/material";
-import {
-  AccessTime,
-  Description,
-  Edit,
-  Favorite,
-  Info,
-  LocalHospital,
-} from "@mui/icons-material";
 import Link from "next/link";
 
 interface MedicalHistory {
@@ -82,8 +68,15 @@ const MedicalHistoriesPage = async ({
   console.log(histories);
   return (
     <Grid item xs={12} md={6}>
-      <Typography variant="h6" gutterBottom>
+      <Typography
+        variant="h6"
+        gutterBottom
+        className="flex flex-col md:flex-row justify-center"
+      >
         Medical histories
+        <Link href={`/patients/${patientID}/create-medical-histories`}>
+          <AddCircleOutline /> Add Medical History
+        </Link>
       </Typography>
       <List>
         {histories.map((history) => (

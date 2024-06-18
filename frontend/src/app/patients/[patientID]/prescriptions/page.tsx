@@ -1,3 +1,4 @@
+import { AddCircleOutline } from "@mui/icons-material";
 import {
   Divider,
   Grid,
@@ -65,8 +66,15 @@ const PrescriptionsPage = async ({
   console.log(prescriptions);
   return (
     <Grid item xs={12} md={6}>
-      <Typography variant="h6" gutterBottom>
+      <Typography
+        variant="h6"
+        gutterBottom
+        className="flex flex-col md:flex-row justify-center"
+      >
         Prescriptions
+        <Link href={`/patients/${patientID}/create-prescription`}>
+          <AddCircleOutline /> Enter new prescription
+        </Link>
       </Typography>
       <List>
         {prescriptions.map((prescription) => (

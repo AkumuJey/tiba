@@ -1,4 +1,4 @@
-import DeleteMedicalHistory from "@/components/DeletemedicalHistory";
+import DeleteMedicalHistory from "@/components/DeleteHistory";
 import LinkToEdit from "@/components/LinkToEdit";
 import { Description, Info } from "@mui/icons-material";
 import {

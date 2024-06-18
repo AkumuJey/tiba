@@ -126,7 +126,7 @@ history.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
-export const deleteHistoryController = async (req: Request, res: Response) => {
+history.delete("/:id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const patientID = parseInt(req.params.patientID, 10);
@@ -141,6 +141,6 @@ export const deleteHistoryController = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ error, message: "Failed to delete history" });
   }
-};
+});
 
 export default history;

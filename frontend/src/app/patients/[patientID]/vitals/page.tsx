@@ -1,3 +1,4 @@
+import { AddCircleOutline } from "@mui/icons-material";
 import {
   Divider,
   Grid,
@@ -66,8 +67,15 @@ const VitalsPage = async ({ params }: { params: { patientID: string } }) => {
   console.log(hospitalVitalsList);
   return (
     <Grid item xs={12} md={6}>
-      <Typography variant="h6" gutterBottom>
+      <Typography
+        variant="h6"
+        gutterBottom
+        className="flex flex-col md:flex-row justify-center"
+      >
         Vitals reading
+        <Link href={`/patients/${patientID}/create-prescription`}>
+          <AddCircleOutline /> Enter new vitals reading
+        </Link>
       </Typography>
       <List>
         {hospitalVitalsList.map((vitals) => (

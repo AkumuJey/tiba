@@ -1,57 +1,34 @@
-import { Divider, List, ListItem } from "@mui/material";
+import { AddCircleOutline } from "@mui/icons-material";
+import { Divider, List, ListItem, Typography } from "@mui/material";
 import Link from "next/link";
-interface PatientDetails {
-  firstName: string;
-  lastName: string;
-}
+import { useFetchPatientAppointments } from "./actions";
 
-interface AppointmentDetails {
-  id: number;
-  createdAt: string; // ISO 8601 date string
-  patientID: number;
-  healthProviderID: number;
-  venue: string;
-  appointmentTime: string; // ISO 8601 date string
-  amount: number;
-  description: string;
-  patient: PatientDetails;
-}
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-
-const fetchPatientAppointments = async (patientID: string) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/appointments/`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      next: { revalidate: 0 },
-    }
-  );
-  if (!response.ok) {
-    console.log("Failed");
-    return;
-  }
-  const data = await response.json();
-  return data.appointments;
-};
 const AppointmentsPage = async ({
   params,
 }: {
   params: { patientID: string };
 }) => {
   const { patientID } = params;
-  const appointments: AppointmentDetails[] = await fetchPatientAppointments(
-    patientID
-  );
+  const { appointments, error } = await useFetchPatientAppointments(patientID);
   console.log(appointments);
   return (
     <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-2/3">
-      {appointments && (
+      <pre>Here {error}</pre>
+      <Typography
+        variant="h6"
+        gutterBottom
+        className="flex flex-col md:flex-row justify-center"
+      >
+        Appointments
+        <Link href={`/patients/${patientID}/create-appointment`}>
+          <AddCircleOutline /> Book appointment
+        </Link>
+      </Typography>
+      {error && !appointments && <div>Error loaind the appoitnments</div>}
+      {appointments && appointments.length === 0 && (
+        <div>There are no appointments</div>
+      )}
+      {appointments && appointments.length > 0 && !error && (
         <>
           {appointments.map((appointment, index) => (
             <>
