@@ -92,17 +92,17 @@ vitals.delete("/:id", async (req: Request, res: Response) => {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
     const id = parseInt(customReq.params.id, 10);
-    const newHospitalVitals = await prismaClient.hospitalVitals.delete({
+    const deletedVitals = await prismaClient.hospitalVitals.delete({
       where: {
         id,
         healthProviderID: customReq.user.id,
         patientID,
       },
     });
-    if (!newHospitalVitals) {
+    if (!deletedVitals) {
       return res.status(400).json({ message: "Failed to store new vitals" });
     }
-    res.status(201).json({ newHospitalVitals });
+    res.status(201).json({ message: "Deleted", deletedVitals });
   } catch (error) {
     return res.status(400).json({ error });
   }

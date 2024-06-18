@@ -1,3 +1,4 @@
+import DeleteLabResults from "@/components/DeleteLabResults";
 import LinkToEdit from "@/components/LinkToEdit";
 import { LocalHospital } from "@mui/icons-material";
 import {
@@ -71,6 +72,9 @@ const SingleLabResultPage = async ({
           query={labResults}
         />
       </Typography>
+      <div>
+        <DeleteLabResults labsID={labsID} patientID={patientID} />
+      </div>
       <List>
         <ListItem>
           <ListItemAvatar>

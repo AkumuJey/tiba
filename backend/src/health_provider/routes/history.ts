@@ -136,7 +136,7 @@ export const deleteHistoryController = async (req: Request, res: Response) => {
     });
     res
       .status(204)
-      .json({ message: "History deleted successfully", deletedMedicalHistory });
+      .json({ message: "Deleted successfully", deletedMedicalHistory });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error, message: "Failed to delete history" });

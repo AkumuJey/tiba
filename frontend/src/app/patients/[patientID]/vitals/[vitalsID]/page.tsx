@@ -1,5 +1,11 @@
+import DeleteVitals from "@/components/DeleteVitals";
 import LinkToEdit from "@/components/LinkToEdit";
-import { AccessTime, Favorite, LocalHospital } from "@mui/icons-material";
+import {
+  AccessTime,
+  Delete,
+  Favorite,
+  LocalHospital,
+} from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -109,6 +115,12 @@ const SingleVitalsPage = async ({
             <Avatar sx={{ bgcolor: "warning.main" }}>
               <Favorite />
             </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <DeleteVitals patientID={patientID} vitalsID={vitalsID} />
           </ListItemAvatar>
           <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
         </ListItem>

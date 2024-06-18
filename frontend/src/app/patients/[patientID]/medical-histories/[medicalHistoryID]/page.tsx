@@ -1,3 +1,4 @@
+import DeleteMedicalHistory from "@/components/DeletemedicalHistory";
 import LinkToEdit from "@/components/LinkToEdit";
 import { Description, Info } from "@mui/icons-material";
 import {
@@ -114,6 +115,12 @@ const SingleMedicalHistoryPage = async ({
             query={medicalHistory}
           />
         </Typography>
+        <div>
+          <DeleteMedicalHistory
+            medicalHistoryID={medicalHistoryID}
+            patientID={patientID}
+          />
+        </div>
         <List>
           <ListItem>
             <ListItemAvatar>

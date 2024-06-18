@@ -1,3 +1,4 @@
+import DeletePrescription from "@/components/DeletePrescription";
 import LinkToEdit from "@/components/LinkToEdit";
 import { Edit } from "@mui/icons-material";
 import {
@@ -100,6 +101,12 @@ const SinglePrescriptionsPage = async ({
             path={`/patients/${patientID}/prescriptions/${prescriptionID}/edit`}
           />
         </Typography>
+        <div>
+          <DeletePrescription
+            patientID={patientID}
+            prescriptionID={prescriptionID}
+          />
+        </div>
         <List>
           <ListItem>
             <ListItemText

@@ -1,5 +1,6 @@
-import React from "react";
-import { Divider, List, ListItem, Paper, Typography } from "@mui/material";
+import DeleteAppointment from "@/components/DeleteAppointment.tsx";
+import { Edit } from "@mui/icons-material";
+import { IconButton, Paper, Typography } from "@mui/material";
 import Link from "next/link";
 
 interface PatientDetails {
@@ -73,6 +74,7 @@ const SingleAppointment = async ({
     patientID,
   });
   const { patient } = appointment;
+
   return (
     <Paper elevation={2} className="w-full max-w-lg mx-auto p-6 my-4">
       <Typography variant="h6" component="div" className="mb-4 text-center">
@@ -120,20 +122,28 @@ const SingleAppointment = async ({
           Time: {new Date(appointment.createdAt).toLocaleTimeString()}
         </Typography>
       </div>
-      <Link
-        href={{
-          pathname: `/patients/${appointment.patientID}/appointments/${appointment.id}/edit`,
-          query: {
-            venue: appointment.venue,
-            appointmentTime: formatForInput(appointment.appointmentTime),
-            amount: appointment.amount,
-            description: appointment.description,
-          },
-        }}
-        className="block p-2 bg-green-500 text-white text-center rounded hover:bg-green-600 transition"
-      >
-        Edit
-      </Link>
+      <div className="flex justify-between mt-4">
+        <Link
+          href={{
+            pathname: `/patients/${appointment.patientID}/appointments/${appointment.id}/edit`,
+            query: {
+              venue: appointment.venue,
+              appointmentTime: formatForInput(appointment.appointmentTime),
+              amount: appointment.amount,
+              description: appointment.description,
+            },
+          }}
+          className="block p-2 bg-green-500 text-white text-center rounded hover:bg-green-600 transition"
+        >
+          <IconButton>
+            <Edit /> Edit
+          </IconButton>
+        </Link>
+        <DeleteAppointment
+          patientID={patientID}
+          appointmentID={appointmentID}
+        />
+      </div>
     </Paper>
   );
 };

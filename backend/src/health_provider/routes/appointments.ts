@@ -109,11 +109,12 @@ appointments.patch("/:id", async (req: Request, res: Response) => {
   }
 });
 
-appointments.delete("/id", async (req: Request, res: Response) => {
+appointments.delete("/:id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
     const id = parseInt(customReq.params.id, 10);
+    console.log("Hre delete appointment");
     const deletedAppointment = await prismaClient.appointments.delete({
       where: { id, healthProviderID: customReq.user.id, patientID },
     });

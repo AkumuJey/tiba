@@ -97,13 +97,13 @@ prescription.delete("/:id", async (req: Request, res: Response) => {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.id);
     const id = parseInt(customReq.params.id, 10);
-    const prescription = await prismaClient.prescription.delete({
+    const deletedPrrescription = await prismaClient.prescription.delete({
       where: { id, healthcareProviderID: customReq.user.id, patientID },
     });
-    if (!prescription) {
+    if (!deletedPrrescription) {
       return res.status(400).json({ message: "Deletion failed" });
     }
-    return res.status(201).json({ prescription });
+    return res.status(201).json({ message: "Deleted", deletedPrrescription });
   } catch (error) {
     res.status(400).json({ error, message: "Deletion failed" });
   }
