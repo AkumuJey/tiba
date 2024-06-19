@@ -1,6 +1,9 @@
 "use client";
 
 import AppointmentForm from "@/components/AppointmentForm";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface AppointmentData {
   venue: string;
@@ -9,8 +12,35 @@ interface AppointmentData {
   description?: string | undefined;
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+const fetchAppointment = async ({
+  patientID,
+  appointmentID,
+}: {
+  patientID: string;
+  appointmentID: string;
+}) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // Automatically handle cookies
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      return response.data.appointment;
+    } else {
+      console.log("Failed to fetch patient details");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    return null;
+  }
+};
 
 const updateAppointment = async ({
   patientID,
@@ -21,58 +51,83 @@ const updateAppointment = async ({
   details: AppointmentData;
   appointmentID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}/`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
+  try {
+    const response = await axios.patch(
+      `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}/`,
+      {
         ...details,
         amount: parseInt(details.amount, 10),
-      }),
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (response.status !== 200 && response.status !== 201) {
+      console.log("Failed");
+      return;
     }
-  );
-  if (!response.ok) {
-    console.log("Failed");
+
+    const data = response.data;
+    console.log("Response", data);
+    return data;
+  } catch (error) {
+    console.error("Failed to update appointment", error);
     return;
   }
-  const data = await response.json();
-  console.log("Response", data);
-  return data;
 };
 
 interface Params {
   patientID: string;
   appointmentID: string;
 }
+
 interface EditingProps {
-  searchParams: AppointmentData;
   params: Params;
 }
 
-const EditAppointment = ({ searchParams, params }: EditingProps) => {
+const EditAppointment = ({ params }: EditingProps) => {
   const { patientID, appointmentID } = params;
-  console.log(searchParams);
+  const [appointment, setAppointment] = useState<AppointmentData | null>(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedAppointment = await fetchAppointment({
+        patientID,
+        appointmentID,
+      });
+      if (fetchedAppointment) {
+        setAppointment(fetchedAppointment);
+      }
+    };
+
+    fetchData();
+  }, [patientID, appointmentID]);
+
+  const router = useRouter();
   const handleUpdate = async (data: AppointmentData) => {
-    console.log(data);
     const result = await updateAppointment({
       patientID,
       details: data,
       appointmentID,
     });
-    console.log(result);
+
+    if (result) {
+      router.push("/"); // Redirect to the homepage after successful update
+    }
   };
 
   return (
     <>
-      <AppointmentForm
-        handlerFunction={handleUpdate}
-        appointment={searchParams}
-      />
+      {appointment && (
+        <AppointmentForm
+          handlerFunction={handleUpdate}
+          appointment={appointment}
+        />
+      )}
     </>
   );
 };

@@ -1,6 +1,8 @@
 import DeleteAppointment from "@/components/DeleteAppointment.tsx";
 import { Edit } from "@mui/icons-material";
 import { IconButton, Paper, Typography } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 interface PatientDetails {
@@ -34,33 +36,37 @@ const formatForInput = (isoString: string) => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-
 const fetchAppointment = async ({
-  appointmentID,
+  cookieHeader,
   patientID,
+  appointmentID,
 }: {
-  appointmentID: string;
+  cookieHeader: string;
   patientID: string;
+  appointmentID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      next: { revalidate: 0 },
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+
+    if (response.status === (200 || 201)) {
+      return response.data.appointment;
+    } else {
+      console.log("Failed to fetch patient details");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed");
-    return;
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    return [];
   }
-  const data = await response.json();
-  return data.appointment;
 };
 
 const SingleAppointment = async ({
@@ -69,9 +75,12 @@ const SingleAppointment = async ({
   params: { appointmentID: string; patientID: string };
 }) => {
   const { patientID, appointmentID } = params;
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
   const appointment: AppointmentDetails = await fetchAppointment({
     appointmentID,
     patientID,
+    cookieHeader,
   });
   const { patient } = appointment;
 
