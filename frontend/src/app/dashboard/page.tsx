@@ -113,4 +113,9 @@ const Dashboard = async () => {
   );
 };
 
-export default Dashboard;
+const ProtectedDashboard = () => (
+  <ProtectedRoutes>
+    <Dashboard />
+  </ProtectedRoutes>
+);
+export default ProtectedDashboard;

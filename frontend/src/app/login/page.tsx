@@ -73,35 +73,9 @@ const LoginPage = () => {
 
   const context = useAuth();
 
-  const fetchPatients = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:4000/provider/patients/?limit=5",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        return response.data.patients;
-      } else {
-        console.log("Failed to fetch patients");
-        return [];
-      }
-    } catch (error) {
-      console.error("Error fetching patients:", error);
-      return [];
-    }
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = loginDataSchema.parse({ email, password });
-    const people = await fetchPatients();
-    console.log("Rada: ", people);
     context.handleLogin(data.email, data.password);
     setLoading(true);
     setTimeout(() => {
