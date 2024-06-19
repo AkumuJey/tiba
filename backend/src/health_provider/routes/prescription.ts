@@ -103,7 +103,7 @@ prescription.delete("/:id", async (req: Request, res: Response) => {
     if (!deletedPrrescription) {
       return res.status(400).json({ message: "Deletion failed" });
     }
-    return res.status(201).json({ message: "Deleted", deletedPrrescription });
+    return res.status(204).json({ message: "Deleted", deletedPrrescription });
   } catch (error) {
     res.status(400).json({ error, message: "Deletion failed" });
   }

@@ -87,7 +87,7 @@ const fetchHistory = async ({
     );
 
     if (response.status === (200 || 201)) {
-      return response.data.appointment;
+      return response.data.medicalHistory;
     } else {
       console.log("Failed to fetch medical histories");
       return [];

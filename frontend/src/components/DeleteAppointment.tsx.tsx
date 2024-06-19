@@ -1,50 +1,53 @@
 "use client";
 import { Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+interface DeleteAppointmentProps {
+  patientID: string;
+  appointmentID: string;
+}
 
-const deleteLabResults = async ({
+const deleteAppointment = async ({
   patientID,
   appointmentID,
 }: {
   patientID: string;
   appointmentID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
+  try {
+    const response = await axios.delete(
+      `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+    if (response.status === 204) {
+      return response.data.deletedAppointment;
+    } else {
+      console.log("Failed to fetch appointment");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
+  } catch (error) {
+    console.error("Error fetching appointment:", error);
+    return [];
   }
-  const { deletedAppointment } = await response.json();
-  return deletedAppointment;
 };
 
-interface DeleteAppointmentProps {
-  patientID: string;
-  appointmentID: string;
-}
-const DeleteAppointment = ({
+const DeleteAppointmentPage = ({
   appointmentID,
   patientID,
 }: DeleteAppointmentProps) => {
   const router = useRouter();
   const handleDelete = async () => {
-    const results = await deleteLabResults({ appointmentID, patientID });
-    console.log(results);
-    router.replace("/");
+    const results = await deleteAppointment({ appointmentID, patientID });
+    if (results) {
+      router.replace(`/patients/${patientID}/appointments/`);
+    }
   };
   return (
     <IconButton edge="end" onClick={handleDelete}>
@@ -53,4 +56,4 @@ const DeleteAppointment = ({
   );
 };
 
-export default DeleteAppointment;
+export default DeleteAppointmentPage;

@@ -1,14 +1,12 @@
 "use client";
 import { Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 interface DeleteHistoryProps {
   patientID: string;
   medicalHistoryID: string;
 }
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
 const deleteHistory = async ({
   patientID,
@@ -17,34 +15,38 @@ const deleteHistory = async ({
   patientID: string;
   medicalHistoryID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/histories/${medicalHistoryID}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
+  try {
+    const response = await axios.delete(
+      `http://localhost:4000/provider/${patientID}/histories/${medicalHistoryID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+    if (response.status === 204) {
+      return response.data.deletedMedicalHistory;
+    } else {
+      console.log("Failed to fetch appointment");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
+  } catch (error) {
+    console.error("Error fetching appointment:", error);
+    return [];
   }
-  const { deletedMedicalHistory } = await response.json();
-  return deletedMedicalHistory;
 };
 
-const DeleteMedicalHistory = ({
+const DeleteMedicalHistoryPage = ({
   medicalHistoryID,
   patientID,
 }: DeleteHistoryProps) => {
   const router = useRouter();
   const handleDelete = async () => {
     const results = await deleteHistory({ patientID, medicalHistoryID });
-    console.log(results);
-    router.replace("/");
+    if (results) {
+      router.replace(`/patients/${patientID}/medical-histories/`);
+    }
   };
   return (
     <IconButton edge="end" onClick={handleDelete}>
@@ -53,4 +55,4 @@ const DeleteMedicalHistory = ({
   );
 };
 
-export default DeleteMedicalHistory;
+export default DeleteMedicalHistoryPage;

@@ -42,7 +42,7 @@ const fetchHistories = async ({
     );
 
     if (response.status === 200) {
-      return response.data.appointments;
+      return response.data.histories;
     } else {
       console.log("Failed to fetch appointments");
       return [];

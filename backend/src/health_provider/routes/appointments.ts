@@ -135,7 +135,7 @@ appointments.delete("/", async (req: Request, res: Response) => {
       },
     });
     return res
-      .status(200)
+      .status(204)
       .json({ message: "Deleted successfully", deletedAppointment });
   } catch (error) {
     res.status(400).json({ error: error });

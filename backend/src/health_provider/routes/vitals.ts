@@ -102,7 +102,7 @@ vitals.delete("/:id", async (req: Request, res: Response) => {
     if (!deletedVitals) {
       return res.status(400).json({ message: "Failed to store new vitals" });
     }
-    res.status(201).json({ message: "Deleted", deletedVitals });
+    res.status(204).json({ message: "Deleted", deletedVitals });
   } catch (error) {
     return res.status(400).json({ error });
   }

@@ -55,7 +55,7 @@ const fetchPrescriptions = async ({
     );
 
     if (response.status === 200) {
-      return response.data.appointments;
+      return response.data.prescriptions;
     } else {
       console.log("Failed to fetch prescriptions");
       return [];

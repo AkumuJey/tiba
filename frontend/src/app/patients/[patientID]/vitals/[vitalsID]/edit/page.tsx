@@ -35,7 +35,7 @@ const fetchVitals = async ({
     );
 
     if (response.status === 200 || response.status === 201) {
-      return response.data.appointment;
+      return response.data.hospitalVitals;
     } else {
       console.log("Failed to fetch patient details");
       return null;

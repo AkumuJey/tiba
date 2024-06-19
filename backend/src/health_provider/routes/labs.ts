@@ -152,7 +152,7 @@ labs.delete("/:id", async (req: Request, res: Response) => {
     if (!deletedHospitalLabs) {
       return res.status(400).json({ message: "Failed to delete lab results" });
     }
-    return res.status(201).json({ message: "Success", deletedHospitalLabs });
+    return res.status(204).json({ message: "Success", deletedHospitalLabs });
   } catch (error) {
     return res
       .status(400)

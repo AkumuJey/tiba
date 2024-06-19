@@ -1,14 +1,12 @@
 "use client";
 import { Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 interface DeletePrescriptionProps {
   patientID: string;
   prescriptionID: string;
 }
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
 const deletePrescription = async ({
   patientID,
@@ -17,34 +15,38 @@ const deletePrescription = async ({
   patientID: string;
   prescriptionID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/prescription/${prescriptionID}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
+  try {
+    const response = await axios.delete(
+      `http://localhost:4000/provider/${patientID}/prescription/${prescriptionID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+    if (response.status === 204) {
+      return response.data.deletedVitals;
+    } else {
+      console.log("Failed to fetch appointment");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
+  } catch (error) {
+    console.error("Error fetching appointment:", error);
+    return [];
   }
-  const { deletedPrrescription } = await response.json();
-  return deletedPrrescription;
 };
 
-const DeletePrescription = ({
+const DeletePrescriptionPage = ({
   prescriptionID,
   patientID,
 }: DeletePrescriptionProps) => {
   const router = useRouter();
   const handleDelete = async () => {
     const results = await deletePrescription({ patientID, prescriptionID });
-    console.log(results);
-    router.replace("/");
+    if (results) {
+      router.replace(`/patients/${patientID}/prescriptions/`);
+    }
   };
   return (
     <IconButton edge="end" onClick={handleDelete}>
@@ -53,4 +55,4 @@ const DeletePrescription = ({
   );
 };
 
-export default DeletePrescription;
+export default DeletePrescriptionPage;

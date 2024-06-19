@@ -1,14 +1,12 @@
 "use client";
 import { Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 interface DeleteLabsProps {
   patientID: string;
   labsID: string;
 }
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
 const deleteLabResults = async ({
   patientID,
@@ -17,29 +15,34 @@ const deleteLabResults = async ({
   patientID: string;
   labsID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
+  try {
+    const response = await axios.delete(
+      `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+    if (response.status === 204) {
+      return response.data.deletedHospitalLabs;
+    } else {
+      console.log("Failed to fetch appointment");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
+  } catch (error) {
+    console.error("Error fetching appointment:", error);
+    return [];
   }
-  const { deletedHospitalLabs } = await response.json();
-  return deletedHospitalLabs;
 };
-const DeleteLabResults = ({ labsID, patientID }: DeleteLabsProps) => {
+const DeleteLabResultsPage = ({ labsID, patientID }: DeleteLabsProps) => {
   const router = useRouter();
-  const handleDelete = () => {
-    const results = deleteLabResults({ labsID, patientID });
-    router.replace("/");
+  const handleDelete = async () => {
+    const results = await deleteLabResults({ labsID, patientID });
+    if (results) {
+      router.replace(`/patients/${patientID}/labs/`);
+    }
   };
   return (
     <IconButton edge="end" onClick={handleDelete}>
@@ -48,4 +51,4 @@ const DeleteLabResults = ({ labsID, patientID }: DeleteLabsProps) => {
   );
 };
 
-export default DeleteLabResults;
+export default DeleteLabResultsPage;
