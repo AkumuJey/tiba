@@ -97,9 +97,7 @@ const PrescriptionForm = ({
 
   return (
     <Container maxWidth="md">
-      <Typography variant="h4" component="h1" gutterBottom>
-        Prescription Form
-      </Typography>
+      <h4>Prescription Form</h4>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

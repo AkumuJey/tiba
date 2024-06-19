@@ -41,9 +41,7 @@ const VitalsForm = ({ handlerFunction, vitals }: VitalsFormProps) => {
 
   return (
     <Container maxWidth="sm" component="form" onSubmit={handleSubmit}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Hospital Vitals Form
-      </Typography>
+      <h4>Hospital Vitals Form</h4>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField

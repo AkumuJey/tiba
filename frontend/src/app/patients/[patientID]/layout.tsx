@@ -68,28 +68,20 @@ const layout = async ({
   console.log(patient);
   return (
     <>
-      <Container component="main" maxWidth="md" sx={{ mt: 4 }}>
+      <div>
         <Paper elevation={3} sx={{ p: 4 }}>
           {/* Patient Details */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" gutterBottom>
+            <h5>
               {patient.firstName} {patient.lastName}
-            </Typography>
-            <div className="flex">
-              <Typography variant="subtitle1" color="textSecondary">
-                Age: {age}
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                Address: {patient.address}
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                Last Visit: Today
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                Sex: {patient.sex}
-              </Typography>
+            </h5>
+            <div className="flex justify-evenly">
+              <p>Age: {age}</p>
+              <p>Address: {patient.address}</p>
+              <p>Last Visit: Today</p>
+              <p>Sex: {patient.sex}</p>
             </div>
-            <div>
+            <div className="flex justify-evenly">
               <Link href={`/patients/${patientID}/`}>Patient Infor</Link>
               <Link href={`/patients/${patientID}/medical-histories`}>
                 Histories
@@ -107,7 +99,7 @@ const layout = async ({
           <Divider sx={{ mb: 4 }} />
           <>{children}</>
         </Paper>
-      </Container>
+      </div>
     </>
   );
 };

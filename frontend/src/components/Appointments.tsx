@@ -49,9 +49,7 @@ const AppointmentsDash = ({ appointments }: AppointmentsDashProps) => {
   return (
     <Grid className="w-full md:w-1/2">
       <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h6" gutterBottom>
-          Appointments
-        </Typography>
+        <h5>Appointments</h5>
         <List>
           {appointments.map((appointment) => (
             <Link

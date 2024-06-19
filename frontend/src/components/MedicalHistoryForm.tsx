@@ -1,6 +1,6 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { TextField, Button, Grid, Container, Typography } from "@mui/material";
+import { Button, Container, Grid, TextField } from "@mui/material";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 interface MedicalHistory {
   presentation: string;
@@ -41,9 +41,7 @@ const MedicalHistoryForm = ({
 
   return (
     <Container maxWidth="sm" component={`form`} onSubmit={handleSubmit}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Medical History Form
-      </Typography>
+      <h4>Medical History Form</h4>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField

@@ -1,29 +1,30 @@
 "use client";
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import { useAuth } from "@/utils/AuthContextProvider";
 import {
-  Container,
-  TextField,
-  Box,
-  Grid,
-  Typography,
-  Snackbar,
-  IconButton,
-  InputAdornment,
-  Paper,
-  Avatar,
-  CssBaseline,
-} from "@mui/material";
-import {
+  CheckCircle,
   LockOutlined as LockOutlinedIcon,
   Visibility,
   VisibilityOff,
-  CheckCircle,
 } from "@mui/icons-material";
-import { z } from "zod";
 import { LoadingButton } from "@mui/lab";
+import {
+  Avatar,
+  Box,
+  Container,
+  CssBaseline,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { redirect } from "next/navigation";
+import { ChangeEvent, FormEvent, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { useAuth } from "@/utils/AuthContextProvider";
+import { z } from "zod";
 
 const signupDataSchema = z.object({
   title: z.string(),
@@ -124,7 +125,6 @@ const Signup = () => {
       </li>
     ));
   };
-
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
@@ -325,4 +325,20 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+const ControllSignup = ({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) => {
+  const { isLoggedIn } = useAuth();
+  if (!isLoggedIn) {
+    redirect(`/login`);
+  }
+  return <>{children}</>;
+};
+
+export default (
+  <ControllSignup>
+    <>Signup</>
+  </ControllSignup>
+);

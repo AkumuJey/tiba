@@ -13,7 +13,6 @@ const providerAuthMiddleware = async (
   next: NextFunction
 ) => {
   console.log("Here", req.params);
-  const params = req.params;
   const token = req.cookies.token; // Retrieve the token from cookies
 
   // If no token, respond with an error
@@ -31,11 +30,26 @@ const providerAuthMiddleware = async (
     const user = await prismaClient.healthcareProvider.findFirst({
       where: { id: payload.userId },
     });
+
     if (!user) {
       return res.status(401).json({
         error: "Please authenticate using a valid token",
       });
     }
+
+    // Reset the token expiry by issuing a new token
+    const newToken = jwt.sign(
+      { userId: user.id },
+      process.env.PROVIDER_JWT_SECRET as string,
+      { expiresIn: "1h" }
+    );
+
+    // Set the new token in the cookie
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
     req.user = user;
     console.log(req.params);
     next();
