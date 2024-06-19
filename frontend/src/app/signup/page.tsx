@@ -23,6 +23,7 @@ import { z } from "zod";
 import { LoadingButton } from "@mui/lab";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { useAuth } from "@/utils/AuthContextProvider";
 
 const signupDataSchema = z.object({
   title: z.string(),
@@ -66,7 +67,8 @@ const Signup = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const { handleSignup } = useAuth();
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -79,7 +81,7 @@ const Signup = () => {
       return;
     }
 
-    console.log(validatedData);
+    await handleSignup(validatedData);
     setLoading(false);
     setOpenSnackbar(true);
   };

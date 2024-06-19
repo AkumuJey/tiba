@@ -1,4 +1,6 @@
 import { Box, Container, Divider, Paper, Typography } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import React from "react";
 
@@ -16,24 +18,35 @@ interface Patient {
   emergencyContactName: string;
   emergencyContactPhone: string;
 }
-const fetchPatient = async (patientID: string) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/patients/${patientID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      next: { revalidate: 0 },
+const fetchPatient = async ({
+  cookieHeader,
+  patientID,
+}: {
+  cookieHeader: string;
+  patientID: string;
+}) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/patients/${patientID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+
+    if (response.status === (200 || 201)) {
+      return response.data.patient;
+    } else {
+      console.log("Failed to fetch patient details");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed");
-    return;
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    return [];
   }
-  const data = await response.json();
-  return data.patient;
 };
 
 const layout = async ({
@@ -46,10 +59,13 @@ const layout = async ({
   }>;
 }) => {
   const { patientID } = params;
-  const patient: Patient = await fetchPatient(patientID);
-  console.log(patient);
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const patient: Patient = await fetchPatient({ patientID, cookieHeader });
+
   const age =
     new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
+  console.log(patient);
   return (
     <>
       <Container component="main" maxWidth="md" sx={{ mt: 4 }}>

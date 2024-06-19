@@ -13,24 +13,28 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-const fetchProfile = async () => {
-  const response = await fetch("http://localhost:4000/provider/profile/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearers ${token}`,
-    },
-    next: { revalidate: 0 },
-  });
-  if (!response.ok) {
-    console.log("Failed");
-    return;
+const fetchProfile = async (cookieHeader: string) => {
+  try {
+    const response = await axios.get("http://localhost:4000/provider/profile", {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieHeader, // Pass cookies from the request
+      },
+      withCredentials: true, // Automatically sends cookies
+    });
+    if (response.status === 200) {
+      return response.data.profile;
+    } else {
+      console.log("Failed to fetch profile");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return null;
   }
-  const data = await response.json();
-  return data.profile;
 };
 
 interface Profile {
@@ -45,19 +49,11 @@ interface Profile {
   subscribed: boolean;
 }
 const Profile = async () => {
-  const profile: Profile = await fetchProfile();
-  const {
-    age,
-    createdAt,
-    email,
-    firstName,
-    lastName,
-    phoneNo,
-    subscribed,
-    title,
-    verified,
-  } = profile;
-  console.log(profile);
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+
+  const profile: Profile = await fetchProfile(cookieHeader);
+
   return (
     <ProtectedRoutes>
       <Container
@@ -76,10 +72,10 @@ const Profile = async () => {
             </Avatar>
             <Box>
               <Typography variant="h4" gutterBottom>
-                {title} {firstName} {lastName}
+                {profile.title} {profile.firstName} {profile.lastName}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-                Joined on {new Date(createdAt).toLocaleDateString()}
+                Joined on {new Date(profile.createdAt).toLocaleDateString()}
               </Typography>
             </Box>
           </Box>
@@ -93,7 +89,7 @@ const Profile = async () => {
               </ListItemAvatar>
               <ListItemText
                 primary="Email"
-                secondary={email}
+                secondary={profile.email}
                 primaryTypographyProps={{ variant: "subtitle1" }}
               />
               <IconButton edge="end">
@@ -108,14 +104,14 @@ const Profile = async () => {
               </ListItemAvatar>
               <ListItemText
                 primary="Phone Number"
-                secondary={phoneNo}
+                secondary={profile.phoneNo}
                 primaryTypographyProps={{ variant: "subtitle1" }}
               />
               <IconButton edge="end">
                 <Edit />
               </IconButton>
             </ListItem>
-            {age && (
+            {profile.age && (
               <ListItem>
                 <ListItemAvatar>
                   <Avatar sx={{ bgcolor: "success.main" }}>
@@ -124,7 +120,7 @@ const Profile = async () => {
                 </ListItemAvatar>
                 <ListItemText
                   primary="Age"
-                  secondary={age}
+                  secondary={profile.age}
                   primaryTypographyProps={{ variant: "subtitle1" }}
                 />
                 <IconButton edge="end">
@@ -140,7 +136,7 @@ const Profile = async () => {
               </ListItemAvatar>
               <ListItemText
                 primary="Verified"
-                secondary={verified ? "Yes" : "No"}
+                secondary={profile.verified ? "Yes" : "No"}
                 primaryTypographyProps={{ variant: "subtitle1" }}
               />
               <IconButton edge="end">
@@ -155,7 +151,7 @@ const Profile = async () => {
               </ListItemAvatar>
               <ListItemText
                 primary="Subscribed"
-                secondary={subscribed ? "Yes" : "No"}
+                secondary={profile.subscribed ? "Yes" : "No"}
                 primaryTypographyProps={{ variant: "subtitle1" }}
               />
               <IconButton edge="end">

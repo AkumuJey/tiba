@@ -1,7 +1,55 @@
 import { AddCircleOutline } from "@mui/icons-material";
 import { Divider, List, ListItem, Typography } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { useFetchPatientAppointments } from "./actions";
+export interface PatientDetails {
+  firstName: string;
+  lastName: string;
+}
+
+export interface AppointmentDetails {
+  id: number;
+  createdAt: string; // ISO 8601 date string
+  patientID: number;
+  healthProviderID: number;
+  venue: string;
+  appointmentTime: string; // ISO 8601 date string
+  amount: number;
+  description: string;
+  patient: PatientDetails;
+}
+
+const fetchAppointments = async ({
+  cookieHeader,
+  patientID,
+}: {
+  cookieHeader: string;
+  patientID: string;
+}) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/appointments/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+
+    if (response.status === 200) {
+      return response.data.appointments;
+    } else {
+      console.log("Failed to fetch appointments");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    return [];
+  }
+};
 
 const AppointmentsPage = async ({
   params,
@@ -9,11 +57,15 @@ const AppointmentsPage = async ({
   params: { patientID: string };
 }) => {
   const { patientID } = params;
-  const { appointments, error } = await useFetchPatientAppointments(patientID);
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const appointments: AppointmentDetails[] = await fetchAppointments({
+    cookieHeader,
+    patientID,
+  });
   console.log(appointments);
   return (
     <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-2/3">
-      <pre>Here {error}</pre>
       <Typography
         variant="h6"
         gutterBottom
@@ -24,11 +76,10 @@ const AppointmentsPage = async ({
           <AddCircleOutline /> Book appointment
         </Link>
       </Typography>
-      {error && !appointments && <div>Error loaind the appoitnments</div>}
       {appointments && appointments.length === 0 && (
         <div>There are no appointments</div>
       )}
-      {appointments && appointments.length > 0 && !error && (
+      {appointments && appointments.length > 0 && (
         <>
           {appointments.map((appointment, index) => (
             <>

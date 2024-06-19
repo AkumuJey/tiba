@@ -1,32 +1,47 @@
-import React from "react";
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+import axios from "axios";
+import { cookies } from "next/headers";
 
 interface Patient {
   id: number;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
+  sex: string;
+  address: string;
+  phoneNumber: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
 }
-const fetchPatient = async (patientID: string) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/patients/${patientID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      next: { revalidate: 0 },
+
+const fetchPatient = async ({
+  cookieHeader,
+  patientID,
+}: {
+  cookieHeader: string;
+  patientID: string;
+}) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/patients/${patientID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+
+    if (response.status === (200 || 201)) {
+      return response.data.patient;
+    } else {
+      console.log("Failed to fetch patient details");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed");
-    return;
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    return [];
   }
-  const data = await response.json();
-  return data.patient;
 };
 
 export default async function Patient({
@@ -35,10 +50,13 @@ export default async function Patient({
   params: { patientID: string };
 }) {
   const { patientID } = params;
-  const patient: Patient = await fetchPatient(patientID);
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const patient: Patient = await fetchPatient({ patientID, cookieHeader });
 
   const age =
     new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
+  console.log(patient);
   return (
     <div>
       <h2>{patientID}</h2>

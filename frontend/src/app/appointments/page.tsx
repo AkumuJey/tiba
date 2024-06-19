@@ -10,6 +10,8 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 interface PatientDetails {
@@ -29,24 +31,29 @@ interface AppointmentDetails {
   patient: PatientDetails;
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+const fetchAppointments = async (cookieHeader: string) => {
+  try {
+    const response = await axios.get(
+      "http://localhost:4000/provider/appointments/",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
 
-const fetchAppointments = async () => {
-  const response = await fetch("http://localhost:4000/provider/appointments/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearers ${token}`,
-    },
-    next: { revalidate: 0 },
-  });
-  if (!response.ok) {
-    console.log("Failed");
-    return;
+    if (response.status === 200) {
+      return response.data.appointments;
+    } else {
+      console.log("Failed to fetch appointments");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    return [];
   }
-  const data = await response.json();
-  return data.appointments;
 };
 
 const formatDateTime = (dateTimeString: string) => {
@@ -65,7 +72,11 @@ const formatDateTime = (dateTimeString: string) => {
 };
 
 const Appointments = async () => {
-  const appointments: AppointmentDetails[] = await fetchAppointments();
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const appointments: AppointmentDetails[] = await fetchAppointments(
+    cookieHeader
+  );
   return (
     <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
       <Grid item xs={12} md={6}>
