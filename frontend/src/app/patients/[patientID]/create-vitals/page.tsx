@@ -50,7 +50,7 @@ const CreateVitalsPage = ({ params }: CreateVitalsProps) => {
   const router = useRouter();
   const handleNewVitals = async (vitals: VitalsResults) => {
     const result = await addVitalsResults({ vitals, patientID });
-    if (result.id) {
+    if (result) {
       router.push(`/patients/${patientID}/vitals/`);
     }
   };

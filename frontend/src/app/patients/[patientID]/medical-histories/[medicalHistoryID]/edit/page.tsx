@@ -46,18 +46,18 @@ const fetchHistory = async ({
 
 const updateHistory = async ({
   patientID,
-  details,
+  historyUpdate,
   medicalHistoryID,
 }: {
   patientID: string;
-  details: MedicalHistory;
+  historyUpdate: MedicalHistory;
   medicalHistoryID: string;
 }) => {
   try {
     const response = await axios.patch(
       `http://localhost:4000/provider/${patientID}/histories/${medicalHistoryID}`,
       {
-        details,
+        historyUpdate,
       },
       {
         headers: {
@@ -101,21 +101,21 @@ const EditMedicalHistory = ({ params }: EditHistoryProps) => {
   }, [patientID, medicalHistoryID]);
 
   const router = useRouter();
-  const handleUpdate = async (data: MedicalHistory) => {
+  const handleUpdate = async (historyUpdate: MedicalHistory) => {
     const result = await updateHistory({
       patientID,
-      details: data,
+      historyUpdate,
       medicalHistoryID,
     });
 
     if (result) {
-      router.push("/"); // Redirect to the homepage after successful update
+      router.push(`/patients/${patientID}/medical-histories/${result.id}`);
     }
   };
   return (
     <>
       <MedicalHistoryForm
-        handlerFunction={(medicalHistory) => handleUpdate(medicalHistory)}
+        handlerFunction={handleUpdate}
         medHistory={medicalHistory as MedicalHistory}
       />
     </>

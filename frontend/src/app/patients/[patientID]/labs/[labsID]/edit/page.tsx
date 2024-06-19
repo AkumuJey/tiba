@@ -113,7 +113,7 @@ const EditLabResults = ({ params, searchParams }: EditLabsProps) => {
     });
 
     if (result) {
-      router.push("/"); // Redirect to the homepage after successful update
+      router.push(`/patients/${patientID}/labs/${result.id}`); // Redirect to the homepage after successful update
     }
   };
   return (

@@ -116,7 +116,7 @@ const EditAppointment = ({ params }: EditingProps) => {
     });
 
     if (result) {
-      router.push("/"); // Redirect to the homepage after successful update
+      router.push(`/patients/${patientID}/appointments/${result.id}`);
     }
   };
 

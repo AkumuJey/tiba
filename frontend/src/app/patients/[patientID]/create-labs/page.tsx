@@ -2,6 +2,7 @@
 
 import LabsForm from "@/components/LabsForm";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 export interface CreateLabsProps {
   params: { patientID: string };
 }
@@ -17,16 +18,16 @@ export interface LabResults {
 }
 const postLabResults = async ({
   patientID,
-  details,
+  labResults,
 }: {
   patientID: string;
-  details: LabResults;
+  labResults: LabResults;
 }) => {
   try {
     const response = await axios.post(
       `http://localhost:4000/provider/${patientID}/labs/`,
       {
-        details,
+        labResults,
       },
       {
         headers: {
@@ -52,13 +53,17 @@ const postLabResults = async ({
 
 const CreateLabsPage = ({ params }: CreateLabsProps) => {
   const { patientID } = params;
+
+  const router = useRouter();
+  const handleNewLabs = async (labResults: LabResults) => {
+    const result = await postLabResults({ patientID, labResults });
+    if (result) {
+      router.push(`/patients/${patientID}/labs/`);
+    }
+  };
   return (
     <>
-      <LabsForm
-        handlerFunction={(labResults) =>
-          postLabResults({ patientID, details: labResults })
-        }
-      />
+      <LabsForm handlerFunction={handleNewLabs} />
     </>
   );
 };

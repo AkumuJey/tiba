@@ -127,7 +127,9 @@ labs.patch("/:id", async (req: Request, res: Response) => {
     if (!updatedHospitalLabs) {
       return res.status(400).json({ message: "Failed to update lab results" });
     }
-    return res.status(201).json({ message: "Success", updatedHospitalLabs });
+    return res
+      .status(201)
+      .json({ message: "Success", id: updatedHospitalLabs.id });
   } catch (error) {
     return res
       .status(400)

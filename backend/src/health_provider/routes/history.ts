@@ -120,7 +120,7 @@ history.patch("/:id", async (req: Request, res: Response) => {
     if (!updatedHistory) {
       return res.status(400).json({ message: "Failed to add details" });
     }
-    return res.status(201).json({ updatedHistory });
+    return res.status(201).json({ message: "success", id: updatedHistory.id });
   } catch (error) {
     res.status(400).json({ error, message: "Failed to add details" });
   }

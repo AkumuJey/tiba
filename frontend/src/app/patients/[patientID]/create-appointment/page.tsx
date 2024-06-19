@@ -2,6 +2,7 @@
 
 import AppointmentForm from "@/components/AppointmentForm";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 export interface AppointmentData {
   venue: string;
   appointmentTime: string;
@@ -17,17 +18,17 @@ interface AppointmentCreationProps {
 }
 const bookAppointment = async ({
   patientID,
-  details,
+  newAppointment,
 }: {
   patientID: string;
-  details: AppointmentData;
+  newAppointment: AppointmentData;
 }) => {
   try {
     const response = await axios.post(
       `http://localhost:4000/provider/${patientID}/appointments/`,
       {
-        ...details,
-        amount: parseInt(details.amount, 10),
+        ...newAppointment,
+        amount: parseInt(newAppointment.amount, 10),
       },
       {
         headers: {
@@ -53,8 +54,13 @@ const bookAppointment = async ({
 
 const CreateAppointmentsPage = ({ params }: AppointmentCreationProps) => {
   const { patientID } = params;
-  const handlePost = (data: AppointmentData) =>
-    bookAppointment({ patientID, details: data });
+  const router = useRouter();
+  const handlePost = async (newAppointment: AppointmentData) => {
+    const result = await bookAppointment({ patientID, newAppointment });
+    if (result) {
+      router.push(`/patients/${patientID}/appointments/`);
+    }
+  };
   return (
     <>
       <AppointmentForm handlerFunction={handlePost} />
