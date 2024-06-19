@@ -5,11 +5,11 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import React from "react";
 
 interface Labresults {
   id: number;
@@ -26,27 +26,35 @@ interface Labresults {
   labName: string;
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+const fetchLabResults = async ({
+  cookieHeader,
+  patientID,
+}: {
+  cookieHeader: string;
+  patientID: string;
+}) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/labs/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
 
-const fetchLabResults = async (patientID: string) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/labs/`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
+    if (response.status === 200) {
+      return response.data.hospitalLabsResultsList;
+    } else {
+      console.log("Failed to fetch lab results");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
+  } catch (error) {
+    console.error("Error fetching lab results:", error);
+    return [];
   }
-  const { hospitalLabsResultsList } = await response.json();
-  return hospitalLabsResultsList;
 };
 
 const formatDateTime = (dateTimeString: string) => {
@@ -68,10 +76,13 @@ const LabResultsPage = async ({
 }: {
   params: { patientID: string };
 }) => {
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
   const { patientID } = params;
-  const hospitalLabsResultsList: Labresults[] = await fetchLabResults(
-    patientID
-  );
+  const hospitalLabsResultsList: Labresults[] = await fetchLabResults({
+    patientID,
+    cookieHeader,
+  });
   console.log(hospitalLabsResultsList);
   return (
     <Grid item xs={12} md={6}>

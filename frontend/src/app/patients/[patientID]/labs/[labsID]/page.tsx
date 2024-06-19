@@ -10,6 +10,8 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 
 interface Labresults {
   id: number;
@@ -26,42 +28,51 @@ interface Labresults {
   labName: string;
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-
 const fetchLabResults = async ({
+  cookieHeader,
   patientID,
   labsID,
 }: {
+  cookieHeader: string;
   patientID: string;
   labsID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
-    }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
-  }
-  const { hospitalLabsResults } = await response.json();
-  return hospitalLabsResults;
-};
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
 
+    if (response.status === (200 || 201)) {
+      return response.data.hospitalLabsResults;
+    } else {
+      console.log("Failed to fetch patient details");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    return [];
+  }
+};
 const SingleLabResultPage = async ({
   params,
 }: {
   params: { patientID: string; labsID: string };
 }) => {
   const { patientID, labsID } = params;
-  const labResults: Labresults = await fetchLabResults({ labsID, patientID });
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const labResults: Labresults = await fetchLabResults({
+    labsID,
+    patientID,
+    cookieHeader,
+  });
 
   return (
     <Box sx={{ mb: 4 }}>

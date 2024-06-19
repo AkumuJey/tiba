@@ -10,6 +10,8 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 
 interface Prescription {
   id: number;
@@ -63,47 +65,52 @@ interface MedicalHistory {
   Prescription: Prescription[] | [];
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-
-const fetchHistories = async ({
+const fetchHistory = async ({
+  cookieHeader,
   patientID,
   medicalHistoryID,
 }: {
+  cookieHeader: string;
   patientID: string;
   medicalHistoryID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/histories/${medicalHistoryID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
-    }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
-  }
-  const { medicalHistory } = await response.json();
-  return medicalHistory;
-};
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/histories/${medicalHistoryID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
 
+    if (response.status === (200 || 201)) {
+      return response.data.appointment;
+    } else {
+      console.log("Failed to fetch medical histories");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching medical histories:", error);
+    return [];
+  }
+};
 const SingleMedicalHistoryPage = async ({
   params,
 }: {
   params: { patientID: string; medicalHistoryID: string };
 }) => {
   const { patientID, medicalHistoryID } = params;
-  medicalHistoryID;
-  console.log("PatientID: ", patientID, "ID@: ", medicalHistoryID);
-  const medicalHistory: MedicalHistory = await fetchHistories({
-    patientID,
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const medicalHistory: MedicalHistory = await fetchHistory({
     medicalHistoryID,
+    patientID,
+    cookieHeader,
   });
+
   console.log(medicalHistory);
   return (
     <>
@@ -112,7 +119,6 @@ const SingleMedicalHistoryPage = async ({
           Medical History
           <LinkToEdit
             path={`/patients/${patientID}/medical-histories/${medicalHistoryID}/edit`}
-            query={medicalHistory}
           />
         </Typography>
         <div>
