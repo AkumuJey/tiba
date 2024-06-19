@@ -1,8 +1,8 @@
-import { Delete, Edit } from "@mui/icons-material";
+"use client";
+
 import {
   Divider,
   Grid,
-  IconButton,
   List,
   ListItem,
   ListItemText,
@@ -28,32 +28,11 @@ interface AppointmentDetails {
   patient: PatientDetails;
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
+interface AppointmentsDashProps {
+  appointments: AppointmentDetails[];
+}
 
-const fetchAppointments = async () => {
-  const response = await fetch(
-    "http://localhost:4000/provider/appointments/?limit=5",
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearers ${token}`,
-      },
-      next: { revalidate: 0 },
-    }
-  );
-  if (!response.ok) {
-    console.log("Failed");
-    return;
-  }
-  const data = await response.json();
-  return data.appointments;
-};
-
-const AppointmentsDash = async () => {
-  const appointments: AppointmentDetails[] = await fetchAppointments();
-
+const AppointmentsDash = ({ appointments }: AppointmentsDashProps) => {
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -68,43 +47,38 @@ const AppointmentsDash = async () => {
     });
     return { formattedDate, formattedTime };
   };
+
   return (
-    <>
-      <Grid className="w-full md:w-1/2">
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Appointments
-          </Typography>
-          <List>
-            {appointments.map((appointment) => (
-              <>
-                <Link
-                  href={`patients/${appointment.patientID}/appointments/${appointment.id}`}
-                  key={appointment.id}
-                >
-                  <ListItem>
-                    <ListItemText
-                      primary={
-                        formatDateTime(appointment.appointmentTime)
-                          .formattedDate
-                      }
-                      secondary={`Time: ${
-                        formatDateTime(appointment.appointmentTime)
-                          .formattedTime
-                      }, Venue: ${appointment.venue}`}
-                    />
-                  </ListItem>
-                  <Divider variant="middle" component="li" />
-                </Link>
-              </>
-            ))}
-            <ListItem>
-              <Link href="/appointments">Click to view more</Link>
-            </ListItem>
-          </List>
-        </Paper>
-      </Grid>
-    </>
+    <Grid className="w-full md:w-1/2">
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h6" gutterBottom>
+          Appointments
+        </Typography>
+        <List>
+          {appointments.map((appointment) => (
+            <Link
+              href={`patients/${appointment.patientID}/appointments/${appointment.id}`}
+              key={appointment.id}
+            >
+              <ListItem>
+                <ListItemText
+                  primary={
+                    formatDateTime(appointment.appointmentTime).formattedDate
+                  }
+                  secondary={`Time: ${
+                    formatDateTime(appointment.appointmentTime).formattedTime
+                  }, Venue: ${appointment.venue}`}
+                />
+              </ListItem>
+              <Divider variant="middle" component="li" />
+            </Link>
+          ))}
+          <ListItem>
+            <Link href="/appointments">Click to view more</Link>
+          </ListItem>
+        </List>
+      </Paper>
+    </Grid>
   );
 };
 

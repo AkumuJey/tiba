@@ -22,6 +22,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { z } from "zod";
+import { useAuth } from "@/utils/AuthContextProvider";
+import axios from "axios";
 
 // types.ts
 export interface Patient {
@@ -44,33 +46,6 @@ const loginDataSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
-
-const loginFunction = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
-  try {
-    const response = await fetch("http://localhost:4000/provider/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (response.ok) {
-      const data: Patient = await response.json();
-      console.log(data);
-    } else {
-      console.error("Failed to log in:", response);
-    }
-  } catch (error) {
-    console.error("Error logging in:", error);
-  }
-};
 
 const theme = createTheme();
 
@@ -96,11 +71,38 @@ const LoginPage = () => {
     setPassword(event.target.value);
   };
 
+  const context = useAuth();
+
+  const fetchPatients = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/provider/patients/?limit=5",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        return response.data.patients;
+      } else {
+        console.log("Failed to fetch patients");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+      return [];
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const data = loginDataSchema.parse({ email, password });
-    await loginFunction(data);
+    const people = await fetchPatients();
+    console.log("Rada: ", people);
+    context.handleLogin(data.email, data.password);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);

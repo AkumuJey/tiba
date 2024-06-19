@@ -1,38 +1,7 @@
-import {
-  CancelOutlined,
-  CheckCircleOutline,
-  Email,
-  Person,
-  VerifiedUser,
-} from "@mui/icons-material/";
-import {
-  Avatar,
-  Box,
-  Chip,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-const fetchProfile = async () => {
-  const response = await fetch("http://localhost:4000/provider/profile/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearers ${token}`,
-    },
-    next: { revalidate: 0 },
-  });
-  if (!response.ok) {
-    console.log("Failed");
-    return;
-  }
-  const data = await response.json();
-  return data.profile;
-};
+"use client";
+import { useAuth } from "@/utils/AuthContextProvider";
+import { Email, Person, VerifiedUser } from "@mui/icons-material/";
+import { Avatar, Box, Grid, Paper, Typography } from "@mui/material";
 
 interface Profile {
   id: string;
@@ -44,8 +13,10 @@ interface Profile {
   verified: boolean;
 }
 
-const DashboardProfile = async () => {
-  const profile: Profile = await fetchProfile();
+const DashboardProfile = () => {
+  const context = useAuth();
+
+  const profile: Profile = context.user as Profile;
   return (
     <>
       {profile && (

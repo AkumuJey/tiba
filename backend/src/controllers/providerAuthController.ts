@@ -36,8 +36,8 @@ export const providerLoginController = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === "production",
     });
 
-    return res.status(201).json({
-      provider,
+    return res.status(200).json({
+      id: provider.id,
       token,
     });
   } catch (error) {
