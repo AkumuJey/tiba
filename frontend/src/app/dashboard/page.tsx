@@ -1,48 +1,27 @@
+// app/dashboard/page.js
 import AppointmentsDash from "@/components/Appointments";
 import DashboardProfile from "@/components/DashboardProfile";
 import PatientsDash from "@/components/PatientsDash";
 import ProtectedRoutes from "@/components/ProtectedRoutes";
 import { Container } from "@mui/material";
-import axios from "axios";
 import { cookies } from "next/headers";
 
-interface Patient {
-  id: number;
-  firstName: string;
-  lastName: string;
-  sex: string;
-  dateOfBirth: string;
-}
-
-interface AppointmentDetails {
-  id: number;
-  createdAt: string;
-  patientID: number;
-  healthProviderID: number;
-  venue: string;
-  appointmentTime: string;
-  amount: number;
-  description: string;
-  patient: {
-    firstName: string;
-    lastName: string;
-  };
-}
-
-const fetchPatients = async () => {
+const fetchPatients = async (cookieHeader: string) => {
   try {
-    const response = await axios.get(
+    const response = await fetch(
       "http://localhost:4000/provider/patients/?limit=5",
       {
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
         },
-        withCredentials: true,
+        credentials: "include",
       }
     );
 
-    if (response.status === 200) {
-      return response.data.patients;
+    if (response.ok) {
+      const data = await response.json();
+      return data.patients;
     } else {
       console.log("Failed to fetch patients");
       return [];
@@ -53,20 +32,22 @@ const fetchPatients = async () => {
   }
 };
 
-const fetchAppointments = async () => {
+const fetchAppointments = async (cookieHeader: string) => {
   try {
-    const response = await axios.get(
+    const response = await fetch(
       "http://localhost:4000/provider/appointments/?limit=5",
       {
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
         },
-        withCredentials: true,
+        credentials: "include",
       }
     );
 
-    if (response.status === 200) {
-      return response.data.appointments;
+    if (response.ok) {
+      const data = await response.json();
+      return data.appointments;
     } else {
       console.log("Failed to fetch appointments");
       return [];
@@ -78,9 +59,12 @@ const fetchAppointments = async () => {
 };
 
 const Dashboard = async () => {
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+
   const [patients, appointments] = await Promise.all([
-    fetchPatients(),
-    fetchAppointments(),
+    fetchPatients(cookieHeader),
+    fetchAppointments(cookieHeader),
   ]);
 
   return (
