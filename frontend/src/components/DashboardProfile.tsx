@@ -1,5 +1,3 @@
-"use client";
-import { useAuth } from "@/utils/AuthContextProvider";
 import { Email, Person, VerifiedUser } from "@mui/icons-material/";
 import { Avatar, Box, Grid, Paper, Typography } from "@mui/material";
 
@@ -13,10 +11,10 @@ interface Profile {
   verified: boolean;
 }
 
-const DashboardProfile = () => {
-  const context = useAuth();
-
-  const profile: Profile = context.user as Profile;
+interface ProfileProps {
+  profile: Profile;
+}
+const DashboardProfile = ({ profile }: ProfileProps) => {
   return (
     <>
       {profile && (

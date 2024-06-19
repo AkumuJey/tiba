@@ -1,27 +1,17 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNo: string;
-  title: string;
-  verified: boolean;
-}
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface AuthContextProps {
-  user: User | null;
+  isLoggedIn: boolean;
   handleLogin: (email: string, password: string) => Promise<void>;
   handleLogout: () => Promise<void>;
   handleSignup: (userData: any) => Promise<void>;
@@ -33,50 +23,32 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
+  return null;
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    const checkUserLoggedIn = async () => {
-      try {
-        const response = await fetchProfile();
-        if (response) {
-          setUser(response);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Error checking user logged in status:", error);
-        setUser(null);
+    const checkUserLoggedIn = () => {
+      const token = getCookie("token");
+      console.log("Token:", token);
+      const loggedIn = !!token;
+
+      setIsLoggedIn(loggedIn);
+
+      if (!loggedIn) {
+        router.push("/login");
       }
     };
 
     checkUserLoggedIn();
-  }, []);
-
-  const fetchProfile = async (): Promise<User | null> => {
-    try {
-      const response = await axios.get(
-        "http://localhost:4000/provider/profile",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // Automatically sends cookies
-        }
-      );
-      if (response.status === 200) {
-        return response.data.profile;
-      } else {
-        console.log("Failed to fetch profile");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      return null;
-    }
-  };
+  }, [router]);
 
   const handleLogin = async (email: string, password: string) => {
     try {
@@ -93,13 +65,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           withCredentials: true, // Automatically handle cookies
         }
       );
-      const profile = await fetchProfile();
-      if (profile) {
-        setUser(profile);
-        router.push("/dashboard");
-      } else {
-        console.log("Failed to fetch profile after login");
-      }
+      setIsLoggedIn(true);
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -118,7 +85,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           withCredentials: true, // Automatically handle cookies
         }
       );
-      setUser(null);
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      setIsLoggedIn(false);
       router.push("/login");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -134,13 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         },
         withCredentials: true, // Automatically handle cookies
       });
-      const profile = await fetchProfile();
-      if (profile) {
-        setUser(profile);
-        router.push("/dashboard");
-      } else {
-        console.log("Failed to fetch profile after signup");
-      }
+      router.push("/login");
     } catch (error) {
       console.error("Signup failed:", error);
       throw error;
@@ -149,7 +112,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, handleLogin, handleLogout, handleSignup }}
+      value={{ isLoggedIn, handleLogin, handleLogout, handleSignup }}
     >
       {children}
     </AuthContext.Provider>

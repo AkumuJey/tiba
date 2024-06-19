@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import React, { SyntheticEvent } from "react";
 
 const Navbar = () => {
-  const { user, handleLogout } = useAuth();
+  const { isLoggedIn, handleLogout } = useAuth();
 
   const pathname = usePathname();
 
@@ -39,7 +39,11 @@ const Navbar = () => {
       </div>
       <div className="flex flex-row gap-2">
         <div className="flex flex-row gap-2">
-          {!user && (
+          {isLoggedIn ? (
+            <Link href={"/logout"} onClick={signout} prefetch={true}>
+              Logout
+            </Link>
+          ) : (
             <>
               <Link href={"/signup"} prefetch={true}>
                 Signup
@@ -48,11 +52,6 @@ const Navbar = () => {
                 Login
               </Link>
             </>
-          )}
-          {user && (
-            <Link href={"/logout"} onClick={signout} prefetch={true}>
-              Logout
-            </Link>
           )}
         </div>
       </div>
