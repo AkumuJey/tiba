@@ -15,6 +15,8 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 
 interface Vitals {
   id: number;
@@ -29,41 +31,53 @@ interface Vitals {
   weightKg: number;
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-
-const fetchVitalsResults = async ({
+const fetchVitals = async ({
+  cookieHeader,
   patientID,
   vitalsID,
 }: {
+  cookieHeader: string;
   patientID: string;
   vitalsID: string;
 }) => {
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/vitals/${vitalsID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/vitals/${vitalsID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+
+    if (response.status === (200 || 201)) {
+      return response.data.appointment;
+    } else {
+      console.log("Failed to fetch patient details");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    return [];
   }
-  const { hospitalVitals } = await response.json();
-  return hospitalVitals;
 };
+
 const SingleVitalsPage = async ({
   params,
 }: {
   params: { patientID: string; vitalsID: string };
 }) => {
   const { patientID, vitalsID } = params;
-  const vitals: Vitals = await fetchVitalsResults({ patientID, vitalsID });
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const vitals: Vitals = await fetchVitals({
+    vitalsID,
+    patientID,
+    cookieHeader,
+  });
+
   console.log(vitals);
   return (
     <Box sx={{ mb: 4 }}>

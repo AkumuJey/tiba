@@ -60,11 +60,11 @@ const fetchAppointment = async ({
     if (response.status === (200 || 201)) {
       return response.data.appointment;
     } else {
-      console.log("Failed to fetch patient details");
+      console.log("Failed to fetch appointment");
       return [];
     }
   } catch (error) {
-    console.error("Error fetching patient details:", error);
+    console.error("Error fetching appointment:", error);
     return [];
   }
 };

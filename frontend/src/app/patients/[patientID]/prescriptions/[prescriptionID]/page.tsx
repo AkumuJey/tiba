@@ -9,6 +9,8 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { cookies } from "next/headers";
 import React from "react";
 
 interface PrescriptionDetail {
@@ -33,36 +35,37 @@ interface Prescription {
   prescriptionDetails: PrescriptionDetail[];
 }
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
-
-const fetchPrescriptions = async ({
+const fetchPrescription = async ({
+  cookieHeader,
   patientID,
   prescriptionID,
 }: {
+  cookieHeader: string;
   patientID: string;
   prescriptionID: string;
 }) => {
-  console.log("PatientID: ", patientID, "ID@: ", prescriptionID);
-  const response = await fetch(
-    `http://localhost:4000/provider/${patientID}/prescription/${prescriptionID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      next: { revalidate: 0 },
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/provider/${patientID}/prescription/${prescriptionID}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
+        },
+        withCredentials: true, // Automatically sends cookies
+      }
+    );
+
+    if (response.status === 200) {
+      return response.data.prescription;
+    } else {
+      console.log("Failed to fetch prescriptions");
+      return [];
     }
-  );
-  if (!response.ok) {
-    console.log("Failed", response);
-    return;
+  } catch (error) {
+    console.error("Error fetching prescriptions:", error);
+    return [];
   }
-  const q = await response.json();
-  console.log("Query:", q);
-  const { prescription } = q;
-  return prescription;
 };
 
 const formatDateTime = (dateTimeString: string) => {
@@ -86,10 +89,14 @@ const SinglePrescriptionsPage = async ({
   params: { patientID: string; prescriptionID: string };
 }) => {
   const { patientID, prescriptionID } = params;
-  const prescription: Prescription = await fetchPrescriptions({
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const prescription: Prescription = await fetchPrescription({
+    cookieHeader,
     patientID,
     prescriptionID,
   });
+
   console.log(prescription);
   const { formattedDate, formattedTime } = formatDateTime(prescription.date);
   return (
