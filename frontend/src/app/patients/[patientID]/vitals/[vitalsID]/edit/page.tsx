@@ -48,18 +48,18 @@ const fetchVitals = async ({
 
 const updateVitals = async ({
   patientID,
-  details,
+  updatedVitals,
   vitalsID,
 }: {
   patientID: string;
-  details: VitalsResults;
+  updatedVitals: VitalsResults;
   vitalsID: string;
 }) => {
   try {
     const response = await axios.patch(
       `http://localhost:4000/provider/${patientID}/vitals/${vitalsID}`,
       {
-        details,
+        updatedVitals,
       },
       {
         headers: {
@@ -69,14 +69,11 @@ const updateVitals = async ({
       }
     );
 
-    if (response.status !== 200 && response.status !== 201) {
+    if (response.status !== 201) {
       console.log("Failed");
       return;
     }
-
-    const data = response.data;
-    console.log("Response", data);
-    return data;
+    return response.data;
   } catch (error) {
     console.error("Failed to update appointment", error);
     return;
@@ -102,15 +99,15 @@ const EditVitals = ({ params }: EditVitalsProps) => {
   }, [patientID, vitalsID]);
 
   const router = useRouter();
-  const handleUpdate = async (data: VitalsResults) => {
+  const handleUpdate = async (updatedVitals: VitalsResults) => {
     const result = await updateVitals({
       patientID,
-      details: data,
+      updatedVitals,
       vitalsID,
     });
 
-    if (result) {
-      router.push("/"); // Redirect to the homepage after successful update
+    if (result.id) {
+      router.push(`/patients/${patientID}/vitals/${result.id}`);
     }
   };
   return (

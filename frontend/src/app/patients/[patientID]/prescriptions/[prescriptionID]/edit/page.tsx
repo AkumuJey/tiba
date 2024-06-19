@@ -21,7 +21,7 @@ interface EditPrescriptionsProps {
   params: { prescriptionID: string; vitalsID: string; patientID: string };
 }
 
-const fetchAppointment = async ({
+const fetchPrescription = async ({
   patientID,
   prescriptionID,
 }: {
@@ -53,18 +53,18 @@ const fetchAppointment = async ({
 
 const updatePrescription = async ({
   patientID,
-  details,
+  updatedPrescription,
   prescriptionID,
 }: {
   patientID: string;
-  details: Prescription;
+  updatedPrescription: Prescription;
   prescriptionID: string;
 }) => {
   try {
     const response = await axios.patch(
       `http://localhost:4000/provider/${patientID}/appointments/${prescriptionID}/`,
       {
-        details,
+        updatedPrescription,
       },
       {
         headers: {
@@ -94,12 +94,12 @@ const EditPrescription = ({ params }: EditPrescriptionsProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedAppointment = await fetchAppointment({
+      const fetchedPrescription = await fetchPrescription({
         patientID,
         prescriptionID,
       });
-      if (fetchedAppointment) {
-        setPrescription(fetchedAppointment);
+      if (fetchedPrescription) {
+        setPrescription(fetchedPrescription);
       }
     };
 
@@ -107,15 +107,15 @@ const EditPrescription = ({ params }: EditPrescriptionsProps) => {
   }, [patientID, prescriptionID]);
 
   const router = useRouter();
-  const handleUpdate = async (data: Prescription) => {
+  const handleUpdate = async (updatedPrescription: Prescription) => {
     const result = await updatePrescription({
       patientID,
-      details: data,
+      updatedPrescription,
       prescriptionID,
     });
 
     if (result) {
-      router.push("/"); // Redirect to the homepage after successful update
+      router.push(`/patients/${patientID}/prescriptions/${result.id}`);
     }
   };
   return (

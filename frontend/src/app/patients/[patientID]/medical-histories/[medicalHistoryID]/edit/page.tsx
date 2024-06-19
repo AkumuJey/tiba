@@ -76,7 +76,7 @@ const updateHistory = async ({
     console.log("Response", data);
     return data;
   } catch (error) {
-    console.error("Failed to update appointment", error);
+    console.error("Failed to update medical history", error);
     return;
   }
 };

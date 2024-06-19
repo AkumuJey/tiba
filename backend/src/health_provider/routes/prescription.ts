@@ -47,7 +47,7 @@ prescription.post("/", async (req: Request, res: Response) => {
       return { ...prescription, prescriptionDetail };
     });
 
-    return res.status(201).json({ data: { prescription } });
+    return res.status(201).json({ message: "success", id: prescription.id });
   } catch (error) {
     return res.status(400).json({ error, message: "failed to prescribe" });
   }
@@ -126,7 +126,7 @@ prescription.patch("/", async (req: Request, res: Response) => {
     if (!prescription) {
       return res.status(400).json({ message: "Failed to update" });
     }
-    return res.status(201).json({ prescription });
+    return res.status(201).json({ message: "success", id: prescription.id });
   } catch (error) {
     res.status(400).json({ error, message: "Failed to update" });
   }
