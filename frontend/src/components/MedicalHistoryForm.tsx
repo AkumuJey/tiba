@@ -1,4 +1,6 @@
 "use client";
+import loading from "@/app/appointments/loading";
+import { LoadingButton } from "@mui/lab";
 import { Button, Container, Grid, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -11,10 +13,14 @@ interface MedicalHistory {
 
 interface MedHistoryFormProps {
   medHistory?: MedicalHistory;
+  loading: boolean;
+  error: boolean;
   handlerFunction: (data: MedicalHistory) => void;
 }
 const MedicalHistoryForm = ({
   medHistory,
+  loading,
+  error,
   handlerFunction,
 }: MedHistoryFormProps) => {
   const initial = {
@@ -98,9 +104,16 @@ const MedicalHistoryForm = ({
           />
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            loading={loading}
+            disabled={loading}
+          >
             Submit
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
     </Container>

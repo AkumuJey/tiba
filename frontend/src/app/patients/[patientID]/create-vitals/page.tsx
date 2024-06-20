@@ -1,6 +1,7 @@
 import VitalsForm from "@/components/VitalsForm";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface CreateVitalsProps {
   params: { patientID: string };
@@ -47,16 +48,26 @@ const addVitalsResults = async ({
 };
 const CreateVitalsPage = ({ params }: CreateVitalsProps) => {
   const { patientID } = params;
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const router = useRouter();
   const handleNewVitals = async (vitals: VitalsResults) => {
+    setLoading(true);
+    setError(false);
     const result = await addVitalsResults({ vitals, patientID });
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/vitals/`);
+      return router.push(`/patients/${patientID}/vitals/`);
     }
+    setError(true);
   };
   return (
     <>
-      <VitalsForm handlerFunction={handleNewVitals} />
+      <VitalsForm
+        handlerFunction={handleNewVitals}
+        error={error}
+        loading={loading}
+      />
     </>
   );
 };

@@ -16,9 +16,16 @@ interface LabResults {
 
 interface LabFormProps {
   labResults?: LabResults;
+  loading: boolean;
+  error: boolean;
   handlerFunction: (data: LabResults) => void;
 }
-const LabsForm = ({ labResults, handlerFunction }: LabFormProps) => {
+const LabsForm = ({
+  labResults,
+  handlerFunction,
+  error,
+  loading,
+}: LabFormProps) => {
   const initialResuts = {
     bloodSugar: 0,
     cholesterol: 0,
@@ -150,6 +157,8 @@ const LabsForm = ({ labResults, handlerFunction }: LabFormProps) => {
             variant="contained"
             color="primary"
             fullWidth
+            loading={loading}
+            disabled={loading}
           >
             Submit
           </LoadingButton>

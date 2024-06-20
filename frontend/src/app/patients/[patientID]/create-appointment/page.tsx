@@ -3,6 +3,7 @@
 import AppointmentForm from "@/components/AppointmentForm";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 export interface AppointmentData {
   venue: string;
   appointmentTime: string;
@@ -54,16 +55,26 @@ const bookAppointment = async ({
 
 const CreateAppointmentsPage = ({ params }: AppointmentCreationProps) => {
   const { patientID } = params;
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const router = useRouter();
   const handlePost = async (newAppointment: AppointmentData) => {
+    setLoading(true);
+    setError(false);
     const result = await bookAppointment({ patientID, newAppointment });
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/appointments/`);
+      return router.push(`/patients/${patientID}/appointments/`);
     }
+    setError(true);
   };
   return (
     <>
-      <AppointmentForm handlerFunction={handlePost} />
+      <AppointmentForm
+        handlerFunction={handlePost}
+        loading={loading}
+        error={error}
+      />
     </>
   );
 };

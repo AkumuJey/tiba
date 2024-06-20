@@ -1,5 +1,6 @@
 "use client";
-import { Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Container, Grid, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 interface VitalsResults {
@@ -12,9 +13,16 @@ interface VitalsResults {
 
 interface VitalsFormProps {
   vitals?: VitalsResults;
+  loading: boolean;
+  error: boolean;
   handlerFunction: (data: VitalsResults) => void;
 }
-const VitalsForm = ({ handlerFunction, vitals }: VitalsFormProps) => {
+const VitalsForm = ({
+  handlerFunction,
+  vitals,
+  loading,
+  error,
+}: VitalsFormProps) => {
   const initialVitals = {
     breathingRate: 0,
     systolicBP: 0,
@@ -104,9 +112,16 @@ const VitalsForm = ({ handlerFunction, vitals }: VitalsFormProps) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <LoadingButton
+            loading={loading}
+            disabled={loading}
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+          >
             Submit
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
     </Container>

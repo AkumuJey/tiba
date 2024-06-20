@@ -92,6 +92,8 @@ interface EditingProps {
 const EditAppointment = ({ params }: EditingProps) => {
   const { patientID, appointmentID } = params;
   const [appointment, setAppointment] = useState<AppointmentData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,15 +111,18 @@ const EditAppointment = ({ params }: EditingProps) => {
 
   const router = useRouter();
   const handleUpdate = async (data: AppointmentData) => {
+    setLoading(true);
+    setError(false);
     const result = await updateAppointment({
       patientID,
       details: data,
       appointmentID,
     });
-
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/appointments/${result.id}`);
+      return router.push(`/patients/${patientID}/appointments/${result.id}`);
     }
+    setError(true);
   };
 
   return (
@@ -126,6 +131,8 @@ const EditAppointment = ({ params }: EditingProps) => {
         <AppointmentForm
           handlerFunction={handleUpdate}
           appointment={appointment}
+          loading={loading}
+          error={error}
         />
       )}
     </>

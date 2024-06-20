@@ -91,6 +91,8 @@ const updatePrescription = async ({
 const EditPrescription = ({ params }: EditPrescriptionsProps) => {
   const { patientID, prescriptionID } = params;
   const [prescription, setPrescription] = useState<Prescription | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,21 +110,26 @@ const EditPrescription = ({ params }: EditPrescriptionsProps) => {
 
   const router = useRouter();
   const handleUpdate = async (updatedPrescription: Prescription) => {
+    setLoading(true);
+    setError(false);
     const result = await updatePrescription({
       patientID,
       updatedPrescription,
       prescriptionID,
     });
-
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/prescriptions/${result.id}`);
+      return router.push(`/patients/${patientID}/prescriptions/${result.id}`);
     }
+    setError(true);
   };
   return (
     <>
       <PrescriptionForm
         prescription={prescription as Prescription}
         handlerFunction={handleUpdate}
+        error={error}
+        loading={loading}
       />
     </>
   );

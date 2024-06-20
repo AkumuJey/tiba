@@ -2,6 +2,7 @@
 import MedicalHistoryForm from "@/components/MedicalHistoryForm";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface MedicalHistory {
   presentation: string;
@@ -50,21 +51,30 @@ const addHistory = async ({
 
 const CreateHistoriesPage = ({ params }: CreateHistoryProps) => {
   const { patientID } = params;
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const router = useRouter();
   const handleNewHistory = async (medicalHistory: MedicalHistory) => {
+    setLoading(true);
+    setError(false);
     const result = await addHistory({
       patientID,
       medicalHistory,
     });
 
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/medical-histories/`);
+      return router.push(`/patients/${patientID}/medical-histories/`);
     }
+    setError(true);
   };
   return (
     <>
-      <MedicalHistoryForm handlerFunction={handleNewHistory} />
+      <MedicalHistoryForm
+        handlerFunction={handleNewHistory}
+        error={error}
+        loading={loading}
+      />
     </>
   );
 };

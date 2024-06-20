@@ -2,6 +2,7 @@
 import PrescriptionForm from "@/components/PrescriptionForm";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 interface CreatePrescriptionsProps {
   params: { patientID: string };
@@ -58,16 +59,26 @@ const addPrescription = async ({
 
 const CreatePrescriptionPage = ({ params }: CreatePrescriptionsProps) => {
   const { patientID } = params;
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const router = useRouter();
   const handleNewPrescription = async (prescription: Prescription) => {
+    setLoading(true);
+    setError(false);
     const result = await addPrescription({ patientID, prescription });
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/prescriptions/`);
+      return router.push(`/patients/${patientID}/prescriptions/`);
     }
+    setError(true);
   };
   return (
     <>
-      <PrescriptionForm handlerFunction={handleNewPrescription} />
+      <PrescriptionForm
+        handlerFunction={handleNewPrescription}
+        error={error}
+        loading={loading}
+      />
     </>
   );
 };

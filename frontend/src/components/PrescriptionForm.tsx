@@ -1,15 +1,8 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import {
-  TextField,
-  Button,
-  Grid,
-  Container,
-  Typography,
-  IconButton,
-  Box,
-} from "@mui/material";
 import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import { Box, Container, Grid, IconButton, TextField } from "@mui/material";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 interface Drug {
   quantity: number;
@@ -27,11 +20,15 @@ interface FormData {
 
 interface PrescriptionFormProps {
   prescription?: FormData;
+  loading: boolean;
+  error: boolean;
   handlerFunction: (data: FormData) => void;
 }
 
 const PrescriptionForm = ({
   prescription,
+  error,
+  loading,
   handlerFunction,
 }: PrescriptionFormProps) => {
   const initialPrescription = {
@@ -221,9 +218,16 @@ const PrescriptionForm = ({
             </IconButton>
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              loading={loading}
+              disabled={loading}
+            >
               Submit
-            </Button>
+            </LoadingButton>
           </Grid>
         </Grid>
       </form>

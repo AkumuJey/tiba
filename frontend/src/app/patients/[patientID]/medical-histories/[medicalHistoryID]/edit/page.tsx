@@ -85,7 +85,8 @@ const EditMedicalHistory = ({ params }: EditHistoryProps) => {
   const [medicalHistory, setMedicalHistory] = useState<MedicalHistory | null>(
     null
   );
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const fetchedHistory = await fetchHistory({
@@ -102,21 +103,28 @@ const EditMedicalHistory = ({ params }: EditHistoryProps) => {
 
   const router = useRouter();
   const handleUpdate = async (historyUpdate: MedicalHistory) => {
+    setLoading(true);
+    setError(false);
     const result = await updateHistory({
       patientID,
       historyUpdate,
       medicalHistoryID,
     });
-
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/medical-histories/${result.id}`);
+      return router.push(
+        `/patients/${patientID}/medical-histories/${result.id}`
+      );
     }
+    setError(true);
   };
   return (
     <>
       <MedicalHistoryForm
         handlerFunction={handleUpdate}
         medHistory={medicalHistory as MedicalHistory}
+        error={error}
+        loading={loading}
       />
     </>
   );

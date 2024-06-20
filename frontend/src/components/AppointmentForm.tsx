@@ -1,4 +1,5 @@
 "use client";
+import loading from "@/app/appointments/loading";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Paper, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -12,9 +13,13 @@ interface AppointmentData {
 
 interface AppointmentFormProps {
   appointment?: AppointmentData;
+  loading: boolean;
+  error: boolean;
   handlerFunction: (data: AppointmentData) => void;
 }
 const AppointmentForm = ({
+  loading,
+  error,
   appointment,
   handlerFunction,
 }: AppointmentFormProps) => {
@@ -28,6 +33,7 @@ const AppointmentForm = ({
   const [formState, setFormState] = useState(
     appointment ? appointment : initialAppointment
   );
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -104,7 +110,7 @@ const AppointmentForm = ({
             variant="contained"
             color="primary"
             fullWidth
-            loading={false}
+            loading={loading}
           >
             Submit
           </LoadingButton>

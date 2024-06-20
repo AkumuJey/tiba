@@ -3,6 +3,7 @@
 import LabsForm from "@/components/LabsForm";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 export interface CreateLabsProps {
   params: { patientID: string };
 }
@@ -54,16 +55,27 @@ const postLabResults = async ({
 const CreateLabsPage = ({ params }: CreateLabsProps) => {
   const { patientID } = params;
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   const router = useRouter();
   const handleNewLabs = async (labResults: LabResults) => {
+    setLoading(true);
+    setError(false);
     const result = await postLabResults({ patientID, labResults });
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/labs/`);
+      return router.push(`/patients/${patientID}/labs/`);
     }
+    setError(true);
   };
   return (
     <>
-      <LabsForm handlerFunction={handleNewLabs} />
+      <LabsForm
+        handlerFunction={handleNewLabs}
+        error={error}
+        loading={loading}
+      />
     </>
   );
 };

@@ -37,6 +37,39 @@ const signupDataSchema = z.object({
   confirmPassword: z.string(),
 });
 
+const passwordRequirements = [
+  {
+    label: "At least 6 characters long",
+    test: (pw: string) => pw.length >= 6,
+  },
+  {
+    label: "Contains a non-alphabet character",
+    test: (pw: string) => /\W/.test(pw),
+  },
+  { label: "Contains a letter", test: (pw: string) => /[a-zA-Z]/.test(pw) },
+  {
+    label: "Passwords match",
+    test: (pw: string, confirmPw: string) =>
+      pw === confirmPw && (pw.length > 0 || confirmPw.length > 0),
+  },
+];
+
+const checkPasswordStrength = (password: string, confirmPassword: string) => {
+  return passwordRequirements.map((req, index) => (
+    <li
+      key={index}
+      style={{
+        color: req.test(password, confirmPassword) ? "green" : "red",
+      }}
+      className={`text-[10px] ${
+        req.test(password, confirmPassword) ? "text-green-700" : "text-red-600"
+      }`}
+    >
+      {req.label}
+    </li>
+  ));
+};
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     title: "",
@@ -52,7 +85,6 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [phoneNo, setPhoneNo] = useState<string>("");
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,47 +116,8 @@ const Signup = () => {
 
     await handleSignup(validatedData);
     setLoading(false);
-    setOpenSnackbar(true);
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
-  const passwordRequirements = [
-    {
-      label: "At least 6 characters long",
-      test: (pw: string) => pw.length >= 6,
-    },
-    {
-      label: "Contains a non-alphabet character",
-      test: (pw: string) => /\W/.test(pw),
-    },
-    { label: "Contains a letter", test: (pw: string) => /[a-zA-Z]/.test(pw) },
-    {
-      label: "Passwords match",
-      test: (pw: string, confirmPw: string) =>
-        pw === confirmPw && (pw.length > 0 || confirmPw.length > 0),
-    },
-  ];
-
-  const checkPasswordStrength = (password: string, confirmPassword: string) => {
-    return passwordRequirements.map((req, index) => (
-      <li
-        key={index}
-        style={{
-          color: req.test(password, confirmPassword) ? "green" : "red",
-        }}
-        className={`text-[10px] ${
-          req.test(password, confirmPassword)
-            ? "text-green-700"
-            : "text-red-600"
-        }`}
-      >
-        {req.label}
-      </li>
-    ));
-  };
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
@@ -297,30 +290,6 @@ const Signup = () => {
           </Box>
         </Box>
       </Paper>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        message="Sign up successful"
-        action={
-          <IconButton
-            size="small"
-            aria-label="close"
-            color="inherit"
-            onClick={handleCloseSnackbar}
-          >
-            <CheckCircle />
-          </IconButton>
-        }
-        sx={{
-          "& .MuiSnackbarContent-root": {
-            backgroundColor: "green",
-            color: "white",
-            display: "flex",
-            alignItems: "center",
-          },
-        }}
-      />
     </Container>
   );
 };

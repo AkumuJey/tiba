@@ -89,7 +89,8 @@ const updateLabResults = async ({
 const EditLabResults = ({ params, searchParams }: EditLabsProps) => {
   const { labsID, patientID } = params;
   const [labResults, setLabResults] = useState<LabResults | null>(null);
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const fetchedAppointment = await fetchLabResults({
@@ -106,21 +107,26 @@ const EditLabResults = ({ params, searchParams }: EditLabsProps) => {
 
   const router = useRouter();
   const handleUpdate = async (data: LabResults) => {
+    setLoading(true);
+    setError(false);
     const result = await updateLabResults({
       patientID,
       details: data,
       labsID,
     });
-
+    setLoading(false);
     if (result) {
-      router.push(`/patients/${patientID}/labs/${result.id}`); // Redirect to the homepage after successful update
+      return router.push(`/patients/${patientID}/labs/${result.id}`);
     }
+    setError(true);
   };
   return (
     <>
       <LabsForm
         handlerFunction={handleUpdate}
         labResults={labResults as LabResults}
+        error={error}
+        loading={loading}
       />
     </>
   );

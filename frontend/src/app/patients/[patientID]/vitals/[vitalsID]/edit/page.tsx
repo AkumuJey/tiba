@@ -83,7 +83,8 @@ const updateVitals = async ({
 const EditVitals = ({ params }: EditVitalsProps) => {
   const { vitalsID, patientID } = params;
   const [vitals, setVitals] = useState<VitalsResults | null>(null);
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const fetchedAppointment = await fetchVitals({
@@ -100,21 +101,26 @@ const EditVitals = ({ params }: EditVitalsProps) => {
 
   const router = useRouter();
   const handleUpdate = async (updatedVitals: VitalsResults) => {
+    setLoading(true);
+    setError(false);
     const result = await updateVitals({
       patientID,
       updatedVitals,
       vitalsID,
     });
-
+    setLoading(false);
     if (result.id) {
-      router.push(`/patients/${patientID}/vitals/${result.id}`);
+      return router.push(`/patients/${patientID}/vitals/${result.id}`);
     }
+    setError(true);
   };
   return (
     <>
       <VitalsForm
         handlerFunction={handleUpdate}
         vitals={vitals as VitalsResults}
+        loading={loading}
+        error={error}
       />
     </>
   );
