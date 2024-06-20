@@ -1,8 +1,10 @@
 "use client";
 import { Delete } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 interface DeleteLabsProps {
   patientID: string;
   labsID: string;
@@ -28,26 +30,38 @@ const deleteLabResults = async ({
     if (response.status === 204) {
       return response.data.deletedHospitalLabs;
     } else {
-      console.log("Failed to fetch appointment");
-      return [];
+      console.log("Failed to delete lab results");
+      return null;
     }
   } catch (error) {
-    console.error("Error fetching appointment:", error);
-    return [];
+    console.error("Error deleting lab results:", error);
+    return null;
   }
 };
+
 const DeleteLabResultsPage = ({ labsID, patientID }: DeleteLabsProps) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const handleDelete = async () => {
+    setLoading(true);
     const results = await deleteLabResults({ labsID, patientID });
+    setLoading(false);
     if (results) {
       router.replace(`/patients/${patientID}/labs/`);
     }
   };
+
   return (
-    <IconButton edge="end" onClick={handleDelete}>
-      <Delete /> Delete
-    </IconButton>
+    <LoadingButton
+      onClick={handleDelete}
+      loading={loading}
+      variant="contained"
+      color="secondary"
+      startIcon={<Delete />}
+    >
+      Delete
+    </LoadingButton>
   );
 };
 
