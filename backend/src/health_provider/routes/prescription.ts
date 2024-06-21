@@ -85,7 +85,7 @@ prescription.get("/:id", async (req: Request, res: Response) => {
     });
     console.log("Prescription");
     return res
-      .status(201)
+      .status(200)
       .json({ message: "Success", prescription, trivia: "Yes I got here" });
   } catch (error) {
     res.status(400).json({ error, message: "Failed to fetch prescription" });
@@ -97,14 +97,17 @@ prescription.delete("/:id", async (req: Request, res: Response) => {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.id);
     const id = parseInt(customReq.params.id, 10);
-    const deletedPrrescription = await prismaClient.prescription.delete({
+    console.log("Patient", patientID, "Here: ", id);
+    const deletedPrescription = await prismaClient.prescription.delete({
       where: { id, healthcareProviderID: customReq.user.id, patientID },
     });
-    if (!deletedPrrescription) {
+    console.log("What here: ", deletedPrescription);
+    if (!deletedPrescription) {
       return res.status(400).json({ message: "Deletion failed" });
     }
-    return res.status(204).json({ message: "Deleted", deletedPrrescription });
+    return res.status(204).json({ message: "Deleted", deletedPrescription });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error, message: "Deletion failed" });
   }
 });

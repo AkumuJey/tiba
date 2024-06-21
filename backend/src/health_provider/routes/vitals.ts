@@ -52,13 +52,13 @@ vitals.get("/:id", async (req: Request, res: Response) => {
   try {
     const patientID = parseInt(req.params.patientID, 10);
     const id = parseInt(req.params.id);
-    const hospitalVitals = await prismaClient.hospitalVitals.findUniqueOrThrow({
+    const hospitalVitals = await prismaClient.hospitalVitals.findUnique({
       where: {
         id,
         patientID,
       },
     });
-    res.status(201).json({ message: "Success", hospitalVitals });
+    res.status(200).json({ message: "Success", hospitalVitals });
   } catch (error) {
     return res.status(400).json({ message: "Failed to fetch vitals", error });
   }
@@ -92,6 +92,9 @@ vitals.delete("/:id", async (req: Request, res: Response) => {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
     const id = parseInt(customReq.params.id, 10);
+    console.log("Patient ", patientID);
+    console.log("Vitals  ", id);
+    console.log("Provider", customReq.user.id);
     const deletedVitals = await prismaClient.hospitalVitals.delete({
       where: {
         id,

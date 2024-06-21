@@ -27,8 +27,9 @@ const deletePrescription = async ({
         withCredentials: true, // Automatically sends cookies
       }
     );
+    console.log(response);
     if (response.status === 204) {
-      return response.data.deletedVitals;
+      return response.data.deletedPrescription;
     } else {
       console.log("Failed to fetch appointment");
       return [];

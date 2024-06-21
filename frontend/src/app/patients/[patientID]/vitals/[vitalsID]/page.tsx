@@ -51,9 +51,9 @@ const fetchVitals = async ({
         withCredentials: true, // Automatically sends cookies
       }
     );
-
-    if (response.status === (200 || 201)) {
-      return response.data.hospitalVitals;
+    if (response.status === 200 || response.status === 201) {
+      const { hospitalVitals } = await response.data;
+      return hospitalVitals;
     } else {
       console.log("Failed to fetch patient details");
       return [];
@@ -136,7 +136,6 @@ const SingleVitalsPage = async ({
           <ListItemAvatar>
             <DeleteVitals patientID={patientID} vitalsID={vitalsID} />
           </ListItemAvatar>
-          <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
         </ListItem>
       </List>
     </Box>

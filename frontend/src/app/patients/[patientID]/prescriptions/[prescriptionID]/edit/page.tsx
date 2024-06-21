@@ -17,6 +17,7 @@ export interface Prescription {
   instruction?: string;
   drugs: Drug[];
 }
+
 interface EditPrescriptionsProps {
   params: { prescriptionID: string; vitalsID: string; patientID: string };
 }
@@ -27,7 +28,7 @@ const fetchPrescription = async ({
 }: {
   patientID: string;
   prescriptionID: string;
-}) => {
+}): Promise<Prescription | null> => {
   try {
     const response = await axios.get(
       `http://localhost:4000/provider/${patientID}/prescription/${prescriptionID}`,
@@ -40,7 +41,8 @@ const fetchPrescription = async ({
     );
 
     if (response.status === 200 || response.status === 201) {
-      return response.data.prescription;
+      const { prescription } = response.data;
+      return prescription;
     } else {
       console.log("Failed to fetch prescriptions");
       return null;
@@ -59,7 +61,7 @@ const updatePrescription = async ({
   patientID: string;
   updatedPrescription: Prescription;
   prescriptionID: string;
-}) => {
+}): Promise<Prescription | null> => {
   try {
     const response = await axios.patch(
       `http://localhost:4000/provider/${patientID}/appointments/${prescriptionID}/`,
@@ -75,16 +77,16 @@ const updatePrescription = async ({
     );
 
     if (response.status !== 200 && response.status !== 201) {
-      console.log("Failed");
-      return;
+      console.log("Failed to update prescription");
+      return null;
     }
 
     const data = response.data;
     console.log("Response", data);
     return data;
   } catch (error) {
-    console.error("Failed to update appointment", error);
-    return;
+    console.error("Failed to update prescription", error);
+    return null;
   }
 };
 
@@ -96,12 +98,17 @@ const EditPrescription = ({ params }: EditPrescriptionsProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("Fetching prescription for:", patientID, prescriptionID);
       const fetchedPrescription = await fetchPrescription({
         patientID,
         prescriptionID,
       });
+      console.log("Fetched prescription:", fetchedPrescription);
       if (fetchedPrescription) {
         setPrescription(fetchedPrescription);
+      } else {
+        console.log("No prescription found");
+        setError(true);
       }
     };
 
@@ -119,12 +126,16 @@ const EditPrescription = ({ params }: EditPrescriptionsProps) => {
     });
     setLoading(false);
     if (result) {
-      return router.push(`/patients/${patientID}/prescriptions/${result.id}`);
+      return router.push(
+        `/patients/${patientID}/prescriptions/${prescriptionID}`
+      );
     }
     setError(true);
   };
+
   return (
     <>
+      {error && <p className="text-red-500">Error fetching prescription</p>}
       <PrescriptionForm
         prescription={prescription as Prescription}
         handlerFunction={handleUpdate}

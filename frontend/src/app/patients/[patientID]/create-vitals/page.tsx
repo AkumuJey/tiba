@@ -34,7 +34,7 @@ const addVitalsResults = async ({
         withCredentials: true,
       }
     );
-
+    console.log(response);
     if (response.status !== 200 && response.status !== 201) {
       console.log("Failed");
       return;

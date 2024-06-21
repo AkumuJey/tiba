@@ -59,7 +59,7 @@ const updateVitals = async ({
     const response = await axios.patch(
       `http://localhost:4000/provider/${patientID}/vitals/${vitalsID}`,
       {
-        updatedVitals,
+        ...updatedVitals,
       },
       {
         headers: {

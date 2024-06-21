@@ -55,8 +55,16 @@ export const providerLogoutController = (req: Request, res: Response) => {
 export const providerSignupController = async (req: Request, res: Response) => {
   try {
     ProviderSignupSchema.parse(req.body);
-    const { firstName, lastName, title, email, password, age, phoneNo } =
-      req.body;
+    const {
+      firstName,
+      lastName,
+      title,
+      email,
+      password,
+      age,
+      phoneNo,
+      dateOfBirth,
+    } = req.body;
     let provider = await prismaClient.healthcareProvider.findFirst({
       where: { email },
     });
@@ -76,6 +84,7 @@ export const providerSignupController = async (req: Request, res: Response) => {
         phoneNo,
         age,
         verified: false,
+        dateOfBirth,
       },
     });
 

@@ -33,6 +33,7 @@ model HealthcareProvider {
   password           String               @unique
   phoneNo            String
   age                Int?
+  dateOfBirth        DateTime?
   verified           Boolean?             @default(false)
   subscribed         Boolean?             @default(false)
   Appointments       Appointments[]

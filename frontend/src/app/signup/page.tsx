@@ -175,10 +175,10 @@ const SignupPage = () => {
                 <TextField
                   required
                   fullWidth
-                  id="dob"
+                  id="dateOfBirth"
                   label="Date of Birth"
                   type="date"
-                  name="dob"
+                  name="dateOfBirth"
                   InputLabelProps={{ shrink: true }}
                   value={formData.dob}
                   onChange={handleInputChange}

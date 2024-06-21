@@ -8,4 +8,5 @@ export const ProviderSignupSchema = z.object({
   password: z.string().min(6),
   age: z.number().min(0).max(120).optional(),
   phoneNo: z.string(),
+  dateOfBirth: z.string().optional(),
 });
