@@ -1,7 +1,6 @@
 "use client";
 import { useAuth } from "@/utils/AuthContextProvider";
 import {
-  CheckCircle,
   LockOutlined as LockOutlinedIcon,
   Visibility,
   VisibilityOff,
@@ -16,12 +15,12 @@ import {
   IconButton,
   InputAdornment,
   Paper,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
-import { redirect } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { z } from "zod";
@@ -300,9 +299,13 @@ const ControllSignup = ({
   children: React.ReactNode;
 }>) => {
   const { isLoggedIn } = useAuth();
-  if (!isLoggedIn) {
-    redirect(`/login`);
-  }
+  const router = useRouter();
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.back();
+      return;
+    }
+  }, [router, isLoggedIn]);
   return <>{children}</>;
 };
 

@@ -1,29 +1,29 @@
 "use client";
-import React, { useState } from "react";
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container,
-  IconButton,
-  InputAdornment,
-  Snackbar,
-  CircularProgress,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useAuth } from "@/utils/AuthContextProvider";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import GoogleIcon from "@mui/icons-material/Google";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import GoogleIcon from "@mui/icons-material/Google";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Link,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
+import React, { ReactNode, useEffect, useState } from "react";
 import { z } from "zod";
-import { useAuth } from "@/utils/AuthContextProvider";
-import axios from "axios";
 
 // types.ts
 export interface Patient {
@@ -178,16 +178,6 @@ const LoginPage = () => {
                 </Link>
               </Grid>
             </Grid>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3, mb: 2 }}
-              startIcon={<GoogleIcon />}
-              onClick={handleGoogleLogin}
-            >
-              Sign in with Google
-            </Button>
           </Box>
         </Box>
         <Snackbar
@@ -221,4 +211,16 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const ControlledLoginPage = ({ children }: { children: ReactNode }) => {
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.back();
+      return;
+    }
+  }, [router, isLoggedIn]);
+  return <>{children}</>;
+};
+
+export default ControlledLoginPage;
