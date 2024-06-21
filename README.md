@@ -14,8 +14,12 @@ cd frontend
 npm install
 
 # Install backend dependencies
-cd ../backend
+cd backend
 npm install
+
+# starting app from common root directory
+npm start-frontend
+npm start-backend
 
 # Return to the root directory
 cd ..

@@ -1,3 +1,4 @@
+"use client";
 import VitalsForm from "@/components/VitalsForm";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -25,9 +26,7 @@ const addVitalsResults = async ({
   try {
     const response = await axios.post(
       `http://localhost:4000/provider/${patientID}/vitals/`,
-      {
-        vitals,
-      },
+      vitals,
       {
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +63,7 @@ const CreateVitalsPage = ({ params }: CreateVitalsProps) => {
   return (
     <>
       <VitalsForm
-        handlerFunction={handleNewVitals}
+        handlerFunction={(data) => handleNewVitals(data)}
         error={error}
         loading={loading}
       />

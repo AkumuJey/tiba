@@ -1,3 +1,4 @@
+"use server";
 import { AddCircleOutline } from "@mui/icons-material";
 import {
   Divider,
@@ -54,7 +55,7 @@ const fetchPrescriptions = async ({
       }
     );
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       return response.data.prescriptions;
     } else {
       console.log("Failed to fetch prescriptions");

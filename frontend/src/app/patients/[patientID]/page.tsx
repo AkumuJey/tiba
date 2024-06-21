@@ -1,6 +1,8 @@
 import axios from "axios";
 import { cookies } from "next/headers";
-
+import PersonIcon from "@mui/icons-material/Person";
+import LocationCity from "@mui/icons-material/LocationCity";
+import { ContactPhone } from "@mui/icons-material";
 interface Patient {
   id: number;
   firstName: string;
@@ -59,10 +61,33 @@ export default async function Patient({
   console.log(patient);
   return (
     <div>
-      <h2>{patientID}</h2>
+      <h2>
+        <span className="font-bold text-xl">Patient ID: </span>
+        {patientID}
+      </h2>
       <div>
-        <div>{`${patient.firstName} ${patient.lastName}`}</div>
-        <div>{age} Years</div>
+        <h4>
+          <PersonIcon className="mr-2 text-gray-500" />
+          <span className="font-bold text-xl">Emergency Contact Name</span>
+          {patient.emergencyContactName
+            ? " : " + patient.emergencyContactName
+            : " : Not Available"}
+        </h4>
+        <h4>
+          <ContactPhone className="mr-2 text-gray-500" />
+          <span className="font-bold text-xl">
+            Emergency Contact Phone Number
+          </span>
+          {patient.emergencyContactPhone
+            ? " : " + patient.emergencyContactPhone
+            : " : Not Available"}{" "}
+          Years
+        </h4>
+        <h4>
+          <LocationCity className="mr-2 text-gray-500" />
+          <span className="font-bold text-xl">Patient Address</span>
+          {patient.address}
+        </h4>
       </div>
     </div>
   );

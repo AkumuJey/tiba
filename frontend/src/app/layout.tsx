@@ -32,10 +32,13 @@ const RootLayoutWithProvider = ({
   children,
 }: {
   children: React.ReactNode;
-}) => (
-  <AuthProvider>
-    <RootLayout>{children}</RootLayout>
-  </AuthProvider>
-);
+}) => {
+  "use client";
+  return (
+    <AuthProvider>
+      <RootLayout>{children}</RootLayout>
+    </AuthProvider>
+  );
+};
 
 export default RootLayoutWithProvider;

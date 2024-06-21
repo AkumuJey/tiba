@@ -1,7 +1,8 @@
 "use client";
 import PrescriptionForm from "@/components/PrescriptionForm";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 
 interface CreatePrescriptionsProps {
@@ -32,9 +33,7 @@ const addPrescription = async ({
   try {
     const response = await axios.post(
       `http://localhost:4000/provider/${patientID}/appointments/`,
-      {
-        prescription,
-      },
+      JSON.stringify(prescription),
       {
         headers: {
           "Content-Type": "application/json",
@@ -45,15 +44,14 @@ const addPrescription = async ({
 
     if (response.status !== 200 && response.status !== 201) {
       console.log("Failed");
-      return;
+      return null;
     }
 
     const data = response.data;
     console.log("Response", data);
     return data;
   } catch (error) {
-    console.error("Failed to update appointment", error);
-    return;
+    return null;
   }
 };
 
@@ -75,7 +73,7 @@ const CreatePrescriptionPage = ({ params }: CreatePrescriptionsProps) => {
   return (
     <>
       <PrescriptionForm
-        handlerFunction={handleNewPrescription}
+        handlerFunction={(data) => handleNewPrescription(data)}
         error={error}
         loading={loading}
       />

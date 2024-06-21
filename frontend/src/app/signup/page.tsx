@@ -1,6 +1,5 @@
 "use client";
 import { useAuth } from "@/utils/AuthContextProvider";
-import ControlledPages from "@/utils/ControlledPages";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
@@ -19,9 +18,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { z } from "zod";
@@ -294,10 +292,4 @@ const SignupPage = () => {
   );
 };
 
-const ControllSignup = () => {
-  <ControlledPages>
-    <SignupPage />
-  </ControlledPages>;
-};
-
-export default ControllSignup;
+export default SignupPage;

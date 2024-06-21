@@ -24,9 +24,7 @@ const addHistory = async ({
   try {
     const response = await axios.post(
       `http://localhost:4000/provider/${patientID}/histories/`,
-      {
-        medicalHistory,
-      },
+      { ...medicalHistory },
       {
         headers: {
           "Content-Type": "application/json",
@@ -34,12 +32,9 @@ const addHistory = async ({
         withCredentials: true,
       }
     );
-
     if (response.status !== 201) {
-      console.log("Failed");
       return;
     }
-
     const data = response.data;
     console.log("Response", data);
     return data;
@@ -55,6 +50,7 @@ const CreateHistoriesPage = ({ params }: CreateHistoryProps) => {
   const [error, setError] = useState(false);
   const router = useRouter();
   const handleNewHistory = async (medicalHistory: MedicalHistory) => {
+    console.log("New  msf", medicalHistory);
     setLoading(true);
     setError(false);
     const result = await addHistory({
@@ -71,7 +67,7 @@ const CreateHistoriesPage = ({ params }: CreateHistoryProps) => {
   return (
     <>
       <MedicalHistoryForm
-        handlerFunction={handleNewHistory}
+        handlerFunction={(data) => handleNewHistory(data)}
         error={error}
         loading={loading}
       />

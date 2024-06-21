@@ -7,16 +7,6 @@ import { Container } from "@mui/material";
 import axios from "axios";
 import { cookies } from "next/headers";
 
-interface Profile {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNo: string;
-  title: string;
-  verified: boolean;
-}
-
 const fetchPatients = async (cookieHeader: string) => {
   try {
     const response = await axios.get(

@@ -1,11 +1,10 @@
-import { Box, Container, Divider, Paper, Typography } from "@mui/material";
+"use server";
+import PatientLinks from "@/components/PatientLinks";
+import { Box, Divider, Paper } from "@mui/material";
 import axios from "axios";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import React from "react";
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxODAyMDQ5NH0.8JDRgyP69-ywPQV_E5MTQWMYE3V6TYh9zW_n0uX1bZo";
 
 interface Patient {
   id: number;
@@ -65,36 +64,45 @@ const layout = async ({
 
   const age =
     new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
-  console.log(patient);
+
+  const firstLinkArray = [
+    { href: `/patients/${patientID}/`, label: "Patient Info" },
+    { href: `/patients/${patientID}/medical-histories`, label: "Histories" },
+    { href: `/patients/${patientID}/vitals`, label: "Vitals" },
+  ];
+
+  const secondLinkArray = [
+    { href: `/patients/${patientID}/labs`, label: "Labs" },
+    { href: `/patients/${patientID}/prescriptions`, label: "Prescription" },
+    { href: `/patients/${patientID}/appointments`, label: "Appointments" },
+  ];
+
   return (
     <>
       <div>
-        <Paper elevation={3} sx={{ p: 4 }}>
+        <Paper
+          elevation={3}
+          sx={{ p: 4 }}
+          className="w-[90%] md:w-4/5 mx-auto bg-transparent"
+        >
           {/* Patient Details */}
           <Box sx={{ mb: 4 }}>
-            <h5>
-              {patient.firstName} {patient.lastName}
-            </h5>
-            <div className="flex justify-evenly">
-              <p>Age: {age}</p>
-              <p>Address: {patient.address}</p>
-              <p>Last Visit: Today</p>
-              <p>Sex: {patient.sex}</p>
+            <div className="flex justify-between">
+              <h3>
+                <span className="font-bold">Name: </span>
+                {patient.firstName} {patient.lastName}
+              </h3>
+              <h3>
+                <span className="font-bold">Age:</span> {age} Years
+              </h3>
+              <h3>
+                <span className="font-bold">Sex:</span> {patient.sex}
+              </h3>
             </div>
-            <div className="flex justify-evenly">
-              <Link href={`/patients/${patientID}/`}>Patient Infor</Link>
-              <Link href={`/patients/${patientID}/medical-histories`}>
-                Histories
-              </Link>
-              <Link href={`/patients/${patientID}/vitals`}>Vitals</Link>
-              <Link href={`/patients/${patientID}/labs`}>Labs</Link>
-              <Link href={`/patients/${patientID}/prescriptions`}>
-                Prescription
-              </Link>
-              <Link href={`/patients/${patientID}/appointments`}>
-                Appointments
-              </Link>
-            </div>
+            <PatientLinks
+              firstLinkArray={firstLinkArray}
+              secondLinkArray={secondLinkArray}
+            />
           </Box>
           <Divider sx={{ mb: 4 }} />
           <>{children}</>

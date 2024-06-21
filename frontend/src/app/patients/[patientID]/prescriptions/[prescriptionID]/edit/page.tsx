@@ -1,7 +1,7 @@
 "use client";
 import PrescriptionForm from "@/components/PrescriptionForm";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Drug {

@@ -2,7 +2,7 @@
 import MedicalHistoryForm from "@/components/MedicalHistoryForm";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 interface MedicalHistory {
   presentation: string;
   medicalHistory: string;

@@ -43,8 +43,8 @@ const fetchVitals = async ({
         withCredentials: true, // Automatically sends cookies
       }
     );
-
-    if (response.status === 200) {
+    console.log(response);
+    if (response.status === 201) {
       return response.data.hospitalVitalsList;
     } else {
       console.log("Failed to fetch vitals");
@@ -87,7 +87,7 @@ const VitalsPage = async ({ params }: { params: { patientID: string } }) => {
         className="flex flex-col md:flex-row justify-center"
       >
         Vitals reading
-        <Link href={`/patients/${patientID}/create-prescription`}>
+        <Link href={`/patients/${patientID}/create-vitals`}>
           <AddCircleOutline /> Enter new vitals reading
         </Link>
       </Typography>

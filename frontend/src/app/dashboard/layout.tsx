@@ -1,3 +1,4 @@
+"use client";
 import ProtectedRoutes from "@/components/ProtectedRoutes";
 import React from "react";
 const DashboardLayout = ({

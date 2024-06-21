@@ -53,7 +53,7 @@ appointments.get("/", async (req: Request, res: Response) => {
         createdAt: "desc",
       },
     });
-    if (!appointments || appointments.length === 0) {
+    if (!appointments) {
       return res.json({ message: "No appointments found" });
     }
     return res.json({ appointments });

@@ -79,16 +79,6 @@ const LoginPage = () => {
     const data = loginDataSchema.parse({ email, password });
     context.handleLogin(data.email, data.password);
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setOpen(true);
-    }, 2000); // Simulate a login delay
-    // Handle form submission logic here
-  };
-
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-    // Handle Google login logic here
   };
 
   const handleClose = () => {
@@ -212,10 +202,4 @@ const LoginPage = () => {
   );
 };
 
-const ControlledLoginPage = () => {
-  <ControlledPages>
-    <LoginPage />
-  </ControlledPages>;
-};
-
-export default ControlledLoginPage;
+export default LoginPage;

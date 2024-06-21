@@ -1,7 +1,7 @@
 "use client";
 import VitalsForm from "@/components/VitalsForm";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export interface VitalsResults {

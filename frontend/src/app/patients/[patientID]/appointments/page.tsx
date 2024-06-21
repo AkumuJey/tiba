@@ -63,7 +63,6 @@ const AppointmentsPage = async ({
     cookieHeader,
     patientID,
   });
-  console.log(appointments);
   return (
     <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-2/3">
       <Typography

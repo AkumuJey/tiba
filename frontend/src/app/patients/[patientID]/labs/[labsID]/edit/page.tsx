@@ -1,7 +1,7 @@
 "use client";
 import LabsForm from "@/components/LabsForm";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface LabResults {
@@ -16,7 +16,6 @@ interface LabResults {
 
 interface EditLabsProps {
   params: { labsID: string; patientID: string };
-  searchParams: LabResults;
 }
 
 const fetchLabResults = async ({
@@ -86,7 +85,7 @@ const updateLabResults = async ({
   }
 };
 
-const EditLabResults = ({ params, searchParams }: EditLabsProps) => {
+const EditLabResults = ({ params }: EditLabsProps) => {
   const { labsID, patientID } = params;
   const [labResults, setLabResults] = useState<LabResults | null>(null);
   const [loading, setLoading] = useState(false);
