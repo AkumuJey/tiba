@@ -23,13 +23,6 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const getCookie = (name: string): string | null => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
-  return null;
-};
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -46,24 +39,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             withCredentials: true, // Automatically sends cookies
           }
         );
-        if (response.status === 200) {
-          return response.data.profile;
-        } else {
-          console.log("Failed to fetch profile");
-          return null;
-        }
+        return response.status === 200;
       } catch (error) {
-        console.error("Error fetching profile:", error);
-        return null;
+        return false;
       }
     };
     const checkUserLoggedIn = async () => {
       const checker = await fetchProfile();
-      if (!checker) {
-        setIsLoggedIn(false);
-        return;
-      }
-      setIsLoggedIn(true);
+      setIsLoggedIn(checker);
     };
     checkUserLoggedIn();
   }, [router]);

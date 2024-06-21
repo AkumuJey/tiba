@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Project Overview
 
-## Getting Started
+This project is a frontend application for a medical app, developed using TypeScript and Next.js. It leverages several libraries and tools for UI components, state management, form validation, and more.
 
-First, run the development server:
+## Installation
+
+Use the following command to install all the required dependencies and devDependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm i @emotion/cache @emotion/react @emotion/styled @mui/icons-material @mui/lab @mui/material @mui/material-nextjs axios next react react-dom react-phone-number-input zod @types/node @types/react @types/react-dom eslint eslint-config-next postcss tailwindcss typescript
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+@emotion/cache: A caching library for Emotion, a CSS-in-JS library.
+@emotion/react: Core package for Emotion, providing support for CSS-in-JS with React.
+@emotion/styled: Styled-components for Emotion, allowing the use of styled-components with Emotion.
+@mui/icons-material: Material UI icons.
+@mui/lab: Material UI lab components, providing additional experimental components.
+@mui/material: Material UI core components.
+@mui/material-nextjs: Next.js-specific integration for Material UI.
+axios: A promise-based HTTP client for making requests to the backend.
+next: The React framework used for server-side rendering and static site generation.
+react: The React library.
+react-dom: React package for working with the DOM.
+react-phone-number-input: A React component for phone number input.
+zod: A TypeScript-first schema declaration and validation library.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## DevDependencies
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+@types/node: TypeScript type definitions for Node.js.
+@types/react: TypeScript type definitions for React.
+@types/react-dom: TypeScript type definitions for React DOM.
+eslint: A tool for identifying and fixing problems in JavaScript/TypeScript code.
+eslint-config-next: ESLint configuration used by Next.js.
+postcss: A tool for transforming CSS with JavaScript.
+tailwindcss: A utility-first CSS framework.
+typescript: TypeScript language support.

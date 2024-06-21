@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/utils/AuthContextProvider";
+import ControlledPages from "@/utils/ControlledPages";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
@@ -69,7 +70,7 @@ const checkPasswordStrength = (password: string, confirmPassword: string) => {
   ));
 };
 
-const Signup = () => {
+const SignupPage = () => {
   const [formData, setFormData] = useState({
     title: "",
     firstName: "",
@@ -293,20 +294,10 @@ const Signup = () => {
   );
 };
 
-const ControllSignup = ({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) => {
-  const { isLoggedIn } = useAuth();
-  const router = useRouter();
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.back();
-      return;
-    }
-  }, [router, isLoggedIn]);
-  return <>{children}</>;
+const ControllSignup = () => {
+  <ControlledPages>
+    <SignupPage />
+  </ControlledPages>;
 };
 
 export default ControllSignup;

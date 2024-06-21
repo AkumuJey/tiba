@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/utils/AuthContextProvider";
+import ControlledPages from "@/utils/ControlledPages";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import GoogleIcon from "@mui/icons-material/Google";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -211,16 +212,10 @@ const LoginPage = () => {
   );
 };
 
-const ControlledLoginPage = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn } = useAuth();
-  const router = useRouter();
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.back();
-      return;
-    }
-  }, [router, isLoggedIn]);
-  return <>{children}</>;
+const ControlledLoginPage = () => {
+  <ControlledPages>
+    <LoginPage />
+  </ControlledPages>;
 };
 
 export default ControlledLoginPage;
