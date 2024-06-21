@@ -1,12 +1,6 @@
+"use server";
 import { AddCircleOutline } from "@mui/icons-material";
-import {
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Divider, Grid, List, ListItem, ListItemText } from "@mui/material";
 import axios from "axios";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -84,16 +78,16 @@ const MedicalHistoriesPage = async ({
   console.log(histories);
   return (
     <Grid item xs={12} md={6}>
-      <Typography
-        variant="h6"
-        gutterBottom
-        className="flex flex-col md:flex-row justify-center"
-      >
-        Medical histories
-        <Link href={`/patients/${patientID}/create-medical-histories`}>
-          <AddCircleOutline /> Add Medical History
+      <div className="flex justify-between py-1">
+        <h4 className="text-2xl font-bold">Medical histories</h4>
+        <Link
+          href={`/patients/${patientID}/create-vitals`}
+          className="px-[1rem] py-[0.7rem] bg-[#E2D2D2] rounded-md text-lg flex gap-2 flex-col md:flex-row"
+        >
+          <AddCircleOutline className="font-bold" height={5} width={5} /> Enter
+          <h4>Add Medical History</h4>
         </Link>
-      </Typography>
+      </div>
       <List>
         {histories.map((history) => (
           <>

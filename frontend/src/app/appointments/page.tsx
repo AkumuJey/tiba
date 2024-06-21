@@ -1,4 +1,5 @@
 "use server";
+import AppointmentsDisplay from "@/components/Appointments";
 import { Delete, Edit } from "@mui/icons-material";
 import {
   Container,
@@ -79,46 +80,14 @@ const Appointments = async () => {
     cookieHeader
   );
   return (
-    <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
-      <Grid item xs={12} md={6}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Appointments
-          </Typography>
-          <List>
-            {appointments &&
-              appointments.map((appointment) => (
-                <>
-                  <Link
-                    href={`patients/${appointment.patientID}/appointments/${appointment.id}`}
-                    key={appointment.id}
-                  >
-                    <ListItem>
-                      <ListItemText
-                        primary={
-                          formatDateTime(appointment.appointmentTime)
-                            .formattedDate
-                        }
-                        secondary={`Time: ${
-                          formatDateTime(appointment.appointmentTime)
-                            .formattedTime
-                        }, Venue: ${appointment.venue}`}
-                      />
-                      <IconButton edge="end">
-                        <Edit />
-                      </IconButton>
-                      <IconButton edge="end">
-                        <Delete />
-                      </IconButton>
-                    </ListItem>
-                    <Divider variant="middle" component="li" />
-                  </Link>
-                </>
-              ))}
-          </List>
-        </Paper>
-      </Grid>
-    </Container>
+    <Grid className="w-[95%] md:w-3/4 mx-auto">
+      <Paper
+        elevation={2}
+        className="w-[95%] md:w-3/4 mx-auto mt-[1rem] bg-transparent p-4"
+      >
+        <AppointmentsDisplay appointments={appointments} longerList={true} />
+      </Paper>
+    </Grid>
   );
 };
 

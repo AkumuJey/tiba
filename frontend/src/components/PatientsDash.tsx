@@ -22,9 +22,9 @@ const PatientsDash = ({ patients }: PatientsDashProps) => {
   };
 
   return (
-    <div className="w-full md:w-1/2">
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <h6>Patients</h6>
+    <div className="w-full md:w-1/2 bg-[#F1F6F6]">
+      <Paper elevation={3} sx={{ p: 4 }} className="bg-[#F1F6F6]">
+        <h5 className="font-bol text-xl">Patients</h5>
         <List>
           {patients.map((patient) => (
             <Link href={`/patients/${patient.id}`} key={patient.id}>

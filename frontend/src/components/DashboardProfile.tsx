@@ -21,7 +21,7 @@ const DashboardProfile = ({ profile }: ProfileProps) => {
         // <Container component="main" maxWidth="lg" sx={{ mt: 4 }} >
         <Grid item xs={12} md={6}>
           {/* Profile Summary */}
-          <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
+          <Paper elevation={3} sx={{ p: 4, mb: 4 }} className="bg-[#DDE2EE]">
             <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
               <Avatar sx={{ width: 100, height: 100, mr: 4 }}>
                 <Person />

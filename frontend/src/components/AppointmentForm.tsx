@@ -11,6 +11,19 @@ interface AppointmentData {
   description?: string | undefined;
 }
 
+const formatForInput = (isoString: string) => {
+  const date = new Date(isoString);
+
+  const pad = (number: number) => (number < 10 ? `0${number}` : number);
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // Months are zero-based
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
 interface AppointmentFormProps {
   appointment?: AppointmentData;
   loading: boolean;
@@ -31,7 +44,12 @@ const AppointmentForm = ({
   };
 
   const [formState, setFormState] = useState(
-    appointment ? appointment : initialAppointment
+    appointment
+      ? {
+          ...appointment,
+          appointmentTime: formatForInput(appointment.appointmentTime),
+        }
+      : initialAppointment
   );
 
   const handleChange = (

@@ -120,7 +120,10 @@ const EditAppointment = ({ params }: EditingProps) => {
     });
     setLoading(false);
     if (result) {
-      return router.push(`/patients/${patientID}/appointments/${result.id}`);
+      const { updatedAppointment } = result;
+      return router.push(
+        `/patients/${patientID}/appointments/${updatedAppointment.id}`
+      );
     }
     setError(true);
   };

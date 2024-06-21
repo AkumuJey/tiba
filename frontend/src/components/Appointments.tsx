@@ -28,9 +28,13 @@ interface AppointmentDetails {
 
 interface AppointmentsDashProps {
   appointments: AppointmentDetails[];
+  longerList?: boolean;
 }
 
-const AppointmentsDash = ({ appointments }: AppointmentsDashProps) => {
+const AppointmentsDisplay = ({
+  appointments,
+  longerList,
+}: AppointmentsDashProps) => {
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -47,35 +51,41 @@ const AppointmentsDash = ({ appointments }: AppointmentsDashProps) => {
   };
 
   return (
-    <Grid className="w-full md:w-1/2">
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <h5>Appointments</h5>
-        <List>
-          {appointments.map((appointment) => (
-            <Link
-              href={`patients/${appointment.patientID}/appointments/${appointment.id}`}
-              key={appointment.id}
-            >
-              <ListItem>
-                <ListItemText
-                  primary={
-                    formatDateTime(appointment.appointmentTime).formattedDate
-                  }
-                  secondary={`Time: ${
-                    formatDateTime(appointment.appointmentTime).formattedTime
-                  }, Venue: ${appointment.venue}`}
-                />
-              </ListItem>
-              <Divider variant="middle" component="li" />
-            </Link>
-          ))}
+    <>
+      <List>
+        <h5 className="font-bol text-xl">Appointments</h5>
+        {appointments.length === 0 ? (
+          <div>No appointments available</div>
+        ) : (
+          <List>
+            {appointments.map((appointment) => (
+              <Link
+                href={`patients/${appointment.patientID}/appointments/${appointment.id}`}
+                key={appointment.id}
+              >
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      formatDateTime(appointment.appointmentTime).formattedDate
+                    }
+                    secondary={`Time: ${
+                      formatDateTime(appointment.appointmentTime).formattedTime
+                    }, Venue: ${appointment.venue}`}
+                  />
+                </ListItem>
+                <Divider variant="middle" component="li" />
+              </Link>
+            ))}
+          </List>
+        )}
+        {!longerList && (
           <ListItem>
             <Link href="/appointments">Click to view more</Link>
           </ListItem>
-        </List>
-      </Paper>
-    </Grid>
+        )}
+      </List>
+    </>
   );
 };
 
-export default AppointmentsDash;
+export default AppointmentsDisplay;

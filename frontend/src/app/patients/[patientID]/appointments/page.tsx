@@ -1,5 +1,6 @@
+import AppointmentsDisplay from "@/components/Appointments";
 import { AddCircleOutline } from "@mui/icons-material";
-import { Divider, List, ListItem, Typography } from "@mui/material";
+import { Divider, Grid, List, ListItem, Typography } from "@mui/material";
 import axios from "axios";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -64,47 +65,21 @@ const AppointmentsPage = async ({
     patientID,
   });
   return (
-    <List className="flex bg-[#DCD6D6] flex-col w-[90%] md:w-2/3">
-      <Typography
-        variant="h6"
-        gutterBottom
-        className="flex flex-col md:flex-row justify-center"
-      >
-        Appointments
-        <Link href={`/patients/${patientID}/create-appointment`}>
-          <AddCircleOutline /> Book appointment
+    <Grid item xs={12} md={6}>
+      <div className="flex justify-between py-1">
+        <h4 className="text-2xl font-bold"> Appointments</h4>
+        <Link
+          href={`/patients/${patientID}/create-appointment`}
+          className="px-[1rem] py-[0.7rem] bg-[#E2D2D2] rounded-md text-lg flex gap-2 flex-col md:flex-row"
+        >
+          <AddCircleOutline className="font-bold" height={5} width={5} /> Enter
+          <h4>Book appointment</h4>
         </Link>
-      </Typography>
-      {appointments && appointments.length === 0 && (
-        <div>There are no appointments</div>
-      )}
-      {appointments && appointments.length > 0 && (
-        <>
-          {appointments.map((appointment, index) => (
-            <>
-              <Link
-                href={`/patients/${appointment.patientID}/appointments/${appointment.id}`}
-                key={appointment.id}
-                className="w-full h-full"
-              >
-                <ListItem className="flex w-full justify-between hover:bg-[#C1BABA]">
-                  <div className="w-[10%]">{appointment.id}</div>
-                  <div className="w-[70%]">
-                    {appointment.patient.firstName +
-                      " " +
-                      appointment.patient.lastName}
-                  </div>
-                  <div className="w-[20%]">{appointment.venue}</div>
-                </ListItem>
-              </Link>
-              {index !== appointments.length - 1 && (
-                <Divider variant="middle" component="li" key={appointment.id} />
-              )}
-            </>
-          ))}
-        </>
-      )}
-    </List>
+      </div>
+      <div className="w-full">
+        <AppointmentsDisplay appointments={appointments} longerList={true} />
+      </div>
+    </Grid>
   );
 };
 

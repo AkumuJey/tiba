@@ -1,9 +1,10 @@
 "use server";
-import AppointmentsDash from "@/components/Appointments";
+
+import AppointmentsDisplay from "@/components/Appointments";
 import DashboardProfile from "@/components/DashboardProfile";
 import PatientsDash from "@/components/PatientsDash";
 import ProtectedRoutes from "@/components/ProtectedRoutes";
-import { Container } from "@mui/material";
+import { Container, Paper } from "@mui/material";
 import axios from "axios";
 import { cookies } from "next/headers";
 
@@ -95,7 +96,13 @@ const Dashboard = async () => {
       </div>
       <div className="flex flex-col md:flex-row justify-between w-full md:w-3/4 mx-auto gap-[1rem]">
         <PatientsDash patients={patients} />
-        <AppointmentsDash appointments={appointments} />
+        <Paper
+          className="w-full md:w-1/2 bg-[#F1F6F6]"
+          elevation={3}
+          sx={{ p: 3 }}
+        >
+          <AppointmentsDisplay appointments={appointments} />
+        </Paper>
       </div>
     </Container>
   );

@@ -81,16 +81,16 @@ const VitalsPage = async ({ params }: { params: { patientID: string } }) => {
   console.log(hospitalVitalsList);
   return (
     <Grid item xs={12} md={6}>
-      <Typography
-        variant="h6"
-        gutterBottom
-        className="flex flex-col md:flex-row justify-center"
-      >
-        Vitals reading
-        <Link href={`/patients/${patientID}/create-vitals`}>
-          <AddCircleOutline /> Enter new vitals reading
+      <div className="flex justify-between py-1">
+        <h4 className="text-2xl font-bold">Vitals reading</h4>
+        <Link
+          href={`/patients/${patientID}/create-vitals`}
+          className="px-[1rem] py-[0.7rem] bg-[#E2D2D2] rounded-md text-lg flex gap-2 flex-col md:flex-row"
+        >
+          <AddCircleOutline className="font-bold" height={5} width={5} /> Enter
+          <h4>New vitals reading</h4>
         </Link>
-      </Typography>
+      </div>
       <List>
         {hospitalVitalsList.map((vitals) => (
           <>
