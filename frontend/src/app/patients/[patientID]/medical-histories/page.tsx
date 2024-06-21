@@ -81,7 +81,7 @@ const MedicalHistoriesPage = async ({
       <div className="flex justify-between py-1">
         <h4 className="text-2xl font-bold">Medical histories</h4>
         <Link
-          href={`/patients/${patientID}/create-vitals`}
+          href={`/patients/${patientID}/create-medical-histories`}
           className="px-[1rem] py-[0.7rem] bg-[#E2D2D2] rounded-md text-lg flex gap-2 flex-col md:flex-row"
         >
           <AddCircleOutline className="font-bold" height={5} width={5} /> Enter

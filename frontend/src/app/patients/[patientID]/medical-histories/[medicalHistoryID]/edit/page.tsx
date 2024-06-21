@@ -31,9 +31,10 @@ const fetchHistory = async ({
         withCredentials: true, // Automatically handle cookies
       }
     );
-
+    console.log(response);
     if (response.status === (200 || 201)) {
-      return response.data.medicalHistory;
+      const { medicalHistory } = await response.data.medicalHistory;
+      return medicalHistory;
     } else {
       console.log("Failed to fetch medical histories");
       return [];
@@ -57,7 +58,7 @@ const updateHistory = async ({
     const response = await axios.patch(
       `http://localhost:4000/provider/${patientID}/histories/${medicalHistoryID}`,
       {
-        historyUpdate,
+        ...historyUpdate,
       },
       {
         headers: {
@@ -93,6 +94,7 @@ const EditMedicalHistory = ({ params }: EditHistoryProps) => {
         patientID,
         medicalHistoryID,
       });
+      console.log(fetchedHistory);
       if (fetchedHistory) {
         setMedicalHistory(fetchedHistory);
       }
@@ -103,25 +105,26 @@ const EditMedicalHistory = ({ params }: EditHistoryProps) => {
 
   const router = useRouter();
   const handleUpdate = async (historyUpdate: MedicalHistory) => {
-    setLoading(true);
-    setError(false);
-    const result = await updateHistory({
-      patientID,
-      historyUpdate,
-      medicalHistoryID,
-    });
-    setLoading(false);
-    if (result) {
+    try {
+      setLoading(true);
+      setError(false);
+      const result = await updateHistory({
+        patientID,
+        historyUpdate,
+        medicalHistoryID,
+      });
+      setLoading(false);
       return router.push(
         `/patients/${patientID}/medical-histories/${result.id}`
       );
+    } catch (error) {
+      setError(true);
     }
-    setError(true);
   };
   return (
     <>
       <MedicalHistoryForm
-        handlerFunction={handleUpdate}
+        handlerFunction={(data) => handleUpdate(data)}
         medHistory={medicalHistory as MedicalHistory}
         error={error}
         loading={loading}

@@ -69,7 +69,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsLoggedIn(true);
       router.push("/dashboard");
     } catch (error) {
-      console.error("Login failed:", error);
       throw error;
     }
   };

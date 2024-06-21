@@ -127,14 +127,15 @@ const SinglePrescriptionsPage = async ({
               secondary={prescription.instruction || "N/A"}
             />
           </ListItem>
-          {prescription.prescriptionDetails.map((detail, index) => (
-            <ListItem key={detail.id}>
-              <ListItemText
-                primary={`${detail.drugName} (${detail.quantity} ${detail.units})`}
-                secondary={`Route: ${detail.route}, Duration: ${detail.durationInDays} days`}
-              />
-            </ListItem>
-          ))}
+          {prescription &&
+            prescription.prescriptionDetails.map((detail, index) => (
+              <ListItem key={detail.id}>
+                <ListItemText
+                  primary={`${detail.drugName} (${detail.quantity} ${detail.units})`}
+                  secondary={`Route: ${detail.route}, Duration: ${detail.durationInDays} days`}
+                />
+              </ListItem>
+            ))}
         </List>
       </Box>
     </>

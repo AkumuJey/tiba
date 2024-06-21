@@ -1,8 +1,6 @@
 "use client";
 import { useAuth } from "@/utils/AuthContextProvider";
-import ControlledPages from "@/utils/ControlledPages";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import GoogleIcon from "@mui/icons-material/Google";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -22,8 +20,7 @@ import {
   Typography,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 
 // types.ts

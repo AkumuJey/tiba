@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/utils/AuthContextProvider";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,8 @@ function RootLayout({
         className={`${inter.className} min-h-screen bg-[#F6F1F1] relative flex flex-col gap-[1rem]`}
       >
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow min-height">{children}</main>
+        <Footer />
       </body>
     </html>
   );

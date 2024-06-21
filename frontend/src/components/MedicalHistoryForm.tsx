@@ -1,7 +1,6 @@
 "use client";
-import loading from "@/app/appointments/loading";
 import { LoadingButton } from "@mui/lab";
-import { Button, Container, Grid, TextField } from "@mui/material";
+import { Container, Grid, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 interface MedicalHistory {
