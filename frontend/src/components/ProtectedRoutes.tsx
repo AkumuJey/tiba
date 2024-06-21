@@ -7,8 +7,12 @@ import { ReactNode, useEffect } from "react";
 const ProtectedRoutes = ({ children }: { children: ReactNode }) => {
   const { isLoggedIn } = useAuth();
   const router = useRouter();
-  console.log(isLoggedIn);
-  useEffect(() => {}, [isLoggedIn, router]);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
+  }, [isLoggedIn, router]);
 
   return <>{children}</>;
 };

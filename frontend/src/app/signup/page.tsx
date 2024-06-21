@@ -306,8 +306,4 @@ const ControllSignup = ({
   return <>{children}</>;
 };
 
-export default (
-  <ControllSignup>
-    <>Signup</>
-  </ControllSignup>
-);
+export default ControllSignup;

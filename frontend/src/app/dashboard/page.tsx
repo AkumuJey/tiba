@@ -1,4 +1,4 @@
-// app/dashboard/page.js
+"use server";
 import AppointmentsDash from "@/components/Appointments";
 import DashboardProfile from "@/components/DashboardProfile";
 import PatientsDash from "@/components/PatientsDash";
@@ -99,17 +99,15 @@ const Dashboard = async () => {
   ]);
 
   return (
-    <ProtectedRoutes>
-      <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
-        <div className="md:w-3/4 mx-auto">
-          <DashboardProfile profile={profile} />
-        </div>
-        <div className="flex flex-col md:flex-row justify-between w-full md:w-3/4 mx-auto gap-[1rem]">
-          <PatientsDash patients={patients} />
-          <AppointmentsDash appointments={appointments} />
-        </div>
-      </Container>
-    </ProtectedRoutes>
+    <Container component="main" maxWidth="lg" sx={{ mt: 4 }}>
+      <div className="md:w-3/4 mx-auto">
+        <DashboardProfile profile={profile} />
+      </div>
+      <div className="flex flex-col md:flex-row justify-between w-full md:w-3/4 mx-auto gap-[1rem]">
+        <PatientsDash patients={patients} />
+        <AppointmentsDash appointments={appointments} />
+      </div>
+    </Container>
   );
 };
 

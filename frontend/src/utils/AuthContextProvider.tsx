@@ -35,18 +35,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    const checkUserLoggedIn = () => {
-      const token = getCookie("token");
-      console.log("Token:", token);
-      const loggedIn = !!token;
-
-      setIsLoggedIn(loggedIn);
-
-      if (!loggedIn) {
-        router.push("/login");
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/provider/profile",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true, // Automatically sends cookies
+          }
+        );
+        if (response.status === 200) {
+          return response.data.profile;
+        } else {
+          console.log("Failed to fetch profile");
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        return null;
       }
     };
-
+    const checkUserLoggedIn = async () => {
+      const checker = await fetchProfile();
+      if (!checker) {
+        setIsLoggedIn(false);
+        return;
+      }
+      setIsLoggedIn(true);
+    };
     checkUserLoggedIn();
   }, [router]);
 

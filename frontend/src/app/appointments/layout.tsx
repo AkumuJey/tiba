@@ -1,6 +1,6 @@
 import ProtectedRoutes from "@/components/ProtectedRoutes";
 import React from "react";
-const PatientsLayout = ({
+const AppointmentLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -8,14 +8,14 @@ const PatientsLayout = ({
   return <>{children}</>;
 };
 
-const ProtectedPatientsLayout = ({
+const ProtectedAppointmentLayout = ({
   children,
 }: {
   children: React.ReactNode;
 }) => (
   <ProtectedRoutes>
-    <PatientsLayout>{children}</PatientsLayout>
+    <AppointmentLayout>{children}</AppointmentLayout>
   </ProtectedRoutes>
 );
 
-export default ProtectedPatientsLayout;
+export default ProtectedAppointmentLayout;
