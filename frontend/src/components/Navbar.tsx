@@ -80,37 +80,34 @@ const Navbar = () => {
           <ListItemText primary="Home" />
         </ListItem>
         <ListItem
-          className={pathname === "/" ? "text-purple-800" : ""}
+          className={pathname === "/dashboard" ? "text-purple-800" : ""}
           component={Link}
           href="/dashboard"
         >
           <ListItemText primary="Dashboard" />
         </ListItem>
         <ListItem
-          className={pathname === "/" ? "text-purple-800" : ""}
+          className={pathname === "/appointments" ? "text-purple-800" : ""}
           component={Link}
           href="/appointments"
         >
           <ListItemText primary="Appointment" />
         </ListItem>
         {isLoggedIn ? (
-          <ListItem
-            className={pathname === "/" ? "text-purple-800" : ""}
-            onClick={signout}
-          >
+          <ListItem onClick={signout}>
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
           <>
             <ListItem
-              className={pathname === "/" ? "text-purple-800" : ""}
+              className={pathname === "/signup" ? "text-purple-800" : ""}
               component={Link}
               href="/signup"
             >
               <ListItemText primary="Signup" />
             </ListItem>
             <ListItem
-              className={pathname === "/" ? "text-purple-800" : ""}
+              className={pathname === "/login" ? "text-purple-800" : ""}
               component={Link}
               href="/login"
             >

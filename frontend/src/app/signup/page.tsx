@@ -119,7 +119,7 @@ const SignupPage = () => {
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
-      <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
+      <Paper elevation={1} sx={{ p: 4, mt: 8 }} className="bg-transparent">
         <Box
           sx={{
             display: "flex",
@@ -203,7 +203,7 @@ const SignupPage = () => {
                   value={phoneNo}
                   onChange={(value) => setPhoneNo(value || "")}
                   placeholder="Enter phone number"
-                  className="phone-input outline-none py-[2] px-[2] focus:outline-none"
+                  className="phone-input outline-none py-[2] px-[2] focus:outline-none bg-transparent"
                   style={{ width: "100%" }}
                 />
               </Grid>

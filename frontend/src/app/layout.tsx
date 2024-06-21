@@ -23,7 +23,7 @@ function RootLayout({
         className={`${inter.className} min-h-screen bg-[#F6F1F1] relative flex flex-col gap-[1rem]`}
       >
         <Navbar />
-        <main className="flex-grow min-height">{children}</main>
+        <main className="flex-grow min-height mt-[3rem]">{children}</main>
         <Footer />
       </body>
     </html>

@@ -57,7 +57,8 @@ const fetchPrescription = async ({
     );
 
     if (response.status === 200) {
-      return response.data.prescription;
+      const { prescription } = await response.data.prescription;
+      return prescription;
     } else {
       console.log("Failed to fetch prescriptions");
       return [];
@@ -96,7 +97,7 @@ const SinglePrescriptionsPage = async ({
     patientID,
     prescriptionID,
   });
-
+  const { prescriptionDetails } = prescription;
   console.log(prescription);
   const { formattedDate, formattedTime } = formatDateTime(prescription.date);
   return (
@@ -127,8 +128,8 @@ const SinglePrescriptionsPage = async ({
               secondary={prescription.instruction || "N/A"}
             />
           </ListItem>
-          {prescription &&
-            prescription.prescriptionDetails.map((detail, index) => (
+          {prescriptionDetails &&
+            prescriptionDetails.map((detail, index) => (
               <ListItem key={detail.id}>
                 <ListItemText
                   primary={`${detail.drugName} (${detail.quantity} ${detail.units})`}
