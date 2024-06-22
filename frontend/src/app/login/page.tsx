@@ -52,7 +52,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [err, setErr] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (
@@ -73,18 +73,15 @@ const LoginPage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
-      setLoading(true);
       event.preventDefault();
+      setLoading(true);
+      setErr(false);
       const data = loginDataSchema.parse({ email, password });
       context.handleLogin(data.email, data.password);
     } catch (error) {
-      console.log(error);
+      setErr(true);
       setLoading(false);
     }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -159,6 +156,11 @@ const LoginPage = () => {
             >
               Sign In
             </Button>
+            <Grid className="text-center">
+              {err && (
+                <span className="text-red-400">Invalid Email or password</span>
+              )}
+            </Grid>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -173,32 +175,6 @@ const LoginPage = () => {
             </Grid>
           </Box>
         </Box>
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          message="Logged in successfully"
-          action={
-            <>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-              >
-                <CheckCircleIcon />
-              </IconButton>
-            </>
-          }
-          sx={{
-            "& .MuiSnackbarContent-root": {
-              backgroundColor: "green",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-            },
-          }}
-        />
       </Container>
     </ThemeProvider>
   );

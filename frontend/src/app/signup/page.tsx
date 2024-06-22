@@ -83,6 +83,7 @@ const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(false);
   const [phoneNo, setPhoneNo] = useState<string>("");
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -103,10 +104,9 @@ const SignupPage = () => {
     try {
       e.preventDefault();
       setLoading(true);
-
+      setErr(false);
       const newData = { ...formData, phoneNo };
       const validatedData = signupDataSchema.parse(newData);
-
       if (validatedData.password !== validatedData.confirmPassword) {
         alert("Passwords do not match");
         setLoading(false);
@@ -115,7 +115,7 @@ const SignupPage = () => {
 
       await handleSignup(validatedData);
     } catch (error) {
-      console.log(error);
+      setErr(true);
     } finally {
       setLoading(false);
     }
@@ -268,6 +268,11 @@ const SignupPage = () => {
                   }}
                 />
               </Grid>
+            </Grid>
+            <Grid className="text-center py-1">
+              {err && (
+                <span className="text-red-400">Error creating account</span>
+              )}
             </Grid>
             <Box mt={2}>
               <Typography variant="body2" color="textSecondary">
