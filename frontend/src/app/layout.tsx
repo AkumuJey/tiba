@@ -31,7 +31,6 @@ const RootLayoutWithProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  "use client";
   return (
     <html lang="en">
       <body
