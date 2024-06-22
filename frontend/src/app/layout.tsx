@@ -18,17 +18,11 @@ function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.className} min-h-screen bg-[#F6F1F1] relative flex flex-col gap-[1rem]`}
-      >
-        <Navbar />
-        <main className="flex-grow min-height mt-[6rem] mb-[3rem]">
-          {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
+    <>
+      <Navbar />
+      <main className="flex-grow min-height mt-[4rem]">{children}</main>
+      <Footer />
+    </>
   );
 }
 
@@ -39,9 +33,15 @@ const RootLayoutWithProvider = ({
 }) => {
   "use client";
   return (
-    <AuthProvider>
-      <RootLayout>{children}</RootLayout>
-    </AuthProvider>
+    <html lang="en">
+      <body
+        className={`${inter.className} min-h-screen bg-[#F6F1F1] relative flex flex-col gap-[1rem]`}
+      >
+        <AuthProvider>
+          <RootLayout>{children}</RootLayout>
+        </AuthProvider>
+      </body>
+    </html>
   );
 };
 

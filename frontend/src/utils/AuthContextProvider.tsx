@@ -1,5 +1,6 @@
 "use client";
 
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
@@ -26,8 +27,10 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
+    setSuccess(false);
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
@@ -47,6 +50,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const checkUserLoggedIn = async () => {
       const checker = await fetchProfile();
       setIsLoggedIn(checker);
+      setSuccess(true);
     };
     checkUserLoggedIn();
   }, [router]);
@@ -117,7 +121,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       throw error;
     }
   };
-
+  if (!success) {
+    return (
+      <div className="h-screen w-full flex justify-center items-center bg-[#F6F1F1]">
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
     <AuthContext.Provider
       value={{ isLoggedIn, handleLogin, handleLogout, handleSignup }}
