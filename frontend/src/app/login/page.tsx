@@ -72,10 +72,15 @@ const LoginPage = () => {
   const context = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = loginDataSchema.parse({ email, password });
-    context.handleLogin(data.email, data.password);
-    setLoading(true);
+    try {
+      setLoading(true);
+      event.preventDefault();
+      const data = loginDataSchema.parse({ email, password });
+      context.handleLogin(data.email, data.password);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {
@@ -161,7 +166,7 @@ const LoginPage = () => {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

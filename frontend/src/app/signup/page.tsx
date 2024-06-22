@@ -28,7 +28,7 @@ const signupDataSchema = z.object({
   title: z.string(),
   firstName: z.string(),
   lastName: z.string(),
-  dob: z.string(), // Date of Birth
+  dateOfBirth: z.string(), // Date of Birth
   phoneNo: z.string(),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -73,7 +73,7 @@ const SignupPage = () => {
     title: "",
     firstName: "",
     lastName: "",
-    dob: "",
+    dateOfBirth: "",
     phoneNo: "",
     email: "",
     password: "",
@@ -100,20 +100,25 @@ const SignupPage = () => {
 
   const { handleSignup } = useAuth();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+    try {
+      e.preventDefault();
+      setLoading(true);
 
-    const newData = { ...formData, phoneNo };
-    const validatedData = signupDataSchema.parse(newData);
+      const newData = { ...formData, phoneNo };
+      const validatedData = signupDataSchema.parse(newData);
 
-    if (validatedData.password !== validatedData.confirmPassword) {
-      alert("Passwords do not match");
+      if (validatedData.password !== validatedData.confirmPassword) {
+        alert("Passwords do not match");
+        setLoading(false);
+        return;
+      }
+
+      await handleSignup(validatedData);
+    } catch (error) {
+      console.log(error);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    await handleSignup(validatedData);
-    setLoading(false);
   };
 
   return (
@@ -180,7 +185,7 @@ const SignupPage = () => {
                   type="date"
                   name="dateOfBirth"
                   InputLabelProps={{ shrink: true }}
-                  value={formData.dob}
+                  value={formData.dateOfBirth}
                   onChange={handleInputChange}
                 />
               </Grid>

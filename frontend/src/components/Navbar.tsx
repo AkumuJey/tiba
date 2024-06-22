@@ -131,7 +131,7 @@ const Navbar = () => {
               </Link>
             </Typography>
           </Box>
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ display: { xs: "none", md: "flex", gap: "1rem" } }}>
             <Link
               href="/"
               className={pathname === "/" ? "text-purple-800" : ""}

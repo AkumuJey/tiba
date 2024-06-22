@@ -5,6 +5,10 @@ import * as jwt from "jsonwebtoken";
 import { LoginSchema } from "../schema/LoginSchema";
 import { ProviderSignupSchema } from "../schema/ProviderSignUpSchema";
 
+const convertToISO = (dateTimeString: string) => {
+  const date = new Date(dateTimeString);
+  return date.toISOString();
+};
 export const providerLoginController = async (req: Request, res: Response) => {
   try {
     LoginSchema.parse(req.body);
@@ -84,7 +88,7 @@ export const providerSignupController = async (req: Request, res: Response) => {
         phoneNo,
         age,
         verified: false,
-        dateOfBirth,
+        dateOfBirth: convertToISO(dateOfBirth),
       },
     });
 

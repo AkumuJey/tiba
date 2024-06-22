@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:4000/provider/login",
         {
           email,
@@ -66,6 +66,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           withCredentials: true, // Automatically handle cookies
         }
       );
+      if (response.status !== 201 && response.status !== 200) {
+        throw new Error("Failed to login");
+      }
+
+      console.log(response);
       setIsLoggedIn(true);
       router.push("/dashboard");
     } catch (error) {
@@ -95,12 +100,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleSignup = async (userData: any) => {
     try {
-      await axios.post("http://localhost:4000/provider/signup", userData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true, // Automatically handle cookies
-      });
+      const response = await axios.post(
+        "http://localhost:4000/provider/signup",
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Automatically handle cookies
+        }
+      );
+      console.log(response);
       router.push("/login");
     } catch (error) {
       console.error("Signup failed:", error);
