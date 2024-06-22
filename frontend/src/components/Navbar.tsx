@@ -73,41 +73,54 @@ const Navbar = () => {
     >
       <List>
         <ListItem
-          className={pathname === "/" ? "text-purple-800" : ""}
+          className={`font-medium text-lg ${
+            pathname === "/" ? "text-purple-800" : "text-black"
+          }`}
           component={Link}
           href="/"
         >
           <ListItemText primary="Home" />
         </ListItem>
         <ListItem
-          className={pathname === "/dashboard" ? "text-purple-800" : ""}
+          className={`font-medium text-lg ${
+            pathname === "/dashboard" ? "text-purple-800" : "text-black"
+          }`}
           component={Link}
           href="/dashboard"
         >
           <ListItemText primary="Dashboard" />
         </ListItem>
         <ListItem
-          className={pathname === "/appointments" ? "text-purple-800" : ""}
+          className={`font-medium text-lg ${
+            pathname === "/appointments" ? "text-purple-800" : "text-black"
+          }`}
           component={Link}
           href="/appointments"
         >
           <ListItemText primary="Appointment" />
         </ListItem>
         {isLoggedIn ? (
-          <ListItem onClick={signout}>
+          <ListItem
+            onClick={signout}
+            className={`font-medium text-lg text-black`}
+          >
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
           <>
             <ListItem
-              className={pathname === "/signup" ? "text-purple-800" : ""}
+              className={`font-medium text-lg ${
+                pathname === "/signup" ? "text-purple-800" : "text-black"
+              }`}
               component={Link}
               href="/signup"
             >
               <ListItemText primary="Signup" />
             </ListItem>
             <ListItem
-              className={pathname === "/login" ? "text-purple-800" : ""}
+              className={`font-medium text-lg ${
+                pathname === "/login" ? "text-purple-800" : "text-black"
+              }`}
               component={Link}
               href="/login"
             >
@@ -127,44 +140,58 @@ const Navbar = () => {
             <LocalHospital sx={{ mr: 2 }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link href="/">
-                <Button color="inherit">Tiba</Button>
+                <Button className="text-black font-medium text-lg">Tiba</Button>
               </Link>
             </Typography>
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex", gap: "1rem" } }}>
             <Link
               href="/"
-              className={pathname === "/" ? "text-purple-800" : ""}
+              className={`font-medium text-lg ${
+                pathname === "/" ? "text-purple-800" : "text-black"
+              }`}
             >
               Home
             </Link>
             <Link
               href="/dashboard"
-              className={pathname === "/dashboard" ? "text-purple-800" : ""}
+              className={`font-medium text-lg ${
+                pathname === "/dashboard" ? "text-purple-800" : "text-black"
+              }`}
             >
               Dashboard
             </Link>
             <Link
               href="/appointments"
-              className={pathname === "/appointments" ? "text-purple-800" : ""}
+              className={`font-medium text-lg ${
+                pathname === "/appointments" ? "text-purple-800" : "text-black"
+              }`}
             >
               Appointment
             </Link>
             {isLoggedIn ? (
-              <Link href={`/logout`} color="inherit" onClick={signout}>
+              <Link
+                href={`/logout`}
+                className={`font-medium text-lg text-black`}
+                onClick={signout}
+              >
                 Logout
               </Link>
             ) : (
               <>
                 <Link
                   href="/signup"
-                  className={pathname === "/signup" ? "text-purple-800" : ""}
+                  className={`font-medium text-lg ${
+                    pathname === "/signup" ? "text-purple-800" : "text-black"
+                  }`}
                 >
                   Signup
                 </Link>
                 <Link
                   href="/login"
-                  className={pathname === "/login" ? "text-purple-800" : ""}
+                  className={`font-medium text-lg ${
+                    pathname === "/login" ? "text-purple-800" : "text-black"
+                  }`}
                 >
                   Login
                 </Link>

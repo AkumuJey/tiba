@@ -33,7 +33,6 @@ const VitalsForm = ({
   const [formData, setFormData] = useState<VitalsResults>(
     vitals ? vitals : initialVitals
   );
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({

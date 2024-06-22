@@ -83,10 +83,7 @@ const SingleVitalsPage = async ({
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" gutterBottom className="flex justify-between">
         Vitals
-        <LinkToEdit
-          path={`/patients/${patientID}/vitals/${vitalsID}/edit`}
-          query={vitals}
-        />
+        <LinkToEdit path={`/patients/${patientID}/vitals/${vitalsID}/edit`} />
       </Typography>
       <List>
         <ListItem>

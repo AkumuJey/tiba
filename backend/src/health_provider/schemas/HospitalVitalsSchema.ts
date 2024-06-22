@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const HospitalVitalsSchema = z.object({
-  medicalHistoryID: z.number().int().optional(),
+  medicalHistoryID: z.number().int().optional().nullable(),
   breathingRate: z.number().int(),
   systolicBP: z.number().int(),
   diastolicBP: z.number().int(),

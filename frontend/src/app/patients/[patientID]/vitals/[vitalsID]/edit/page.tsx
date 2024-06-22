@@ -1,10 +1,13 @@
-"use client";
-import VitalsForm from "@/components/VitalsForm";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { cookies } from "next/headers";
+import EditVitalsController from "./EditController";
 
-export interface VitalsResults {
+interface Vitals {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthProviderID: number;
+  medicalHistoryID: number | null;
   breathingRate: number;
   systolicBP: number;
   diastolicBP: number;
@@ -12,118 +15,55 @@ export interface VitalsResults {
   weightKg: number;
 }
 
-interface EditVitalsProps {
-  params: { vitalsID: string; patientID: string };
-}
-
 const fetchVitals = async ({
+  cookieHeader,
   patientID,
   vitalsID,
 }: {
+  cookieHeader: string;
   patientID: string;
   vitalsID: string;
 }) => {
   try {
     const response = await axios.get(
-      `http://localhost:4000/provider/${patientID}/appointments/${vitalsID}`,
+      `http://localhost:4000/provider/${patientID}/vitals/${vitalsID}`,
       {
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
         },
-        withCredentials: true, // Automatically handle cookies
+        withCredentials: true, // Automatically sends cookies
       }
     );
-
     if (response.status === 200 || response.status === 201) {
-      return response.data.hospitalVitals;
+      const { hospitalVitals } = await response.data;
+      return hospitalVitals;
     } else {
       console.log("Failed to fetch patient details");
-      return null;
+      return [];
     }
   } catch (error) {
     console.error("Error fetching patient details:", error);
-    return null;
+    return [];
   }
 };
 
-const updateVitals = async ({
-  patientID,
-  updatedVitals,
-  vitalsID,
+const VitalsEditPage = async ({
+  params,
 }: {
-  patientID: string;
-  updatedVitals: VitalsResults;
-  vitalsID: string;
+  params: { patientID: string; vitalsID: string };
 }) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:4000/provider/${patientID}/vitals/${vitalsID}`,
-      {
-        ...updatedVitals,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
+  const { patientID, vitalsID } = params;
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const vitals: Vitals = await fetchVitals({
+    vitalsID,
+    patientID,
+    cookieHeader,
+  });
 
-    if (response.status !== 201) {
-      console.log("Failed");
-      return;
-    }
-    return response.data;
-  } catch (error) {
-    console.error("Failed to update appointment", error);
-    return;
-  }
+  console.log(vitals);
+  return <EditVitalsController vitals={vitals} params={params} />;
 };
 
-const EditVitals = ({ params }: EditVitalsProps) => {
-  const { vitalsID, patientID } = params;
-  const [vitals, setVitals] = useState<VitalsResults | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedAppointment = await fetchVitals({
-        patientID,
-        vitalsID,
-      });
-      if (fetchedAppointment) {
-        setVitals(fetchedAppointment);
-      }
-    };
-
-    fetchData();
-  }, [patientID, vitalsID]);
-
-  const router = useRouter();
-  const handleUpdate = async (updatedVitals: VitalsResults) => {
-    setLoading(true);
-    setError(false);
-    const result = await updateVitals({
-      patientID,
-      updatedVitals,
-      vitalsID,
-    });
-    setLoading(false);
-    if (result.id) {
-      return router.push(`/patients/${patientID}/vitals/${result.id}`);
-    }
-    setError(true);
-  };
-  return (
-    <>
-      <VitalsForm
-        handlerFunction={handleUpdate}
-        vitals={vitals as VitalsResults}
-        loading={loading}
-        error={error}
-      />
-    </>
-  );
-};
-
-export default EditVitals;
+export default VitalsEditPage;
