@@ -1,149 +1,88 @@
-"use client";
-import PrescriptionForm from "@/components/PrescriptionForm";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { cookies } from "next/headers";
+import EditPrescription from "./PrescriptionFormController.tsx";
 
-interface Drug {
+interface PrescriptionDetail {
+  id: number;
+  createdAt: string;
+  prescriptionID: number;
+  healthcareProviderID: number;
   quantity: number;
   units: string;
   route: string;
   drugName: string;
   durationInDays: number;
 }
-
-export interface Prescription {
+interface Prescription {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthcareProviderID: number;
+  medicalHistoryID: number | null;
   date: string;
-  instruction?: string;
-  drugs: Drug[];
-}
-
-interface EditPrescriptionsProps {
-  params: { prescriptionID: string; vitalsID: string; patientID: string };
+  instruction: string;
+  prescriptionDetails: PrescriptionDetail[];
 }
 
 const fetchPrescription = async ({
+  cookieHeader,
   patientID,
   prescriptionID,
 }: {
+  cookieHeader: string;
   patientID: string;
   prescriptionID: string;
-}): Promise<Prescription | null> => {
+}) => {
   try {
     const response = await axios.get(
       `http://localhost:4000/provider/${patientID}/prescription/${prescriptionID}`,
       {
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
         },
-        withCredentials: true, // Automatically handle cookies
+        withCredentials: true, // Automatically sends cookies
       }
     );
-
-    if (response.status === 200 || response.status === 201) {
-      const { prescription } = response.data;
+    if (response.status === 200) {
+      const { prescription } = await response.data;
       return prescription;
     } else {
       console.log("Failed to fetch prescriptions");
-      return null;
+      return [];
     }
   } catch (error) {
-    console.error("Error fetching prescription:", error);
-    return null;
+    console.error("Error fetching prescriptions:", error);
+    return [];
   }
 };
 
-const updatePrescription = async ({
-  patientID,
-  updatedPrescription,
-  prescriptionID,
+const PrescriptionFormController = async ({
+  params,
 }: {
-  patientID: string;
-  updatedPrescription: Prescription;
-  prescriptionID: string;
-}): Promise<Prescription | null> => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:4000/provider/${patientID}/appointments/${prescriptionID}/`,
-      {
-        updatedPrescription,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-
-    if (response.status !== 200 && response.status !== 201) {
-      console.log("Failed to update prescription");
-      return null;
-    }
-
-    const data = response.data;
-    console.log("Response", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to update prescription", error);
-    return null;
-  }
-};
-
-const EditPrescription = ({ params }: EditPrescriptionsProps) => {
+  params: { patientID: string; prescriptionID: string };
+}) => {
   const { patientID, prescriptionID } = params;
-  const [prescription, setPrescription] = useState<Prescription | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const prescription: Prescription = await fetchPrescription({
+    cookieHeader,
+    patientID,
+    prescriptionID,
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log("Fetching prescription for:", patientID, prescriptionID);
-      const fetchedPrescription = await fetchPrescription({
-        patientID,
-        prescriptionID,
-      });
-      console.log("Fetched prescription:", fetchedPrescription);
-      if (fetchedPrescription) {
-        setPrescription(fetchedPrescription);
-      } else {
-        console.log("No prescription found");
-        setError(true);
-      }
-    };
-
-    fetchData();
-  }, [patientID, prescriptionID]);
-
-  const router = useRouter();
-  const handleUpdate = async (updatedPrescription: Prescription) => {
-    setLoading(true);
-    setError(false);
-    const result = await updatePrescription({
-      patientID,
-      updatedPrescription,
-      prescriptionID,
-    });
-    setLoading(false);
-    if (result) {
-      return router.push(
-        `/patients/${patientID}/prescriptions/${prescriptionID}`
-      );
-    }
-    setError(true);
+  const prescriptionProp = {
+    ...prescription,
+    drugs: prescription.prescriptionDetails,
   };
+
+  console.log(prescriptionProp);
 
   return (
     <>
-      {error && <p className="text-red-500">Error fetching prescription</p>}
-      <PrescriptionForm
-        prescription={prescription as Prescription}
-        handlerFunction={handleUpdate}
-        error={error}
-        loading={loading}
-      />
+      <EditPrescription params={params} prescription={prescriptionProp} />
     </>
   );
 };
 
-export default EditPrescription;
+export default PrescriptionFormController;

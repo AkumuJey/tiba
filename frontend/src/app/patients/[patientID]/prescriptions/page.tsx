@@ -88,24 +88,22 @@ const PrescriptionsPage = async ({
       <List>
         {prescriptions &&
           prescriptions.map((prescription) => (
-            <>
-              <Link
-                href={`/patients/${patientID}/prescriptions/${prescription.id}`}
-                key={prescription.id}
-              >
-                <ListItem>
-                  <ListItemText
-                    primary={`Date: ${
-                      formatDateTime(prescription.createdAt).formattedDate
-                    } Time: ${
-                      formatDateTime(prescription.createdAt).formattedTime
-                    }`}
-                    secondary={`Instructions ${prescription.instruction}`}
-                  />
-                </ListItem>
-                <Divider variant="middle" component="li" />
-              </Link>
-            </>
+            <Link
+              href={`/patients/${patientID}/prescriptions/${prescription.id}`}
+              key={prescription.id}
+            >
+              <ListItem>
+                <ListItemText
+                  primary={`Date: ${
+                    formatDateTime(prescription.createdAt).formattedDate
+                  } Time: ${
+                    formatDateTime(prescription.createdAt).formattedTime
+                  }`}
+                  secondary={`Instructions ${prescription.instruction}`}
+                />
+              </ListItem>
+              <Divider variant="middle" component="li" />
+            </Link>
           ))}
       </List>
     </Grid>

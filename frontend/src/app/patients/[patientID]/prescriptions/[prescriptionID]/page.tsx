@@ -96,7 +96,7 @@ const SinglePrescriptionsPage = async ({
     patientID,
     prescriptionID,
   });
-
+  console.log(prescription);
   const { formattedDate, formattedTime } = formatDateTime(prescription.date);
   return (
     <>

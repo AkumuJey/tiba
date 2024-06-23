@@ -25,6 +25,18 @@ interface PrescriptionFormProps {
   handlerFunction: (data: FormData) => void;
 }
 
+const formatForInput = (isoString: string) => {
+  const date = new Date(isoString);
+
+  const pad = (number: number) => (number < 10 ? `0${number}` : number);
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // Months are zero-based
+  const day = pad(date.getDate());
+
+  return `${year}-${month}-${day}`;
+};
+
 const PrescriptionForm = ({
   prescription,
   error,
@@ -91,7 +103,7 @@ const PrescriptionForm = ({
     console.log("Form Data Submitted:", formData);
     handlerFunction(formData);
   };
-
+  console.log(formData);
   return (
     <Container maxWidth="md">
       <h4>Prescription Form</h4>
@@ -105,7 +117,7 @@ const PrescriptionForm = ({
               label="Date"
               type="date"
               InputLabelProps={{ shrink: true }}
-              value={formData.date}
+              value={formatForInput(formData.date)}
               onChange={handleFormChange}
               variant="outlined"
             />
