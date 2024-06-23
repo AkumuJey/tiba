@@ -19,9 +19,11 @@ function RootLayout({
 }>) {
   return (
     <>
-      <Navbar />
-      <main className="flex-grow min-height mt-[4rem]">{children}</main>
-      <Footer />
+      <main className="p-0 m-0">
+        <Navbar />
+        <div className="min-h-screen bg-transparent mt-[5rem]">{children}</div>
+        <Footer />
+      </main>
     </>
   );
 }

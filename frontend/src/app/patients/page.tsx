@@ -61,7 +61,7 @@ const Patients = async () => {
   };
   return (
     <Grid className="w-[90%] md:w-2/3 mx-auto">
-      <Paper elevation={3} sx={{ p: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }} className="bg-transparent">
         <Typography variant="h6" gutterBottom>
           Patients
         </Typography>

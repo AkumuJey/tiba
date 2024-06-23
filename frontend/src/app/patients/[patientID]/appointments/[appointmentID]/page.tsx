@@ -71,8 +71,11 @@ const SingleAppointment = async ({
   const { patient } = appointment;
 
   return (
-    <Paper elevation={2} className="w-full max-w-lg mx-auto p-6 my-4">
-      <Typography variant="h6" component="div" className="mb-4 text-center">
+    <Paper
+      elevation={2}
+      className="w-full max-w-lg mx-auto p-6 my-4 bg-transparent"
+    >
+      <Typography variant="h6" component="div" className="mb-4 text-left">
         Appointment Details
       </Typography>
       {!appointment ? (
@@ -145,14 +148,12 @@ const SingleAppointment = async ({
               Time: {new Date(appointment.createdAt).toLocaleTimeString()}
             </Typography>
           </div>
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-between mt-4 items-center">
             <Link
               href={`/patients/${appointment.patientID}/appointments/${appointment.id}/edit`}
-              className="block p-2 bg-green-500 text-white text-center rounded hover:bg-green-600 transition"
+              className="bg-green-500 text-white text-center hover:bg-green-600 transition px-[1rem] py-[0.4rem] uppercase rounded-md"
             >
-              <IconButton>
-                <Edit /> Edit
-              </IconButton>
+              <Edit className="mr-3" /> Edit
             </Link>
             <DeleteAppointment
               patientID={patientID}

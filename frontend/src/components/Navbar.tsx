@@ -147,7 +147,7 @@ const Navbar = () => {
           <Box sx={{ display: { xs: "none", md: "flex", gap: "1rem" } }}>
             <Link
               href="/"
-              className={`font-medium text-lg ${
+              className={`font-medium text-medium ${
                 pathname === "/" ? "text-purple-800" : "text-black"
               }`}
             >
@@ -155,7 +155,7 @@ const Navbar = () => {
             </Link>
             <Link
               href="/dashboard"
-              className={`font-medium text-lg ${
+              className={`font-medium text-medium ${
                 pathname === "/dashboard" ? "text-purple-800" : "text-black"
               }`}
             >
@@ -163,7 +163,7 @@ const Navbar = () => {
             </Link>
             <Link
               href="/appointments"
-              className={`font-medium text-lg ${
+              className={`font-medium text-medium ${
                 pathname === "/appointments" ? "text-purple-800" : "text-black"
               }`}
             >
@@ -172,7 +172,7 @@ const Navbar = () => {
             {isLoggedIn ? (
               <Link
                 href={`/logout`}
-                className={`font-medium text-lg text-black`}
+                className={`font-medium text-medium text-black`}
                 onClick={signout}
               >
                 Logout
@@ -181,7 +181,7 @@ const Navbar = () => {
               <>
                 <Link
                   href="/signup"
-                  className={`font-medium text-lg ${
+                  className={`font-medium text-medium ${
                     pathname === "/signup" ? "text-purple-800" : "text-black"
                   }`}
                 >
@@ -189,7 +189,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   href="/login"
-                  className={`font-medium text-lg ${
+                  className={`font-medium text-medium ${
                     pathname === "/login" ? "text-purple-800" : "text-black"
                   }`}
                 >

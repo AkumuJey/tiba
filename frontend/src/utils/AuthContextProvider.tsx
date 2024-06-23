@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    setSuccess(false);
+    setSuccess(isLoggedIn);
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSuccess(true);
     };
     checkUserLoggedIn();
-  }, [router]);
+  }, [router, isLoggedIn]);
 
   const handleLogin = async (email: string, password: string) => {
     try {
