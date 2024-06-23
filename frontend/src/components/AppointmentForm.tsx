@@ -1,5 +1,4 @@
 "use client";
-import loading from "@/app/appointments/loading";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Paper, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -7,7 +6,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 interface AppointmentData {
   venue: string;
   appointmentTime: string;
-  amount: string;
+  amount: number;
   description?: string | undefined;
 }
 
@@ -58,7 +57,7 @@ const AppointmentForm = ({
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: name === "amount" ? parseFloat(value) : value,
     }));
   };
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

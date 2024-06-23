@@ -32,7 +32,12 @@ interface HideOnScrollProps {
 const HideOnScroll = ({ children }: HideOnScrollProps) => {
   const trigger = useScrollTrigger();
   return (
-    <Slide appear={false} direction="down" in={!trigger}>
+    <Slide
+      appear={false}
+      direction="down"
+      in={!trigger}
+      className="w-full m-0 p-0"
+    >
       {children as any}
     </Slide>
   );
@@ -134,20 +139,24 @@ const Navbar = () => {
 
   return (
     <HideOnScroll>
-      <AppBar position="fixed" sx={{ backgroundColor: "#E0D9E6" }}>
-        <Toolbar>
-          <Box display="flex" alignItems="center" flexGrow={1}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: "#E0D9E6" }}
+        className="text-lg"
+      >
+        <Toolbar className="flex justify-between">
+          <div className="flex items-center w-1/5">
             <LocalHospital sx={{ mr: 2 }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link href="/">
                 <Button className="text-black font-medium text-lg">Tiba</Button>
               </Link>
             </Typography>
-          </Box>
-          <Box sx={{ display: { xs: "none", md: "flex", gap: "1rem" } }}>
+          </div>
+          <div className="w-3/5 flex justify-end gap-[1rem]">
             <Link
               href="/"
-              className={`font-medium text-medium ${
+              className={`font-medium text-lg ${
                 pathname === "/" ? "text-purple-800" : "text-black"
               }`}
             >
@@ -155,7 +164,7 @@ const Navbar = () => {
             </Link>
             <Link
               href="/dashboard"
-              className={`font-medium text-medium ${
+              className={`font-medium text-lg ${
                 pathname === "/dashboard" ? "text-purple-800" : "text-black"
               }`}
             >
@@ -163,16 +172,26 @@ const Navbar = () => {
             </Link>
             <Link
               href="/appointments"
-              className={`font-medium text-medium ${
+              className={`font-medium text-lg ${
                 pathname === "/appointments" ? "text-purple-800" : "text-black"
               }`}
             >
               Appointment
             </Link>
+            <Link
+              href="/patients"
+              className={`font-medium text-lg ${
+                pathname === "/patients" ? "text-purple-800" : "text-black"
+              }`}
+            >
+              Patients
+            </Link>
+          </div>
+          <div className="w-1/5 flex justify-end gap-2 pr-3">
             {isLoggedIn ? (
               <Link
                 href={`/logout`}
-                className={`font-medium text-medium text-black`}
+                className={`font-medium text-lg text-black`}
                 onClick={signout}
               >
                 Logout
@@ -181,7 +200,7 @@ const Navbar = () => {
               <>
                 <Link
                   href="/signup"
-                  className={`font-medium text-medium ${
+                  className={`font-medium text-lg ${
                     pathname === "/signup" ? "text-purple-800" : "text-black"
                   }`}
                 >
@@ -189,7 +208,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   href="/login"
-                  className={`font-medium text-medium ${
+                  className={`font-medium text-lg ${
                     pathname === "/login" ? "text-purple-800" : "text-black"
                   }`}
                 >
@@ -197,7 +216,7 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-          </Box>
+          </div>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               edge="start"

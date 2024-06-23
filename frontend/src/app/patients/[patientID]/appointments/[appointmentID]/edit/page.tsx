@@ -1,21 +1,24 @@
-"use client";
-
-import AppointmentForm from "@/components/AppointmentForm";
+import DeleteAppointment from "@/components/DeleteAppointment.tsx";
+import { Edit } from "@mui/icons-material";
+import { IconButton, Paper, Typography } from "@mui/material";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { cookies } from "next/headers";
+import Link from "next/link";
+import ControllerAppointmentForm from "./ControllerAppointmentForm";
 
-interface AppointmentData {
+interface AppointmentDetails {
   venue: string;
   appointmentTime: string;
-  amount: string;
-  description?: string | undefined;
+  amount: number;
+  description?: string;
 }
 
 const fetchAppointment = async ({
+  cookieHeader,
   patientID,
   appointmentID,
 }: {
+  cookieHeader: string;
   patientID: string;
   appointmentID: string;
 }) => {
@@ -25,121 +28,43 @@ const fetchAppointment = async ({
       {
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
         },
-        withCredentials: true, // Automatically handle cookies
+        withCredentials: true, // Automatically sends cookies
       }
     );
 
-    if (response.status === 200 || response.status === 201) {
+    if (response.status === (200 || 201)) {
       return response.data.appointment;
     } else {
-      console.log("Failed to fetch patient details");
-      return null;
+      console.log("Failed to fetch appointment");
+      return [];
     }
   } catch (error) {
-    console.error("Error fetching patient details:", error);
-    return null;
+    console.error("Error fetching appointment:", error);
+    return [];
   }
 };
 
-const updateAppointment = async ({
-  patientID,
-  details,
-  appointmentID,
+const EditAppointmentPage = async ({
+  params,
 }: {
-  patientID: string;
-  details: AppointmentData;
-  appointmentID: string;
+  params: { appointmentID: string; patientID: string };
 }) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}/`,
-      {
-        ...details,
-        amount: parseInt(details.amount, 10),
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-
-    if (response.status !== 200 && response.status !== 201) {
-      console.log("Failed");
-      return;
-    }
-
-    const data = response.data;
-    console.log("Response", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to update appointment", error);
-    return;
-  }
-};
-
-interface Params {
-  patientID: string;
-  appointmentID: string;
-}
-
-interface EditingProps {
-  params: Params;
-}
-
-const EditAppointment = ({ params }: EditingProps) => {
   const { patientID, appointmentID } = params;
-  const [appointment, setAppointment] = useState<AppointmentData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedAppointment = await fetchAppointment({
-        patientID,
-        appointmentID,
-      });
-      if (fetchedAppointment) {
-        setAppointment(fetchedAppointment);
-      }
-    };
-
-    fetchData();
-  }, [patientID, appointmentID]);
-
-  const router = useRouter();
-  const handleUpdate = async (data: AppointmentData) => {
-    setLoading(true);
-    setError(false);
-    const result = await updateAppointment({
-      patientID,
-      details: data,
-      appointmentID,
-    });
-    setLoading(false);
-    if (result) {
-      const { updatedAppointment } = result;
-      return router.push(
-        `/patients/${patientID}/appointments/${updatedAppointment.id}`
-      );
-    }
-    setError(true);
-  };
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const appointment: AppointmentDetails = await fetchAppointment({
+    appointmentID,
+    patientID,
+    cookieHeader,
+  });
 
   return (
     <>
-      {appointment && (
-        <AppointmentForm
-          handlerFunction={handleUpdate}
-          appointment={appointment}
-          loading={loading}
-          error={error}
-        />
-      )}
+      <ControllerAppointmentForm appointment={appointment} params={params} />
     </>
   );
 };
 
-export default EditAppointment;
+export default EditAppointmentPage;
