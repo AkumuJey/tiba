@@ -39,13 +39,11 @@ const LabsForm = ({
     labResults ? labResults : initialResuts
   );
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, valueAsNumber } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "findings" || name === "labName" ? value : Number(value),
+      [name]: type === "number" ? valueAsNumber : value,
     }));
   };
 
@@ -53,11 +51,6 @@ const LabsForm = ({
     e.preventDefault();
     handlerFunction({
       ...formData,
-      bloodSugar: Number(formData.bloodSugar),
-      cholesterol: Number(formData.cholesterol),
-      HDL: Number(formData.HDL),
-      LDL: Number(formData.LDL),
-      triglyceride: Number(formData.triglyceride),
     });
   };
 

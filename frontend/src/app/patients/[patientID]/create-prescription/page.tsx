@@ -32,8 +32,8 @@ const addPrescription = async ({
 }) => {
   try {
     const response = await axios.post(
-      `http://localhost:4000/provider/${patientID}/appointments/`,
-      JSON.stringify(prescription),
+      `http://localhost:4000/provider/${patientID}/prescription/`,
+      prescription,
       {
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +73,7 @@ const CreatePrescriptionPage = ({ params }: CreatePrescriptionsProps) => {
   return (
     <>
       <PrescriptionForm
-        handlerFunction={(data) => handleNewPrescription(data)}
+        handlerFunction={(data) => handleNewPrescription(data as Prescription)}
         error={error}
         loading={loading}
       />

@@ -5,11 +5,11 @@ import { Box, Container, Grid, IconButton, TextField } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 interface Drug {
-  quantity: number;
+  quantity?: number;
   units: string;
   route: string;
   drugName: string;
-  durationInDays: number;
+  durationInDays?: number;
 }
 
 interface FormData {
@@ -43,29 +43,39 @@ const PrescriptionForm = ({
   loading,
   handlerFunction,
 }: PrescriptionFormProps) => {
-  const initialPrescription = {
+  const initialPrescription: FormData = {
     date: "",
     instruction: "",
     drugs: [
-      { quantity: 0, units: "", route: "", drugName: "", durationInDays: 0 },
+      {
+        quantity: undefined,
+        units: "",
+        route: "",
+        drugName: "",
+        durationInDays: undefined,
+      },
     ],
   };
+
   const [formData, setFormData] = useState<FormData>(
     prescription ? prescription : initialPrescription
   );
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: ChangeEvent<HTMLInputElement>,
     index: number,
     field: keyof Drug
   ) => {
-    const { value } = e.target;
+    const { value, valueAsNumber, type } = e.target;
     const newDrugs = [...formData.drugs];
+
     if (field === "quantity" || field === "durationInDays") {
-      newDrugs[index][field] = Number(value);
+      newDrugs[index][field] =
+        type === "number" ? (value ? valueAsNumber : undefined) : undefined;
     } else {
-      newDrugs[index][field] = value;
+      newDrugs[index][field] = value as any;
     }
+
     setFormData({ ...formData, drugs: newDrugs });
   };
 
@@ -75,11 +85,11 @@ const PrescriptionForm = ({
       drugs: [
         ...formData.drugs,
         {
-          quantity: 0,
+          quantity: undefined,
           units: "",
           route: "",
           drugName: "",
-          durationInDays: 0,
+          durationInDays: undefined,
         },
       ],
     });
@@ -103,7 +113,7 @@ const PrescriptionForm = ({
     console.log("Form Data Submitted:", formData);
     handlerFunction(formData);
   };
-  console.log(formData);
+
   return (
     <Container maxWidth="md">
       <h4>Prescription Form</h4>
@@ -152,8 +162,14 @@ const PrescriptionForm = ({
                     name={`quantity-${index}`}
                     label="Quantity"
                     type="number"
-                    value={drug.quantity}
-                    onChange={(e) => handleChange(e, index, "quantity")}
+                    value={drug.quantity ?? ""}
+                    onChange={(e) =>
+                      handleChange(
+                        e as ChangeEvent<HTMLInputElement>,
+                        index,
+                        "quantity"
+                      )
+                    }
                     variant="outlined"
                   />
                 </Grid>
@@ -165,7 +181,13 @@ const PrescriptionForm = ({
                     label="Units"
                     type="text"
                     value={drug.units}
-                    onChange={(e) => handleChange(e, index, "units")}
+                    onChange={(e) =>
+                      handleChange(
+                        e as ChangeEvent<HTMLInputElement>,
+                        index,
+                        "units"
+                      )
+                    }
                     variant="outlined"
                   />
                 </Grid>
@@ -177,7 +199,13 @@ const PrescriptionForm = ({
                     label="Route"
                     type="text"
                     value={drug.route}
-                    onChange={(e) => handleChange(e, index, "route")}
+                    onChange={(e) =>
+                      handleChange(
+                        e as ChangeEvent<HTMLInputElement>,
+                        index,
+                        "route"
+                      )
+                    }
                     variant="outlined"
                   />
                 </Grid>
@@ -189,7 +217,13 @@ const PrescriptionForm = ({
                     label="Drug Name"
                     type="text"
                     value={drug.drugName}
-                    onChange={(e) => handleChange(e, index, "drugName")}
+                    onChange={(e) =>
+                      handleChange(
+                        e as ChangeEvent<HTMLInputElement>,
+                        index,
+                        "drugName"
+                      )
+                    }
                     variant="outlined"
                   />
                 </Grid>
@@ -200,8 +234,14 @@ const PrescriptionForm = ({
                     name={`durationInDays-${index}`}
                     label="Duration (Days)"
                     type="number"
-                    value={drug.durationInDays}
-                    onChange={(e) => handleChange(e, index, "durationInDays")}
+                    value={drug.durationInDays ?? ""}
+                    onChange={(e) =>
+                      handleChange(
+                        e as ChangeEvent<HTMLInputElement>,
+                        index,
+                        "durationInDays"
+                      )
+                    }
                     variant="outlined"
                   />
                 </Grid>

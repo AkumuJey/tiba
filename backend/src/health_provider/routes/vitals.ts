@@ -39,6 +39,9 @@ vitals.get("/", async (req: Request, res: Response) => {
       where: {
         patientID,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     if (!hospitalVitalsList) {
       return res.status(400).json({ message: "Failed to fetch vitals" });

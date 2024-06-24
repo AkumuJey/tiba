@@ -115,7 +115,9 @@ labs.patch("/:id", async (req: Request, res: Response) => {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID);
     const id = parseInt(customReq.params.id, 10);
+    console.log("body", req.body);
     const data = UpdateHospitalLabsSchema.parse(customReq.body);
+    console.log("data", data);
     const updatedHospitalLabs = await prismaClient.hospitalLabs.update({
       where: {
         id,
@@ -124,6 +126,7 @@ labs.patch("/:id", async (req: Request, res: Response) => {
       },
       data,
     });
+    console.log(updatedHospitalLabs);
     if (!updatedHospitalLabs) {
       return res.status(400).json({ message: "Failed to update lab results" });
     }

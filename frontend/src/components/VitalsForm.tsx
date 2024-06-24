@@ -34,10 +34,10 @@ const VitalsForm = ({
     vitals ? vitals : initialVitals
   );
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, valueAsNumber } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: Number(value),
+      [name]: valueAsNumber,
     }));
   };
 

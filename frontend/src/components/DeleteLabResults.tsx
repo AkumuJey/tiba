@@ -27,10 +27,12 @@ const deleteLabResults = async ({
         withCredentials: true, // Automatically sends cookies
       }
     );
-    if (response.status === 204) {
-      return response.data.deletedHospitalLabs;
+
+    if (response.status === 200 || response.status === 204) {
+      console.log("Successfully deleted lab results.");
+      return response.data;
     } else {
-      console.log("Failed to delete lab results");
+      console.log("Failed to delete lab results.");
       return null;
     }
   } catch (error) {
@@ -47,8 +49,11 @@ const DeleteLabResultsPage = ({ labsID, patientID }: DeleteLabsProps) => {
     setLoading(true);
     const results = await deleteLabResults({ labsID, patientID });
     setLoading(false);
-    if (results) {
-      router.replace(`/patients/${patientID}/labs/`);
+    if (results !== null) {
+      console.log("Navigating to labs page.");
+      router.push(`/patients/${patientID}/labs`);
+    } else {
+      console.error("Failed to navigate. Results are null.");
     }
   };
 

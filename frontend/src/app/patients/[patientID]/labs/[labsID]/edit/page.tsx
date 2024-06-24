@@ -1,8 +1,18 @@
-"use client";
-import LabsForm from "@/components/LabsForm";
+import DeleteLabResults from "@/components/DeleteLabResults";
+import LinkToEdit from "@/components/LinkToEdit";
+import { LocalHospital } from "@mui/icons-material";
+import {
+  Avatar,
+  Box,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { cookies } from "next/headers";
+import LabsEditController from "./LabsEditController";
 
 interface LabResults {
   bloodSugar: number;
@@ -14,14 +24,12 @@ interface LabResults {
   labName: string;
 }
 
-interface EditLabsProps {
-  params: { labsID: string; patientID: string };
-}
-
 const fetchLabResults = async ({
+  cookieHeader,
   patientID,
   labsID,
 }: {
+  cookieHeader: string;
   patientID: string;
   labsID: string;
 }) => {
@@ -31,104 +39,42 @@ const fetchLabResults = async ({
       {
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookieHeader, // Pass cookies from the request
         },
-        withCredentials: true, // Automatically handle cookies
+        withCredentials: true, // Automatically sends cookies
       }
     );
 
-    if (response.status === 200 || response.status === 201) {
-      return response.data.appointment;
+    if (response.status === (200 || 201)) {
+      return response.data.hospitalLabsResults;
     } else {
-      console.log("Failed to fetch lab results");
+      console.log("Failed to fetch patient details");
       return null;
     }
   } catch (error) {
-    console.error("Error fetching lab results:", error);
+    console.error("Error fetching patient details:", error);
     return null;
   }
 };
-
-const updateLabResults = async ({
-  patientID,
-  details,
-  labsID,
+const EditVitalsPage = async ({
+  params,
 }: {
-  patientID: string;
-  details: LabResults;
-  labsID: string;
+  params: { patientID: string; labsID: string };
 }) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
-      {
-        details,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
+  const { patientID, labsID } = params;
+  const tokenCookie = cookies().get("token");
+  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const labResults: LabResults = await fetchLabResults({
+    labsID,
+    patientID,
+    cookieHeader,
+  });
 
-    if (response.status !== 200 && response.status !== 201) {
-      console.log("Failed");
-      return;
-    }
-
-    const data = response.data;
-    console.log("Response", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to update appointment", error);
-    return;
-  }
-};
-
-const EditLabResults = ({ params }: EditLabsProps) => {
-  const { labsID, patientID } = params;
-  const [labResults, setLabResults] = useState<LabResults | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedAppointment = await fetchLabResults({
-        patientID,
-        labsID,
-      });
-      if (fetchedAppointment) {
-        setLabResults(fetchedAppointment);
-      }
-    };
-
-    fetchData();
-  }, [patientID, labsID]);
-
-  const router = useRouter();
-  const handleUpdate = async (data: LabResults) => {
-    setLoading(true);
-    setError(false);
-    const result = await updateLabResults({
-      patientID,
-      details: data,
-      labsID,
-    });
-    setLoading(false);
-    if (result) {
-      return router.push(`/patients/${patientID}/labs/${result.id}`);
-    }
-    setError(true);
-  };
   return (
     <>
-      <LabsForm
-        handlerFunction={handleUpdate}
-        labResults={labResults as LabResults}
-        error={error}
-        loading={loading}
-      />
+      <LabsEditController params={params} labResults={labResults} />
     </>
   );
 };
 
-export default EditLabResults;
+export default EditVitalsPage;

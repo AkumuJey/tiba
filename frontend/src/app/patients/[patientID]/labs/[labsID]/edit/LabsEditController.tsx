@@ -1,14 +1,10 @@
 "use client";
-
 import LabsForm from "@/components/LabsForm";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-export interface CreateLabsProps {
-  params: { patientID: string };
-}
+import { useEffect, useState } from "react";
 
-export interface LabResults {
+interface LabResults {
   bloodSugar: number;
   cholesterol: number;
   LDL: number;
@@ -17,17 +13,25 @@ export interface LabResults {
   findings: string;
   labName: string;
 }
-const postLabResults = async ({
+
+interface EditLabsProps {
+  params: { labsID: string; patientID: string };
+  labResults: LabResults;
+}
+
+const updateLabResults = async ({
   patientID,
-  labResults,
+  details,
+  labsID,
 }: {
   patientID: string;
-  labResults: LabResults;
+  details: LabResults;
+  labsID: string;
 }) => {
   try {
-    const response = await axios.post(
-      `http://localhost:4000/provider/${patientID}/labs/`,
-      labResults,
+    const response = await axios.patch(
+      `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
+      details,
       {
         headers: {
           "Content-Type": "application/json",
@@ -50,27 +54,31 @@ const postLabResults = async ({
   }
 };
 
-const CreateLabsPage = ({ params }: CreateLabsProps) => {
-  const { patientID } = params;
-
+const LabsEditController = ({ params, labResults }: EditLabsProps) => {
+  const { labsID, patientID } = params;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const router = useRouter();
-  const handleNewLabs = async (labResults: LabResults) => {
+  const handleUpdate = async (data: LabResults) => {
     setLoading(true);
     setError(false);
-    const result = await postLabResults({ patientID, labResults });
+    const result = await updateLabResults({
+      patientID,
+      details: data,
+      labsID,
+    });
     setLoading(false);
     if (result) {
-      return router.push(`/patients/${patientID}/labs/`);
+      return router.push(`/patients/${patientID}/labs/${result.id}`);
     }
     setError(true);
   };
   return (
     <>
       <LabsForm
-        handlerFunction={(data) => handleNewLabs(data)}
+        handlerFunction={(data) => handleUpdate(data)}
+        labResults={labResults as LabResults}
         error={error}
         loading={loading}
       />
@@ -78,4 +86,4 @@ const CreateLabsPage = ({ params }: CreateLabsProps) => {
   );
 };
 
-export default CreateLabsPage;
+export default LabsEditController;
