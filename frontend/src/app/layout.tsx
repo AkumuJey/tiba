@@ -21,7 +21,9 @@ function RootLayout({
     <>
       <main className="p-0 m-0">
         <Navbar />
-        <div className="min-h-screen bg-transparent mt-[5rem]">{children}</div>
+        <div className="min-h-screen bg-transparent my-[3rem] md:my-[5rem] flex justify-center">
+          {children}
+        </div>
         <Footer />
       </main>
     </>

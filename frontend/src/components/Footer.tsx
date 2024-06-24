@@ -18,18 +18,21 @@ const Footer = () => {
         py: 2,
         px: 2,
         mt: "auto",
-        backgroundColor: "transparent",
+        backgroundColor: "#E0E1E6",
+        borderTop: "1px solid #e7e7e7",
       }}
     >
       <Container
         maxWidth="md"
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
           justifyContent: "space-between",
           alignItems: "center",
+          textAlign: { xs: "center", sm: "left" },
         }}
       >
-        <Typography variant="body1">
+        <Typography variant="body1" sx={{ mb: { xs: 2, sm: 0 } }}>
           &copy; {new Date().getFullYear()} Tiba Healthcare
         </Typography>
         <Box>

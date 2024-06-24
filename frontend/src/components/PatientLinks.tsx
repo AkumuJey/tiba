@@ -19,7 +19,7 @@ const PatientLinks = ({
   const pathname = usePathname();
   return (
     <div className="space-y-4">
-      <div className="space-y-2 flex text-xl font-bold justify-between items-center">
+      <div className="space-y-2 flex text-sm font-bold justify-between items-center">
         {firstLinkArray.map((link, index) => (
           <Link
             key={link.href}
@@ -36,7 +36,7 @@ const PatientLinks = ({
           </Link>
         ))}
       </div>
-      <div className="space-y-2 flex text-xl font-bold justify-between items-center">
+      <div className="space-y-2 flex text-sm font-bold justify-between items-center">
         {secondLinkArray.map((link) => (
           <Link
             key={link.href}

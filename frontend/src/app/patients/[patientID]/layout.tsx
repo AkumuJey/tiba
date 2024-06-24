@@ -81,9 +81,8 @@ const layout = async ({
     <>
       <div>
         <Paper
-          elevation={3}
-          sx={{ p: 4 }}
-          className="w-[90%] md:w-4/5 mx-auto bg-transparent"
+          elevation={1}
+          className="w-[96%] md:w-4/5 mx-auto bg-transparent p-2"
         >
           {/* Patient Details */}
           <Box sx={{ mb: 4 }}>

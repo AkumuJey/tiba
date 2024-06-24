@@ -32,12 +32,7 @@ interface HideOnScrollProps {
 const HideOnScroll = ({ children }: HideOnScrollProps) => {
   const trigger = useScrollTrigger();
   return (
-    <Slide
-      appear={false}
-      direction="down"
-      in={!trigger}
-      className="w-full m-0 p-0"
-    >
+    <Slide appear={false} direction="down" in={!trigger}>
       {children as any}
     </Slide>
   );
@@ -67,67 +62,53 @@ const Navbar = () => {
 
   const drawerList = () => (
     <Box
-      sx={{ width: "auto" }}
+      sx={{ width: 250 }}
       role="presentation"
-      onClick={(event) => {
-        if ((event.target as HTMLElement).tagName !== "A") {
-          toggleDrawer(false)(event);
-        }
-      }}
+      onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <ListItem
-          className={`font-medium text-lg ${
-            pathname === "/" ? "text-purple-800" : "text-black"
-          }`}
-          component={Link}
-          href="/"
-        >
+        <ListItem component={Link} href="/" selected={pathname === "/"}>
           <ListItemText primary="Home" />
         </ListItem>
         <ListItem
-          className={`font-medium text-lg ${
-            pathname === "/dashboard" ? "text-purple-800" : "text-black"
-          }`}
           component={Link}
           href="/dashboard"
+          selected={pathname === "/dashboard"}
         >
           <ListItemText primary="Dashboard" />
         </ListItem>
         <ListItem
-          className={`font-medium text-lg ${
-            pathname === "/appointments" ? "text-purple-800" : "text-black"
-          }`}
           component={Link}
           href="/appointments"
+          selected={pathname === "/appointments"}
         >
-          <ListItemText primary="Appointment" />
+          <ListItemText primary="Appointments" />
+        </ListItem>
+        <ListItem
+          component={Link}
+          href="/patients"
+          selected={pathname === "/patients"}
+        >
+          <ListItemText primary="Patients" />
         </ListItem>
         {isLoggedIn ? (
-          <ListItem
-            onClick={signout}
-            className={`font-medium text-lg text-black`}
-          >
+          <ListItem button onClick={signout}>
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
           <>
             <ListItem
-              className={`font-medium text-lg ${
-                pathname === "/signup" ? "text-purple-800" : "text-black"
-              }`}
               component={Link}
               href="/signup"
+              selected={pathname === "/signup"}
             >
               <ListItemText primary="Signup" />
             </ListItem>
             <ListItem
-              className={`font-medium text-lg ${
-                pathname === "/login" ? "text-purple-800" : "text-black"
-              }`}
               component={Link}
               href="/login"
+              selected={pathname === "/login"}
             >
               <ListItemText primary="Login" />
             </ListItem>
@@ -139,91 +120,70 @@ const Navbar = () => {
 
   return (
     <HideOnScroll>
-      <AppBar
-        position="fixed"
-        sx={{ backgroundColor: "#E0D9E6" }}
-        className="text-lg"
-      >
-        <Toolbar className="flex justify-between">
-          <div className="flex items-center w-1/5">
+      <AppBar position="fixed" sx={{ backgroundColor: "#E0D9E6" }}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <LocalHospital sx={{ mr: 2 }} />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <Link href="/">
-                <Button className="text-black font-medium text-lg">Tiba</Button>
+            <Typography variant="h6">
+              <Link href="/" passHref>
+                <Button sx={{ color: "black" }}>Tiba</Button>
               </Link>
             </Typography>
-          </div>
-          <div className="w-3/5 flex justify-end gap-[1rem]">
-            <Link
-              href="/"
-              className={`font-medium text-lg ${
-                pathname === "/" ? "text-purple-800" : "text-black"
-              }`}
-            >
-              Home
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+            <Link href="/" passHref>
+              <Button sx={{ color: pathname === "/" ? "purple" : "black" }}>
+                Home
+              </Button>
             </Link>
-            <Link
-              href="/dashboard"
-              className={`font-medium text-lg ${
-                pathname === "/dashboard" ? "text-purple-800" : "text-black"
-              }`}
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/appointments"
-              className={`font-medium text-lg ${
-                pathname === "/appointments" ? "text-purple-800" : "text-black"
-              }`}
-            >
-              Appointment
-            </Link>
-            <Link
-              href="/patients"
-              className={`font-medium text-lg ${
-                pathname === "/patients" ? "text-purple-800" : "text-black"
-              }`}
-            >
-              Patients
-            </Link>
-          </div>
-          <div className="w-1/5 flex justify-end gap-2 pr-3">
-            {isLoggedIn ? (
-              <Link
-                href={`/logout`}
-                className={`font-medium text-lg text-black`}
-                onClick={signout}
+            <Link href="/dashboard" passHref>
+              <Button
+                sx={{ color: pathname === "/dashboard" ? "purple" : "black" }}
               >
+                Dashboard
+              </Button>
+            </Link>
+            <Link href="/appointments" passHref>
+              <Button
+                sx={{
+                  color: pathname === "/appointments" ? "purple" : "black",
+                }}
+              >
+                Appointments
+              </Button>
+            </Link>
+            <Link href="/patients" passHref>
+              <Button
+                sx={{ color: pathname === "/patients" ? "purple" : "black" }}
+              >
+                Patients
+              </Button>
+            </Link>
+            {isLoggedIn ? (
+              <Button onClick={signout} sx={{ color: "black" }}>
                 Logout
-              </Link>
+              </Button>
             ) : (
               <>
-                <Link
-                  href="/signup"
-                  className={`font-medium text-lg ${
-                    pathname === "/signup" ? "text-purple-800" : "text-black"
-                  }`}
-                >
-                  Signup
+                <Link href="/signup" passHref>
+                  <Button
+                    sx={{ color: pathname === "/signup" ? "purple" : "black" }}
+                  >
+                    Signup
+                  </Button>
                 </Link>
-                <Link
-                  href="/login"
-                  className={`font-medium text-lg ${
-                    pathname === "/login" ? "text-purple-800" : "text-black"
-                  }`}
-                >
-                  Login
+                <Link href="/login" passHref>
+                  <Button
+                    sx={{ color: pathname === "/login" ? "purple" : "black" }}
+                  >
+                    Login
+                  </Button>
                 </Link>
               </>
             )}
-          </div>
+          </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={toggleDrawer(true)}
-            >
+            <IconButton color="inherit" onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
             <Drawer

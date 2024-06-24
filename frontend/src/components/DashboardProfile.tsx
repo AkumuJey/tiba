@@ -23,11 +23,11 @@ const DashboardProfile = ({ profile }: ProfileProps) => {
           {/* Profile Summary */}
           <Paper elevation={3} sx={{ p: 4, mb: 4 }} className="bg-[#DDE2EE]">
             <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
-              <Avatar sx={{ width: 100, height: 100, mr: 4 }}>
+              <Avatar sx={{ width: 80, height: 80, mr: 4 }}>
                 <Person />
               </Avatar>
               <Box>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h6" gutterBottom>
                   {profile.firstName + " " + profile.lastName}
                 </Typography>
                 <Typography
