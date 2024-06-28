@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/utils/AuthContextProvider";
+import { useAuth } from "@/lib/AuthContextProvider";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";

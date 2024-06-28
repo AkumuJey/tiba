@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/utils/AuthContextProvider";
+import { useAuth } from "@/lib/AuthContextProvider";
 import { LocalHospital, Menu as MenuIcon } from "@mui/icons-material";
 import {
   AppBar,

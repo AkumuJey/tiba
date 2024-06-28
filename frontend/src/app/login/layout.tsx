@@ -1,5 +1,5 @@
 "use client";
-import ControlledPages from "@/utils/ControlledPages";
+import ControlledPages from "@/lib/ControlledPages";
 import React from "react";
 const LoginLayout = ({
   children,
