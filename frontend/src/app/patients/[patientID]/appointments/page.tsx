@@ -1,7 +1,7 @@
 import AppointmentsDisplay from "@/components/Appointments";
+import providerApi from "@/lib/axios";
 import { AddCircleOutline } from "@mui/icons-material";
-import { Divider, Grid, List, ListItem, Typography } from "@mui/material";
-import axios from "axios";
+import { Grid } from "@mui/material";
 import { cookies } from "next/headers";
 import Link from "next/link";
 export interface PatientDetails {
@@ -29,16 +29,11 @@ const fetchAppointments = async ({
   patientID: string;
 }) => {
   try {
-    const response = await axios.get(
-      `http://localhost:4000/provider/${patientID}/appointments/`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookieHeader, // Pass cookies from the request
-        },
-        withCredentials: true, // Automatically sends cookies
-      }
-    );
+    const response = await providerApi.get(`/${patientID}/appointments/`, {
+      headers: {
+        Cookie: cookieHeader, // Pass cookies from the request
+      },
+    });
 
     if (response.status === 200) {
       return response.data.appointments;

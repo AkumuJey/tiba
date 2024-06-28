@@ -1,7 +1,7 @@
 "use server";
+import providerApi from "@/lib/axios";
 import { AddCircleOutline } from "@mui/icons-material";
 import { Divider, Grid, List, ListItem, ListItemText } from "@mui/material";
-import axios from "axios";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -24,16 +24,13 @@ const fetchHistories = async ({
   patientID: string;
 }) => {
   try {
-    const response = await axios.get(
-      `http://localhost:4000/provider/${patientID}/histories/`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookieHeader, // Pass cookies from the request
-        },
-        withCredentials: true, // Automatically sends cookies
-      }
-    );
+    const response = await providerApi.get(`/${patientID}/histories/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieHeader, // Pass cookies from the request
+      },
+      withCredentials: true, // Automatically sends cookies
+    });
 
     if (response.status === 200) {
       return response.data.histories;
