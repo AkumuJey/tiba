@@ -1,7 +1,6 @@
 "use client";
 
 import { CircularProgress } from "@mui/material";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -10,6 +9,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import providerApi from "./axios";
 
 interface AuthContextProps {
   isLoggedIn: boolean;
@@ -33,15 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setSuccess(isLoggedIn);
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/provider/profile",
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true, // Automatically sends cookies
-          }
-        );
+        const response = await providerApi.get("/profile");
         return response.status === 200;
       } catch (error) {
         return false;
@@ -57,19 +49,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const response = await axios.post(
-        "http://localhost:4000/provider/login",
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // Automatically handle cookies
-        }
-      );
+      const response = await providerApi.post("/login", {
+        email,
+        password,
+      });
       if (response.status !== 201 && response.status !== 200) {
         throw new Error("Failed to login");
       }
@@ -84,16 +67,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:4000/provider/logout",
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // Automatically handle cookies
-        }
-      );
+      await providerApi.post("/logout");
       setIsLoggedIn(false);
       router.push("/login");
     } catch (error) {
@@ -104,16 +78,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleSignup = async (userData: any) => {
     try {
-      const response = await axios.post(
-        "http://localhost:4000/provider/signup",
-        userData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // Automatically handle cookies
-        }
-      );
+      const response = await providerApi.post("/signup", userData);
       console.log(response);
       router.push("/login");
     } catch (error) {

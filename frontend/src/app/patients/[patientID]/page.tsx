@@ -62,30 +62,29 @@ export default async function Patient({
   return (
     <div>
       <h2>
-        <span className="font-bold text-xl">Patient ID: </span>
+        <span className="font-bold text-sm">Patient ID: </span>
         {patientID}
       </h2>
-      <div>
+      <div className="flex flex-col gap-4">
         <h4>
           <PersonIcon className="mr-2 text-gray-500" />
-          <span className="font-bold text-xl">Emergency Contact Name</span>
+          <span className="font-bold text-sm">Emergency Contact Name</span>
           {patient.emergencyContactName
             ? " : " + patient.emergencyContactName
             : " : Not Available"}
         </h4>
         <h4>
           <ContactPhone className="mr-2 text-gray-500" />
-          <span className="font-bold text-xl">
+          <span className="font-bold text-sm">
             Emergency Contact Phone Number
           </span>
           {patient.emergencyContactPhone
             ? " : " + patient.emergencyContactPhone
-            : " : Not Available"}{" "}
-          Years
+            : " : Not Available"}
         </h4>
         <h4>
           <LocationCity className="mr-2 text-gray-500" />
-          <span className="font-bold text-xl">Patient Address</span>
+          <span className="font-bold text-sm">Patient Address</span>
           {patient.address}
         </h4>
       </div>

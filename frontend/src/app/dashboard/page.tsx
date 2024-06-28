@@ -4,9 +4,10 @@ import AppointmentsDisplay from "@/components/Appointments";
 import DashboardProfile from "@/components/DashboardProfile";
 import PatientsDash from "@/components/PatientsDash";
 import ProtectedRoutes from "@/components/ProtectedRoutes";
-import { Container, Paper } from "@mui/material";
+import { Container, Paper, Skeleton } from "@mui/material";
 import axios from "axios";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 
 const fetchPatients = async (cookieHeader: string) => {
   try {
@@ -95,14 +96,20 @@ const Dashboard = async () => {
         <DashboardProfile profile={profile} />
       </div>
       <div className="flex flex-col md:flex-row justify-between w-full md:w-3/4 mx-auto gap-[1rem]">
-        <PatientsDash patients={patients} />
-        <Paper
-          className="w-full md:w-1/2 bg-[#F1F6F6]"
-          elevation={3}
-          sx={{ p: 3 }}
+        <Suspense
+          fallback={
+            <Skeleton height={200} variant="rectangular" animation="wave" />
+          }
         >
-          <AppointmentsDisplay appointments={appointments} />
-        </Paper>
+          <PatientsDash patients={patients} />
+          <Paper
+            className="w-full md:w-1/2 bg-[#F1F6F6]"
+            elevation={3}
+            sx={{ p: 3 }}
+          >
+            <AppointmentsDisplay appointments={appointments} />
+          </Paper>
+        </Suspense>
       </div>
     </Container>
   );

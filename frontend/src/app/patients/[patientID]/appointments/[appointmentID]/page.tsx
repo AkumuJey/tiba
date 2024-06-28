@@ -1,6 +1,6 @@
 import DeleteAppointment from "@/components/DeleteAppointment.tsx";
 import { Edit } from "@mui/icons-material";
-import { IconButton, Paper, Typography } from "@mui/material";
+import { Box, IconButton, Paper, Typography } from "@mui/material";
 import axios from "axios";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -71,10 +71,7 @@ const SingleAppointment = async ({
   const { patient } = appointment;
 
   return (
-    <Paper
-      elevation={2}
-      className="w-full max-w-lg mx-auto p-6 my-4 bg-transparent"
-    >
+    <Box sx={{ mb: 4 }}>
       <Typography variant="h6" component="div" className="mb-4 text-left">
         Appointment Details
       </Typography>
@@ -162,7 +159,7 @@ const SingleAppointment = async ({
           </div>
         </>
       )}
-    </Paper>
+    </Box>
   );
 };
 

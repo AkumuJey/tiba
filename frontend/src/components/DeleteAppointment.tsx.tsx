@@ -60,7 +60,7 @@ const DeleteAppointmentPage = ({
       onClick={handleDelete}
       loading={loading}
       variant="contained"
-      color="secondary"
+      className="bg-red-500 hover:bg-red-600"
       startIcon={<Delete />}
     >
       Delete

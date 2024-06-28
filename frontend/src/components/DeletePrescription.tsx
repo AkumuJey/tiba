@@ -1,7 +1,6 @@
 "use client";
 import { Delete } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { IconButton } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -48,6 +47,7 @@ const DeletePrescriptionPage = ({
   const router = useRouter();
   const handleDelete = async () => {
     setLoading(true);
+    console.log("Press");
     const results = await deletePrescription({ patientID, prescriptionID });
     setLoading(false);
     if (results) {

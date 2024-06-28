@@ -60,7 +60,7 @@ const AppointmentsDisplay = ({
           <List>
             {appointments.map((appointment) => (
               <Link
-                href={`patients/${appointment.patientID}/appointments/${appointment.id}`}
+                href={`/patients/${appointment.patientID}/appointments/${appointment.id}`}
                 key={appointment.id}
               >
                 <ListItem>
