@@ -86,8 +86,8 @@ const LabResultsPage = async ({
           href={`/patients/${patientID}/create-labs`}
           className="px-[1rem] py-[0.7rem] bg-[#E2D2D2] rounded-md text-lg flex gap-2 flex-col md:flex-row"
         >
-          <AddCircleOutline className="font-bold" height={5} width={5} /> Enter
-          <h4>Enter new lab details</h4>
+          <AddCircleOutline className="font-bold" height={5} width={5} />
+          <h6>Enter new lab details</h6>
         </Link>
       </div>
       <List>

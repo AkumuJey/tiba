@@ -79,10 +79,10 @@ const layout = async ({
 
   return (
     <>
-      <div>
+      <div className="w-full">
         <Paper
-          elevation={1}
-          className="w-[96%] md:w-4/5 mx-auto bg-transparent p-2"
+          elevation={2}
+          className="w-[96%] md:w-4/5 mx-auto bg-transparent p-4"
         >
           {/* Patient Details */}
           <Box sx={{ mb: 4 }}>
