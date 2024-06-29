@@ -1,12 +1,6 @@
-import {
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { fetchAppointments } from "@/lib/appointmentUtils";
+import { getCookies } from "@/lib/getCookies";
+import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Link from "next/link";
 
 interface PatientDetails {
@@ -27,14 +21,15 @@ interface AppointmentDetails {
 }
 
 interface AppointmentsDashProps {
-  appointments: AppointmentDetails[];
-  longerList?: boolean;
+  limit?: number;
 }
 
-const AppointmentsDisplay = ({
-  appointments,
-  longerList,
-}: AppointmentsDashProps) => {
+const AppointmentsDisplay = async ({ limit }: AppointmentsDashProps) => {
+  const cookieHeader = getCookies();
+  const appointments: AppointmentDetails[] = await fetchAppointments({
+    limit,
+    cookieHeader,
+  });
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -78,7 +73,7 @@ const AppointmentsDisplay = ({
             ))}
           </List>
         )}
-        {!longerList && (
+        {limit && (
           <ListItem>
             <Link href="/appointments">Click to view more</Link>
           </ListItem>

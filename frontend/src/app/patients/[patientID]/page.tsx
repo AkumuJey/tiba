@@ -2,7 +2,8 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import PersonIcon from "@mui/icons-material/Person";
 import LocationCity from "@mui/icons-material/LocationCity";
-import { ContactPhone } from "@mui/icons-material";
+import { ContactPhone, Phone } from "@mui/icons-material";
+import { Avatar, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 interface Patient {
   id: number;
   firstName: string;
@@ -65,28 +66,53 @@ export default async function Patient({
         <span className="font-bold text-sm">Patient ID: </span>
         {patientID}
       </h2>
-      <div className="flex flex-col gap-4">
-        <h4>
-          <PersonIcon className="mr-2 text-gray-500" />
-          <span className="font-bold text-sm">Emergency Contact Name</span>
-          {patient.emergencyContactName
-            ? " : " + patient.emergencyContactName
-            : " : Not Available"}
-        </h4>
-        <h4>
-          <ContactPhone className="mr-2 text-gray-500" />
-          <span className="font-bold text-sm">
-            Emergency Contact Phone Number
-          </span>
-          {patient.emergencyContactPhone
-            ? " : " + patient.emergencyContactPhone
-            : " : Not Available"}
-        </h4>
-        <h4>
-          <LocationCity className="mr-2 text-gray-500" />
-          <span className="font-bold text-sm">Patient Address</span>
-          {patient.address}
-        </h4>
+      <div className="flex flex-col gap-2">
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              <PersonIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="Emergency Contact Name"
+            secondary={
+              patient.emergencyContactName
+                ? " " + patient.emergencyContactName
+                : " Not Available"
+            }
+            primaryTypographyProps={{ variant: "subtitle1" }}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              <ContactPhone />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="Emergency Contact Phone Number"
+            secondary={
+              patient.emergencyContactPhone
+                ? " " + patient.emergencyContactPhone
+                : " Not Available"
+            }
+            primaryTypographyProps={{ variant: "subtitle1" }}
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              <LocationCity />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="Patient Address"
+            secondary={
+              patient.address ? " " + patient.address : " Not Available"
+            }
+            primaryTypographyProps={{ variant: "subtitle1" }}
+          />
+        </ListItem>
       </div>
     </div>
   );

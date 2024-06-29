@@ -85,7 +85,7 @@ const Appointments = async () => {
         elevation={2}
         className="w-[95%] md:w-3/4 mx-auto mt-[1rem] bg-transparent p-4"
       >
-        <AppointmentsDisplay appointments={appointments} longerList={true} />
+        <AppointmentsDisplay />
       </Paper>
     </Grid>
   );

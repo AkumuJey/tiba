@@ -1,3 +1,5 @@
+import { getCookies } from "@/lib/getCookies";
+import { fetchPatients } from "@/lib/patientsUtils";
 import { Divider, List, ListItem, ListItemText, Paper } from "@mui/material";
 import Link from "next/link";
 
@@ -9,11 +11,13 @@ interface Patient {
   dateOfBirth: string;
 }
 
-interface PatientsDashProps {
-  patients: Patient[];
+interface PatientsListProps {
+  limit?: number;
 }
 
-const PatientsDash = ({ patients }: PatientsDashProps) => {
+const PatientsList = async ({ limit }: PatientsListProps) => {
+  const cookieHeader = getCookies();
+  const patients: Patient[] = await fetchPatients({ limit, cookieHeader });
   const calculateAge = (dateOfBirth: string) => {
     const birthDate = new Date(dateOfBirth);
     const ageDifMs = Date.now() - birthDate.getTime();
@@ -22,7 +26,9 @@ const PatientsDash = ({ patients }: PatientsDashProps) => {
   };
 
   return (
-    <div className="w-full md:w-1/2 bg-[#F1F6F6]">
+    <div
+      className={`${limit ? "w-full md:w-1/2" : "w-full mx-auto"} bg-[#F1F6F6]`}
+    >
       <Paper elevation={3} sx={{ p: 4 }} className="bg-[#F1F6F6]">
         <h5 className="font-bol text-xl">Patients</h5>
         <List>
@@ -48,4 +54,4 @@ const PatientsDash = ({ patients }: PatientsDashProps) => {
   );
 };
 
-export default PatientsDash;
+export default PatientsList;

@@ -1,51 +1,7 @@
 import AppointmentsDisplay from "@/components/Appointments";
-import providerApi from "@/lib/axios";
 import { AddCircleOutline } from "@mui/icons-material";
 import { Grid } from "@mui/material";
-import { cookies } from "next/headers";
 import Link from "next/link";
-export interface PatientDetails {
-  firstName: string;
-  lastName: string;
-}
-
-export interface AppointmentDetails {
-  id: number;
-  createdAt: string; // ISO 8601 date string
-  patientID: number;
-  healthProviderID: number;
-  venue: string;
-  appointmentTime: string; // ISO 8601 date string
-  amount: number;
-  description: string;
-  patient: PatientDetails;
-}
-
-const fetchAppointments = async ({
-  cookieHeader,
-  patientID,
-}: {
-  cookieHeader: string;
-  patientID: string;
-}) => {
-  try {
-    const response = await providerApi.get(`/${patientID}/appointments/`, {
-      headers: {
-        Cookie: cookieHeader, // Pass cookies from the request
-      },
-    });
-
-    if (response.status === 200) {
-      return response.data.appointments;
-    } else {
-      console.log("Failed to fetch appointments");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
-    return [];
-  }
-};
 
 const AppointmentsPage = async ({
   params,
@@ -53,12 +9,6 @@ const AppointmentsPage = async ({
   params: { patientID: string };
 }) => {
   const { patientID } = params;
-  const tokenCookie = cookies().get("token");
-  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
-  const appointments: AppointmentDetails[] = await fetchAppointments({
-    cookieHeader,
-    patientID,
-  });
   return (
     <Grid item xs={12} md={6}>
       <div className="flex justify-between py-1">
@@ -72,7 +22,7 @@ const AppointmentsPage = async ({
         </Link>
       </div>
       <div className="w-full">
-        <AppointmentsDisplay appointments={appointments} longerList={true} />
+        <AppointmentsDisplay />
       </div>
     </Grid>
   );

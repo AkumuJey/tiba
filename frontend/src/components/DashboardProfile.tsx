@@ -1,5 +1,8 @@
+import { fetchProfile } from "@/lib/dashboartUtils";
+import { getCookies } from "@/lib/getCookies";
 import { Email, Person, VerifiedUser } from "@mui/icons-material/";
 import { Avatar, Box, Grid, Paper, Typography } from "@mui/material";
+import Link from "next/link";
 
 interface Profile {
   id: string;
@@ -11,10 +14,9 @@ interface Profile {
   verified: boolean;
 }
 
-interface ProfileProps {
-  profile: Profile;
-}
-const DashboardProfile = ({ profile }: ProfileProps) => {
+const DashboardProfile = async () => {
+  const cookieHeader = getCookies();
+  const profile: Profile = await fetchProfile(cookieHeader);
   return (
     <>
       {profile && (
@@ -43,6 +45,7 @@ const DashboardProfile = ({ profile }: ProfileProps) => {
                   {profile.verified ? "Verified" : "Not Verified"}
                 </Typography>
               </Box>
+              <Link href={`/profile`}>Profile page</Link>
             </Box>
           </Paper>
         </Grid>
