@@ -1,5 +1,4 @@
 import { fetchAppointments } from "@/lib/appointmentUtils";
-import { getCookies } from "@/lib/getCookies";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Link from "next/link";
 
@@ -25,10 +24,8 @@ interface AppointmentsDashProps {
 }
 
 const AppointmentsDisplay = async ({ limit }: AppointmentsDashProps) => {
-  const cookieHeader = getCookies();
   const appointments: AppointmentDetails[] = await fetchAppointments({
     limit,
-    cookieHeader,
   });
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);

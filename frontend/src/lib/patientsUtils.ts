@@ -1,12 +1,8 @@
 import providerApi from "./axios";
+import { getCookies } from "./getCookies";
 
-export const fetchPatients = async ({
-  cookieHeader,
-  limit,
-}: {
-  cookieHeader: string;
-  limit?: number;
-}) => {
+const cookieHeader = getCookies();
+export const fetchPatients = async ({ limit }: { limit?: number }) => {
   try {
     const limitQuery = limit ? `?limit=${limit}` : "";
     const response = await providerApi.get(`/patients/?${limitQuery}`, {

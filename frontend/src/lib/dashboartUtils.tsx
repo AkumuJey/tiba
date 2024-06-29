@@ -1,6 +1,9 @@
 import providerApi from "./axios";
+import { getCookies } from "./getCookies";
 
-export const fetchProfile = async (cookieHeader: string) => {
+const cookieHeader = getCookies();
+
+export const fetchProfile = async () => {
   try {
     const response = await providerApi.get("/profile", {
       headers: {
