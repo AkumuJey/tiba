@@ -27,7 +27,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
   useEffect(() => {
     setSuccess(isLoggedIn);
@@ -53,13 +53,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email,
         password,
       });
-      if (response.status !== 201 && response.status !== 200) {
-        throw new Error("Failed to login");
-      }
-
-      console.log(response);
       setIsLoggedIn(true);
-      router.push("/dashboard");
+      return router.push("/dashboard");
     } catch (error) {
       throw error;
     }
@@ -71,7 +66,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsLoggedIn(false);
       router.push("/login");
     } catch (error) {
-      console.error("Logout failed:", error);
       throw error;
     }
   };
@@ -79,10 +73,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const handleSignup = async (userData: any) => {
     try {
       const response = await providerApi.post("/signup", userData);
-      console.log(response);
       router.push("/login");
     } catch (error) {
-      console.error("Signup failed:", error);
       throw error;
     }
   };

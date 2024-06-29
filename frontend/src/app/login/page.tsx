@@ -1,6 +1,4 @@
 "use client";
-import { useAuth } from "@/lib/AuthContextProvider";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -15,35 +13,12 @@ import {
   IconButton,
   InputAdornment,
   Link,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState } from "react";
-import { z } from "zod";
-
-// types.ts
-export interface Patient {
-  id: number;
-  createdAt: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  sex: string;
-  address: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  emergencyContactName: string;
-  emergencyContactPhone: string | null;
-  subscribed: boolean;
-}
-
-const loginDataSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-});
+import useLogin from "./actions";
 
 const theme = createTheme();
 
@@ -51,8 +26,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState(false);
+  const { handleSubmit, isLoading, error } = useLogin();
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (
@@ -67,21 +41,6 @@ const LoginPage = () => {
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
-  };
-
-  const context = useAuth();
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    try {
-      event.preventDefault();
-      setLoading(true);
-      setErr(false);
-      const data = loginDataSchema.parse({ email, password });
-      context.handleLogin(data.email, data.password);
-    } catch (error) {
-      setErr(true);
-      setLoading(false);
-    }
   };
 
   return (
@@ -104,7 +63,10 @@ const LoginPage = () => {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(email, password);
+            }}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -151,13 +113,13 @@ const LoginPage = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={loading}
-              startIcon={loading ? <CircularProgress size={20} /> : null}
+              disabled={isLoading}
+              startIcon={isLoading ? <CircularProgress size={20} /> : null}
             >
               Sign In
             </Button>
             <Grid className="text-center">
-              {err && (
+              {error && (
                 <span className="text-red-400">Invalid Email or password</span>
               )}
             </Grid>
