@@ -1,7 +1,7 @@
 "use client";
 
 import AppointmentForm from "@/components/AppointmentForm";
-import axios from "axios";
+import { updateAppointment } from "@/lib/appointmentUtils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -11,43 +11,6 @@ interface AppointmentData {
   amount: number;
   description?: string | undefined;
 }
-
-const updateAppointment = async ({
-  patientID,
-  details,
-  appointmentID,
-}: {
-  patientID: string;
-  details: AppointmentData;
-  appointmentID: string;
-}) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:4000/provider/${patientID}/appointments/${appointmentID}/`,
-      {
-        ...details,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-
-    if (response.status !== 200 && response.status !== 201) {
-      console.log("Failed");
-      return;
-    }
-
-    const data = response.data;
-    console.log("Response", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to update appointment", error);
-    return;
-  }
-};
 
 interface Params {
   patientID: string;
@@ -69,7 +32,7 @@ const ControllerAppointmentForm = ({ params, appointment }: EditingProps) => {
     setError(false);
     const result = await updateAppointment({
       patientID,
-      details: data,
+      data,
       appointmentID,
     });
     setLoading(false);

@@ -1,9 +1,7 @@
 "use server";
 import PatientLinks from "@/components/PatientLinks";
+import { fetchPatient } from "@/lib/patientsUtils";
 import { Box, Divider, Paper } from "@mui/material";
-import axios from "axios";
-import { cookies } from "next/headers";
-import Link from "next/link";
 import React from "react";
 
 interface Patient {
@@ -17,36 +15,6 @@ interface Patient {
   emergencyContactName: string;
   emergencyContactPhone: string;
 }
-const fetchPatient = async ({
-  cookieHeader,
-  patientID,
-}: {
-  cookieHeader: string;
-  patientID: string;
-}) => {
-  try {
-    const response = await axios.get(
-      `http://localhost:4000/provider/patients/${patientID}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookieHeader, // Pass cookies from the request
-        },
-        withCredentials: true, // Automatically sends cookies
-      }
-    );
-
-    if (response.status === (200 || 201)) {
-      return response.data.patient;
-    } else {
-      console.log("Failed to fetch patient details");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching patient details:", error);
-    return [];
-  }
-};
 
 const layout = async ({
   params,
@@ -58,10 +26,7 @@ const layout = async ({
   }>;
 }) => {
   const { patientID } = params;
-  const tokenCookie = cookies().get("token");
-  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
-  const patient: Patient = await fetchPatient({ patientID, cookieHeader });
-
+  const patient: Patient = await fetchPatient({ patientID });
   const age =
     new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
 
@@ -80,32 +45,36 @@ const layout = async ({
   return (
     <>
       <div className="w-full">
-        <Paper
-          elevation={2}
-          className="w-[96%] md:w-4/5 mx-auto bg-transparent p-4"
-        >
-          {/* Patient Details */}
-          <Box sx={{ mb: 4 }}>
-            <div className="flex justify-between">
-              <h3>
-                <span className="font-bold">Name: </span>
-                {patient.firstName} {patient.lastName}
-              </h3>
-              <h3>
-                <span className="font-bold">Age:</span> {age} Years
-              </h3>
-              <h3>
-                <span className="font-bold">Sex:</span> {patient.sex}
-              </h3>
-            </div>
-            <PatientLinks
-              firstLinkArray={firstLinkArray}
-              secondLinkArray={secondLinkArray}
-            />
-          </Box>
-          <Divider sx={{ mb: 4 }} />
-          <>{children}</>
-        </Paper>
+        {!patient ? (
+          <div>Error loading patient details</div>
+        ) : (
+          <Paper
+            elevation={2}
+            className="w-[96%] md:w-4/5 mx-auto bg-transparent p-4"
+          >
+            {/* Patient Details */}
+            <Box sx={{ mb: 4 }}>
+              <div className="flex justify-between">
+                <h3>
+                  <span className="font-bold">Name: </span>
+                  {patient.firstName} {patient.lastName}
+                </h3>
+                <h3>
+                  <span className="font-bold">Age:</span> {age} Years
+                </h3>
+                <h3>
+                  <span className="font-bold">Sex:</span> {patient.sex}
+                </h3>
+              </div>
+              <PatientLinks
+                firstLinkArray={firstLinkArray}
+                secondLinkArray={secondLinkArray}
+              />
+            </Box>
+            <Divider sx={{ mb: 4 }} />
+            <>{children}</>
+          </Paper>
+        )}
       </div>
     </>
   );

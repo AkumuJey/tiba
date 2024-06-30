@@ -1,4 +1,4 @@
-import { fetchAppointments } from "@/lib/appointmentUtils";
+import { fetchPatientAppointments } from "@/lib/appointmentUtils";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Link from "next/link";
 
@@ -21,11 +21,15 @@ interface AppointmentDetails {
 
 interface AppointmentsDashProps {
   limit?: number;
+  patientID?: number;
 }
 
-const AppointmentsDisplay = async ({ limit }: AppointmentsDashProps) => {
-  const appointments: AppointmentDetails[] = await fetchAppointments({
-    limit,
+const AppointmentsDisplay = async ({
+  limit,
+  patientID,
+}: AppointmentsDashProps) => {
+  const appointments: AppointmentDetails[] = await fetchPatientAppointments({
+    patientID,
   });
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
@@ -46,34 +50,42 @@ const AppointmentsDisplay = async ({ limit }: AppointmentsDashProps) => {
     <>
       <List>
         <h5 className="font-bol text-xl">Appointments</h5>
-        {appointments.length === 0 ? (
-          <div>No appointments available</div>
+        {!appointments ? (
+          <div>Error loading appointments</div>
         ) : (
-          <List>
-            {appointments.map((appointment) => (
-              <Link
-                href={`/patients/${appointment.patientID}/appointments/${appointment.id}`}
-                key={appointment.id}
-              >
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      formatDateTime(appointment.appointmentTime).formattedDate
-                    }
-                    secondary={`Time: ${
-                      formatDateTime(appointment.appointmentTime).formattedTime
-                    }, Venue: ${appointment.venue}`}
-                  />
-                </ListItem>
-                <Divider variant="middle" component="li" />
-              </Link>
-            ))}
-          </List>
-        )}
-        {limit && (
-          <ListItem>
-            <Link href="/appointments">Click to view more</Link>
-          </ListItem>
+          <>
+            {appointments.length === 0 ? (
+              <div>No appointments available</div>
+            ) : (
+              <List>
+                {appointments.map((appointment) => (
+                  <Link
+                    href={`/patients/${appointment.patientID}/appointments/${appointment.id}`}
+                    key={appointment.id}
+                  >
+                    <ListItem>
+                      <ListItemText
+                        primary={
+                          formatDateTime(appointment.appointmentTime)
+                            .formattedDate
+                        }
+                        secondary={`Time: ${
+                          formatDateTime(appointment.appointmentTime)
+                            .formattedTime
+                        }, Venue: ${appointment.venue}`}
+                      />
+                    </ListItem>
+                    <Divider variant="middle" component="li" />
+                  </Link>
+                ))}
+              </List>
+            )}
+            {limit && (
+              <ListItem>
+                <Link href="/appointments">Click to view more</Link>
+              </ListItem>
+            )}
+          </>
         )}
       </List>
     </>

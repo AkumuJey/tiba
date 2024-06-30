@@ -1,55 +1,8 @@
 "use server";
+import { fetchLabResultsList, Labresults } from "@/lib/labs";
 import { AddCircleOutline } from "@mui/icons-material";
 import { Divider, Grid, List, ListItem, ListItemText } from "@mui/material";
-import axios from "axios";
-import { cookies } from "next/headers";
 import Link from "next/link";
-
-interface Labresults {
-  id: number;
-  createdAt: string;
-  patientID: number;
-  healthProviderID: number | null;
-  medicalHistoryID: number | null;
-  bloodSugar: number;
-  cholesterol: number;
-  LDL: number;
-  HDL: number;
-  triglyceride: number;
-  findings: string;
-  labName: string;
-}
-
-const fetchLabResults = async ({
-  cookieHeader,
-  patientID,
-}: {
-  cookieHeader: string;
-  patientID: string;
-}) => {
-  try {
-    const response = await axios.get(
-      `http://localhost:4000/provider/${patientID}/labs/`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookieHeader, // Pass cookies from the request
-        },
-        withCredentials: true, // Automatically sends cookies
-      }
-    );
-
-    if (response.status === 200) {
-      return response.data.hospitalLabsResultsList;
-    } else {
-      console.log("Failed to fetch lab results");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error fetching lab results:", error);
-    return [];
-  }
-};
 
 const formatDateTime = (dateTimeString: string) => {
   const date = new Date(dateTimeString);
@@ -70,12 +23,9 @@ const LabResultsPage = async ({
 }: {
   params: { patientID: string };
 }) => {
-  const tokenCookie = cookies().get("token");
-  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
   const { patientID } = params;
-  const hospitalLabsResultsList: Labresults[] = await fetchLabResults({
+  const hospitalLabsResultsList: Labresults[] = await fetchLabResultsList({
     patientID,
-    cookieHeader,
   });
   console.log(hospitalLabsResultsList);
   return (
@@ -91,26 +41,40 @@ const LabResultsPage = async ({
         </Link>
       </div>
       <List>
-        {hospitalLabsResultsList.map((labresults) => (
-          <>
-            <Link
-              href={`/patients/${patientID}/labs/${labresults.id}`}
-              key={labresults.id}
-            >
-              <ListItem>
-                <ListItemText
-                  primary={`Date: ${
-                    formatDateTime(labresults.createdAt).formattedDate
-                  } Time: ${
-                    formatDateTime(labresults.createdAt).formattedTime
-                  }`}
-                  secondary={`Findings: ${labresults.findings} Labname: ${labresults.labName}`}
-                />
-              </ListItem>
-              <Divider variant="middle" component="li" />
-            </Link>
-          </>
-        ))}
+        <>
+          {!hospitalLabsResultsList ? (
+            <div>Error fetching labresults</div>
+          ) : (
+            <>
+              <>
+                {hospitalLabsResultsList.length === 0 ? (
+                  <div>No lab results available</div>
+                ) : (
+                  hospitalLabsResultsList.map((labresults) => (
+                    <>
+                      <Link
+                        href={`/patients/${patientID}/labs/${labresults.id}`}
+                        key={labresults.id}
+                      >
+                        <ListItem>
+                          <ListItemText
+                            primary={`Date: ${
+                              formatDateTime(labresults.createdAt).formattedDate
+                            } Time: ${
+                              formatDateTime(labresults.createdAt).formattedTime
+                            }`}
+                            secondary={`Findings: ${labresults.findings} Labname: ${labresults.labName}`}
+                          />
+                        </ListItem>
+                        <Divider variant="middle" component="li" />
+                      </Link>
+                    </>
+                  ))
+                )}
+              </>
+            </>
+          )}
+        </>
       </List>
     </Grid>
   );

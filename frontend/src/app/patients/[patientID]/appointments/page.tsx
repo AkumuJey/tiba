@@ -22,7 +22,7 @@ const AppointmentsPage = async ({
         </Link>
       </div>
       <div className="w-full">
-        <AppointmentsDisplay />
+        <AppointmentsDisplay patientID={Number(patientID)} />
       </div>
     </Grid>
   );

@@ -1,58 +1,13 @@
 "use client";
 import LabsForm from "@/components/LabsForm";
-import axios from "axios";
+import { EditedLabResults, updateLabResults } from "@/lib/labs";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
-interface LabResults {
-  bloodSugar: number;
-  cholesterol: number;
-  LDL: number;
-  HDL: number;
-  triglyceride: number;
-  findings: string;
-  labName: string;
-}
+import { useState } from "react";
 
 interface EditLabsProps {
   params: { labsID: string; patientID: string };
-  labResults: LabResults;
+  labResults: EditedLabResults;
 }
-
-const updateLabResults = async ({
-  patientID,
-  details,
-  labsID,
-}: {
-  patientID: string;
-  details: LabResults;
-  labsID: string;
-}) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:4000/provider/${patientID}/labs/${labsID}`,
-      details,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-
-    if (response.status !== 200 && response.status !== 201) {
-      console.log("Failed");
-      return;
-    }
-
-    const data = response.data;
-    console.log("Response", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to update appointment", error);
-    return;
-  }
-};
 
 const LabsEditController = ({ params, labResults }: EditLabsProps) => {
   const { labsID, patientID } = params;
@@ -60,7 +15,7 @@ const LabsEditController = ({ params, labResults }: EditLabsProps) => {
   const [error, setError] = useState(false);
 
   const router = useRouter();
-  const handleUpdate = async (data: LabResults) => {
+  const handleUpdate = async (data: EditedLabResults) => {
     setLoading(true);
     setError(false);
     const result = await updateLabResults({
@@ -78,7 +33,7 @@ const LabsEditController = ({ params, labResults }: EditLabsProps) => {
     <>
       <LabsForm
         handlerFunction={(data) => handleUpdate(data)}
-        labResults={labResults as LabResults}
+        labResults={labResults as EditedLabResults}
         error={error}
         loading={loading}
       />

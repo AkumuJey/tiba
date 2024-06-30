@@ -16,3 +16,19 @@ export const fetchPatients = async ({ limit }: { limit?: number }) => {
     return null;
   }
 };
+
+export const fetchPatient = async ({ patientID }: { patientID: string }) => {
+  try {
+    const response = await providerApi.get(
+      `http://localhost:4000/provider/patients/${patientID}`,
+      {
+        headers: {
+          Cookie: cookieHeader,
+        },
+      }
+    );
+    return response.data.patient;
+  } catch (error) {
+    return null;
+  }
+};

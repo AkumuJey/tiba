@@ -29,24 +29,34 @@ const PatientsList = async ({ limit }: PatientsListProps) => {
     >
       <Paper elevation={3} sx={{ p: 4 }} className="bg-[#F1F6F6]">
         <h5 className="font-bol text-xl">Patients</h5>
-        <List>
-          {patients.map((patient) => (
-            <Link href={`/patients/${patient.id}`} key={patient.id}>
-              <ListItem>
-                <ListItemText
-                  primary={`${patient.firstName} ${patient.lastName}`}
-                  secondary={`Sex: ${patient.sex}, Age: ${calculateAge(
-                    patient.dateOfBirth
-                  )} Years`}
-                />
-              </ListItem>
-              <Divider variant="middle" component="li" />
-            </Link>
-          ))}
-          <ListItem>
-            <Link href="/patients">Click to view more</Link>
-          </ListItem>
-        </List>
+        {!patients ? (
+          <div>Error loading patients</div>
+        ) : (
+          <>
+            {patients.length === 0 ? (
+              <div>No patients available</div>
+            ) : (
+              <List>
+                {patients.map((patient) => (
+                  <Link href={`/patients/${patient.id}`} key={patient.id}>
+                    <ListItem>
+                      <ListItemText
+                        primary={`${patient.firstName} ${patient.lastName}`}
+                        secondary={`Sex: ${patient.sex}, Age: ${calculateAge(
+                          patient.dateOfBirth
+                        )} Years`}
+                      />
+                    </ListItem>
+                    <Divider variant="middle" component="li" />
+                  </Link>
+                ))}
+                <ListItem>
+                  <Link href="/patients">Click to view more</Link>
+                </ListItem>
+              </List>
+            )}
+          </>
+        )}
       </Paper>
     </div>
   );
