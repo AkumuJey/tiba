@@ -1,4 +1,6 @@
 import ProtectedRoutes from "@/components/ProtectedRoutes";
+import { fetchProfile, Profile } from "@/lib/dashboartUtils";
+import { getCookies } from "@/lib/getCookies";
 import { Edit, Email, Person, Phone, VerifiedUser } from "@mui/icons-material";
 import {
   Avatar,
@@ -13,27 +15,13 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { cookies } from "next/headers";
-import fetchProfile from "./actions";
-
-interface Profile {
-  createdAt: string;
-  firstName: string;
-  lastName: string;
-  title: string;
-  email: string;
-  phoneNo: string;
-  age: number | null;
-  verified: boolean;
-  subscribed: boolean;
-}
 
 // Server Component to render the ProfilePage
 const ProfilePage = async () => {
-  const tokenCookie = cookies().get("token");
-  const cookieHeader = tokenCookie ? `token=${tokenCookie.value}` : "";
+  const cookieHeader = getCookies();
 
   const profile: Profile = await fetchProfile(cookieHeader);
+  console.log(profile);
 
   return (
     <Container

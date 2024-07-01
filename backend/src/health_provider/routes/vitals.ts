@@ -24,7 +24,7 @@ vitals.post("/", async (req: Request, res: Response) => {
     if (!newHospitalVitals) {
       return res.status(400).json({ message: "Failed to store new vitals" });
     }
-    res.status(201).json({ message: "success", id: newHospitalVitals.id });
+    res.status(201).json({ message: "success", newHospitalVitals });
   } catch (error) {
     return res.status(400).json({ error });
   }

@@ -37,31 +37,32 @@ const MedicalHistoriesPage = async ({
           <div>Error loading medical histories</div>
         ) : (
           <>
-            histories.length === 0 ? (<div>No medical histories available</div>)
-            : (
-            <>
-              {histories.map((history) => (
-                <>
-                  <Link
-                    href={`/patients/${patientID}/medical-histories/${history.id}`}
-                    key={history.id}
-                  >
-                    <ListItem>
-                      <ListItemText
-                        primary={`Date: ${
-                          formatDateTime(history.createdAt).formattedDate
-                        } Time: ${
-                          formatDateTime(history.createdAt).formattedTime
-                        }`}
-                        secondary={`Presentation: ${history.presentation}`}
-                      />
-                    </ListItem>
-                    <Divider variant="middle" component="li" />
-                  </Link>
-                </>
-              ))}
-            </>
-            )
+            {histories.length === 0 ? (
+              <div>No medical histories available</div>
+            ) : (
+              <>
+                {histories.map((history) => (
+                  <>
+                    <Link
+                      href={`/patients/${patientID}/medical-histories/${history.id}`}
+                      key={history.id}
+                    >
+                      <ListItem>
+                        <ListItemText
+                          primary={`Date: ${
+                            formatDateTime(history.createdAt).formattedDate
+                          } Time: ${
+                            formatDateTime(history.createdAt).formattedTime
+                          }`}
+                          secondary={`Presentation: ${history.presentation}`}
+                        />
+                      </ListItem>
+                      <Divider variant="middle" component="li" />
+                    </Link>
+                  </>
+                ))}
+              </>
+            )}
           </>
         )}
       </List>

@@ -117,3 +117,21 @@ export const updatePrescription = async ({
     return null;
   }
 };
+
+export const addPrescription = async ({
+  patientID,
+  prescription,
+}: {
+  patientID: string;
+  prescription: EditablePrescription;
+}) => {
+  try {
+    const response = await providerApi.post(`/${patientID}/prescription/`, {
+      ...prescription,
+      prescriptionDetails: prescription.drugs,
+    });
+    return response.data.prescription;
+  } catch (error) {
+    return null;
+  }
+};

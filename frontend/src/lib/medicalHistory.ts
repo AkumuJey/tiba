@@ -132,3 +132,21 @@ export const updateHistory = async ({
     return null;
   }
 };
+
+export const addHistory = async ({
+  patientID,
+  medicalHistory,
+}: {
+  patientID: string;
+  medicalHistory: EditableMedicalHistory;
+}) => {
+  try {
+    const response = await providerApi.post(
+      `/${patientID}/histories/`,
+      medicalHistory
+    );
+    return response.data.newMedicalHistory;
+  } catch (error) {
+    return null;
+  }
+};

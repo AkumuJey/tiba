@@ -30,17 +30,14 @@ const ControllerAppointmentForm = ({ params, appointment }: EditingProps) => {
   const handleUpdate = async (data: AppointmentData) => {
     setLoading(true);
     setError(false);
-    const result = await updateAppointment({
+    const resultId = await updateAppointment({
       patientID,
       data,
       appointmentID,
     });
     setLoading(false);
-    if (result) {
-      const { updatedAppointment } = result;
-      return router.push(
-        `/patients/${patientID}/appointments/${updatedAppointment.id}`
-      );
+    if (resultId) {
+      return router.push(`/patients/${patientID}/appointments/${resultId}`);
     }
     setError(true);
   };

@@ -47,7 +47,7 @@ prescription.post("/", async (req: Request, res: Response) => {
       return { ...prescription, prescriptionDetail };
     });
 
-    return res.status(201).json({ message: "success", id: prescription.id });
+    return res.status(201).json({ message: "success", prescription });
   } catch (error) {
     return res.status(400).json({ error, message: "failed to prescribe" });
   }

@@ -80,3 +80,18 @@ export const updateLabResults = async ({
     return null;
   }
 };
+
+export const postLabResults = async ({
+  patientID,
+  labResults,
+}: {
+  patientID: string;
+  labResults: EditedLabResults;
+}) => {
+  try {
+    const response = await providerApi.post(`/${patientID}/labs/`, labResults);
+    return response.data.newHospitalLabs;
+  } catch (error) {
+    return null;
+  }
+};

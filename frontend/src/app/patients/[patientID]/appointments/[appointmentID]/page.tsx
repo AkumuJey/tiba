@@ -1,25 +1,9 @@
 import DeleteAppointment from "@/components/DeleteAppointment.tsx";
-import { fetchAppointment } from "@/lib/appointmentUtils";
+import { AppointmentDetails, fetchAppointment } from "@/lib/appointmentUtils";
+import { getCookies } from "@/lib/getCookies";
 import { Edit } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
-
-interface PatientDetails {
-  firstName: string;
-  lastName: string;
-}
-
-interface AppointmentDetails {
-  id: number;
-  createdAt: string;
-  patientID: number;
-  healthProviderID: number;
-  venue: string;
-  appointmentTime: string;
-  amount: number;
-  description: string;
-  patient: PatientDetails;
-}
 
 const SingleAppointment = async ({
   params,
@@ -27,9 +11,11 @@ const SingleAppointment = async ({
   params: { appointmentID: string; patientID: string };
 }) => {
   const { patientID, appointmentID } = params;
+  const cookieHeader = getCookies();
   const appointment: AppointmentDetails = await fetchAppointment({
     appointmentID,
     patientID,
+    cookieHeader,
   });
   const { patient } = appointment;
 

@@ -1,20 +1,12 @@
-import { fetchProfile } from "@/lib/dashboartUtils";
+import { fetchProfile, Profile } from "@/lib/dashboartUtils";
+import { getCookies } from "@/lib/getCookies";
 import { Email, Person, VerifiedUser } from "@mui/icons-material/";
 import { Avatar, Box, Grid, Paper, Typography } from "@mui/material";
 import Link from "next/link";
 
-interface Profile {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNo: string;
-  title: string;
-  verified: boolean;
-}
-
 const DashboardProfile = async () => {
-  const profile: Profile = await fetchProfile();
+  const cookieHeader = getCookies();
+  const profile: Profile = await fetchProfile(cookieHeader);
   return (
     <>
       {profile && (

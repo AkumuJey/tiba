@@ -95,3 +95,18 @@ export const updateVitals = async ({
     return null;
   }
 };
+
+export const addVitalsResults = async ({
+  patientID,
+  vitals,
+}: {
+  patientID: string;
+  vitals: VitalsResultsEdit;
+}) => {
+  try {
+    const response = await providerApi.post(`/${patientID}/vitals/`, vitals);
+    return response.data.newHospitalVitals;
+  } catch (error) {
+    return null;
+  }
+};

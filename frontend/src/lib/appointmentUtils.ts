@@ -1,5 +1,20 @@
 import providerApi from "./axios";
+export interface PatientDetails {
+  firstName: string;
+  lastName: string;
+}
 
+export interface AppointmentDetails {
+  id: number;
+  createdAt: string;
+  patientID: number;
+  healthProviderID: number;
+  venue: string;
+  appointmentTime: string;
+  amount: number;
+  description: string;
+  patient: PatientDetails;
+}
 export const fetchAppointments = async ({
   limit,
   cookieHeader,
@@ -57,13 +72,14 @@ export const fetchAppointment = async ({
         },
       }
     );
+    console.log(response.data);
     return response.data.appointment;
   } catch (error) {
     return null;
   }
 };
 
-interface AppointmentData {
+export interface AppointmentData {
   venue: string;
   appointmentTime: string;
   amount: number;
@@ -82,15 +98,27 @@ export const updateAppointment = async ({
   try {
     const response = await providerApi.patch(
       `/${patientID}/appointments/${appointmentID}/`,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
+      data
     );
-    return response.data;
+    return response.data.id;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const bookAppointment = async ({
+  patientID,
+  newAppointment,
+}: {
+  patientID: string;
+  newAppointment: AppointmentData;
+}) => {
+  try {
+    const response = await providerApi.post(
+      `/${patientID}/appointments/`,
+      newAppointment
+    );
+    return response.data.id;
   } catch (error) {
     return null;
   }

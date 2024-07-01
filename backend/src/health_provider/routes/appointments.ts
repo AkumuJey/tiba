@@ -34,7 +34,7 @@ appointments.post("/", async (req: Request, res: Response) => {
     if (!appointment) {
       return res.status(400).json({ message: "Failed to book appointment" });
     }
-    return res.status(201).json({ message: "Success", appointment });
+    return res.status(201).json({ message: "Success", id: appointment.id });
   } catch (error) {
     return res.json({ error });
   }
@@ -79,7 +79,7 @@ appointments.get("/:id", async (req: Request, res: Response) => {
         },
       },
     });
-    return res.json({ appointment });
+    return res.json({ message: "success", appointment });
   } catch (error) {
     res.status(400).json({ error: error });
   }
@@ -103,7 +103,7 @@ appointments.patch("/:id", async (req: Request, res: Response) => {
     }
     return res
       .status(200)
-      .json({ message: "Updated Successfully", updatedAppointment });
+      .json({ message: "Updated Successfully", id: updatedAppointment.id });
   } catch (error) {
     return res.json({ error, message: "Failed to update" });
   }

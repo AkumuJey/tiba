@@ -1,5 +1,6 @@
 "use server";
 import PatientLinks from "@/components/PatientLinks";
+import { getCookies } from "@/lib/getCookies";
 import { fetchPatient } from "@/lib/patientsUtils";
 import { Box, Divider, Paper } from "@mui/material";
 import React from "react";
@@ -26,7 +27,8 @@ const layout = async ({
   }>;
 }) => {
   const { patientID } = params;
-  const patient: Patient = await fetchPatient({ patientID });
+  const cookieHeader = getCookies();
+  const patient: Patient = await fetchPatient({ patientID, cookieHeader });
   const age =
     new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear();
 
