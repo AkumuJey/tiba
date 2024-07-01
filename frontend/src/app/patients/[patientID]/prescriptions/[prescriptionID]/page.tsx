@@ -1,8 +1,7 @@
-import DeletePrescription from "@/components/DeletePrescription";
-import LinkToEdit from "@/components/LinkToEdit";
 import { getCookies } from "@/lib/getCookies";
 import { fetchPrescription, Prescription } from "@/lib/prescription";
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
+import BottomDiv from "./BottomDiv";
 
 const formatDateTime = (dateTimeString: string) => {
   const date = new Date(dateTimeString);
@@ -38,16 +37,7 @@ const SinglePrescriptionsPage = async ({
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" gutterBottom className="flex justify-between">
           Prescription
-          <LinkToEdit
-            path={`/patients/${patientID}/prescriptions/${prescriptionID}/edit`}
-          />
         </Typography>
-        <div>
-          <DeletePrescription
-            patientID={patientID}
-            prescriptionID={prescriptionID}
-          />
-        </div>
         <List>
           <ListItem>
             <ListItemText
@@ -71,6 +61,7 @@ const SinglePrescriptionsPage = async ({
               </ListItem>
             ))}
         </List>
+        <BottomDiv patientID={patientID} prescriptionID={patientID} />
       </Box>
     </>
   );

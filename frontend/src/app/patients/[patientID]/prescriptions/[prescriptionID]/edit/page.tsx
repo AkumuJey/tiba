@@ -1,4 +1,4 @@
-import { getCookies } from "@/lib/getCookies.js";
+import { getCookies } from "@/lib/getCookies";
 import EditPrescription from "./PrescriptionFormController.tsx";
 import { fetchPrescription, Prescription } from "@/lib/prescription";
 

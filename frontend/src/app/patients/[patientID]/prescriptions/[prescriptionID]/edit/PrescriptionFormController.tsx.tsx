@@ -1,7 +1,6 @@
 "use client";
 import PrescriptionForm from "@/components/PrescriptionForm";
 import { updatePrescription } from "@/lib/prescription";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

@@ -135,3 +135,20 @@ export const addPrescription = async ({
     return null;
   }
 };
+
+export const deletePrescription = async ({
+  patientID,
+  prescriptionID,
+}: {
+  patientID: string;
+  prescriptionID: string;
+}) => {
+  try {
+    const response = await providerApi.delete(
+      `/${patientID}/prescription/${prescriptionID}`
+    );
+    return response.data.deletedPrescription;
+  } catch (error) {
+    return null;
+  }
+};
