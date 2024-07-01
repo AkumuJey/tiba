@@ -1,5 +1,4 @@
 import providerApi from "./axios";
-import { getCookies } from "./getCookies";
 
 interface Prescription {
   id: number;
@@ -55,8 +54,13 @@ export interface MedicalHistory extends EditableMedicalHistory {
   Prescription: Prescription[] | [];
 }
 
-const cookieHeader = getCookies();
-export const fetchHistories = async ({ patientID }: { patientID: string }) => {
+export const fetchHistories = async ({
+  patientID,
+  cookieHeader,
+}: {
+  patientID: string;
+  cookieHeader: string;
+}) => {
   try {
     const response = await providerApi.get(`/${patientID}/histories/`, {
       headers: {
@@ -88,9 +92,11 @@ export const formatDateTime = (dateTimeString: string) => {
 export const fetchHistory = async ({
   patientID,
   medicalHistoryID,
+  cookieHeader,
 }: {
   patientID: string;
   medicalHistoryID: string;
+  cookieHeader: string;
 }) => {
   try {
     const response = await providerApi.get(

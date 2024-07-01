@@ -1,5 +1,6 @@
 import DeleteMedicalHistory from "@/components/DeleteHistory";
 import LinkToEdit from "@/components/LinkToEdit";
+import { getCookies } from "@/lib/getCookies";
 import { fetchHistory, MedicalHistory } from "@/lib/medicalHistory";
 import { Description, Info } from "@mui/icons-material";
 import {
@@ -18,9 +19,11 @@ const SingleMedicalHistoryPage = async ({
   params: { patientID: string; medicalHistoryID: string };
 }) => {
   const { patientID, medicalHistoryID } = params;
+  const cookieHeader = getCookies();
   const medicalHistory: MedicalHistory = await fetchHistory({
     medicalHistoryID,
     patientID,
+    cookieHeader,
   });
 
   console.log(medicalHistory);

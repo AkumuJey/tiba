@@ -1,5 +1,7 @@
+"use server";
 import { fetchAppointment } from "@/lib/appointmentUtils";
 import ControllerAppointmentForm from "./ControllerAppointmentForm";
+import { getCookies } from "@/lib/getCookies";
 
 interface AppointmentDetails {
   venue: string;
@@ -14,9 +16,11 @@ const EditAppointmentPage = async ({
   params: { appointmentID: string; patientID: string };
 }) => {
   const { patientID, appointmentID } = params;
+  const cookieHeader = getCookies();
   const appointment: AppointmentDetails = await fetchAppointment({
     appointmentID,
     patientID,
+    cookieHeader,
   });
 
   return (

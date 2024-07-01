@@ -1,5 +1,6 @@
 import DeleteLabResults from "@/components/DeleteLabResults";
 import LinkToEdit from "@/components/LinkToEdit";
+import { getCookies } from "@/lib/getCookies";
 import { fetchLabResults, Labresults } from "@/lib/labs";
 import { LocalHospital } from "@mui/icons-material";
 import {
@@ -18,9 +19,11 @@ const SingleLabResultPage = async ({
   params: { patientID: string; labsID: string };
 }) => {
   const { patientID, labsID } = params;
+  const cookieHeader = getCookies();
   const labResults: Labresults = await fetchLabResults({
     labsID,
     patientID,
+    cookieHeader,
   });
 
   return (

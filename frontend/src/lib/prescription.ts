@@ -1,7 +1,4 @@
 import providerApi from "./axios";
-import { getCookies } from "./getCookies";
-
-const cookieHeader = getCookies();
 
 export interface PrescriptionDetail {
   id: number;
@@ -56,8 +53,10 @@ export const formatDateTime = (dateTimeString: string) => {
 
 export const fetchPrescriptions = async ({
   patientID,
+  cookieHeader,
 }: {
   patientID: string;
+  cookieHeader: string;
 }) => {
   try {
     const response = await providerApi.get(`/${patientID}/prescription/`, {
@@ -74,9 +73,11 @@ export const fetchPrescriptions = async ({
 export const fetchPrescription = async ({
   patientID,
   prescriptionID,
+  cookieHeader,
 }: {
   patientID: string;
   prescriptionID: string;
+  cookieHeader: string;
 }) => {
   try {
     const response = await providerApi.get(

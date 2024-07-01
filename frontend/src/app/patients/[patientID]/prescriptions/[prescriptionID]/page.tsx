@@ -1,5 +1,6 @@
 import DeletePrescription from "@/components/DeletePrescription";
 import LinkToEdit from "@/components/LinkToEdit";
+import { getCookies } from "@/lib/getCookies";
 import { fetchPrescription, Prescription } from "@/lib/prescription";
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 
@@ -24,9 +25,11 @@ const SinglePrescriptionsPage = async ({
   params: { patientID: string; prescriptionID: string };
 }) => {
   const { patientID, prescriptionID } = params;
+  const cookieHeader = getCookies();
   const prescription: Prescription = await fetchPrescription({
     patientID,
     prescriptionID,
+    cookieHeader,
   });
   console.log(prescription);
   const { formattedDate, formattedTime } = formatDateTime(prescription.date);

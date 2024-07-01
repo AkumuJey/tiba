@@ -1,3 +1,4 @@
+import { getCookies } from "@/lib/getCookies.js";
 import EditPrescription from "./PrescriptionFormController.tsx";
 import { fetchPrescription, Prescription } from "@/lib/prescription";
 
@@ -7,9 +8,11 @@ const PrescriptionFormController = async ({
   params: { patientID: string; prescriptionID: string };
 }) => {
   const { patientID, prescriptionID } = params;
+  const cookieHeader = getCookies();
   const prescription: Prescription = await fetchPrescription({
     patientID,
     prescriptionID,
+    cookieHeader,
   });
 
   const prescriptionProp = {

@@ -1,4 +1,8 @@
-import { fetchPatientAppointments } from "@/lib/appointmentUtils";
+import {
+  fetchAppointments,
+  fetchPatientAppointments,
+} from "@/lib/appointmentUtils";
+import { getCookies } from "@/lib/getCookies";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Link from "next/link";
 
@@ -28,9 +32,10 @@ const AppointmentsDisplay = async ({
   limit,
   patientID,
 }: AppointmentsDashProps) => {
-  const appointments: AppointmentDetails[] = await fetchPatientAppointments({
-    patientID,
-  });
+  const cookieHeader = getCookies();
+  const appointments: AppointmentDetails[] = patientID
+    ? await fetchPatientAppointments({ cookieHeader, patientID })
+    : await fetchAppointments({ cookieHeader, limit });
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     const formattedDate = date.toLocaleDateString("en-US", {

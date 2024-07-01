@@ -78,6 +78,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       throw error;
     }
   };
+
   if (!success) {
     return (
       <div className="h-screen w-full flex justify-center items-center bg-[#F6F1F1]">

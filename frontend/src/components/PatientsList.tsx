@@ -1,3 +1,4 @@
+import { getCookies } from "@/lib/getCookies";
 import { fetchPatients } from "@/lib/patientsUtils";
 import { Divider, List, ListItem, ListItemText, Paper } from "@mui/material";
 import Link from "next/link";
@@ -15,7 +16,8 @@ interface PatientsListProps {
 }
 
 const PatientsList = async ({ limit }: PatientsListProps) => {
-  const patients: Patient[] = await fetchPatients({ limit });
+  const cookieHeader = getCookies();
+  const patients: Patient[] = await fetchPatients({ limit, cookieHeader });
   const calculateAge = (dateOfBirth: string) => {
     const birthDate = new Date(dateOfBirth);
     const ageDifMs = Date.now() - birthDate.getTime();

@@ -1,7 +1,4 @@
 import providerApi from "./axios";
-import { getCookies } from "./getCookies";
-
-const cookieHeader = getCookies();
 
 export interface Vitals {
   id: number;
@@ -30,7 +27,13 @@ export const formatVitalsDateTime = (dateTimeString: string) => {
   });
   return { formattedDate, formattedTime };
 };
-export const fetchVitalsList = async ({ patientID }: { patientID: string }) => {
+export const fetchVitalsList = async ({
+  patientID,
+  cookieHeader,
+}: {
+  patientID: string;
+  cookieHeader: string;
+}) => {
   try {
     const response = await providerApi.get(`/${patientID}/vitals/`, {
       headers: {
@@ -46,9 +49,11 @@ export const fetchVitalsList = async ({ patientID }: { patientID: string }) => {
 export const fetchVitals = async ({
   patientID,
   vitalsID,
+  cookieHeader,
 }: {
   patientID: string;
   vitalsID: string;
+  cookieHeader: string;
 }) => {
   try {
     const response = await providerApi.get(`/${patientID}/vitals/${vitalsID}`, {

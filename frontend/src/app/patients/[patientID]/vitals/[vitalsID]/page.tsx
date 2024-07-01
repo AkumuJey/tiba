@@ -1,5 +1,6 @@
 import DeleteVitals from "@/components/DeleteVitals";
 import LinkToEdit from "@/components/LinkToEdit";
+import { getCookies } from "@/lib/getCookies";
 import { fetchVitals, Vitals } from "@/lib/vitals";
 import { AccessTime, Favorite, LocalHospital } from "@mui/icons-material";
 import {
@@ -18,9 +19,11 @@ const SingleVitalsPage = async ({
   params: { patientID: string; vitalsID: string };
 }) => {
   const { patientID, vitalsID } = params;
+  const cookieHeader = getCookies();
   const vitals: Vitals = await fetchVitals({
     vitalsID,
     patientID,
+    cookieHeader,
   });
 
   console.log(vitals);

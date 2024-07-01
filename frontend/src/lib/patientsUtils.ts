@@ -1,8 +1,12 @@
 import providerApi from "./axios";
-import { getCookies } from "./getCookies";
 
-const cookieHeader = getCookies();
-export const fetchPatients = async ({ limit }: { limit?: number }) => {
+export const fetchPatients = async ({
+  limit,
+  cookieHeader,
+}: {
+  limit?: number;
+  cookieHeader: string;
+}) => {
   try {
     const limitQuery = limit ? `?limit=${limit}` : "";
     const response = await providerApi.get(`/patients/?${limitQuery}`, {
@@ -17,16 +21,19 @@ export const fetchPatients = async ({ limit }: { limit?: number }) => {
   }
 };
 
-export const fetchPatient = async ({ patientID }: { patientID: string }) => {
+export const fetchPatient = async ({
+  patientID,
+  cookieHeader,
+}: {
+  patientID: string;
+  cookieHeader: string;
+}) => {
   try {
-    const response = await providerApi.get(
-      `http://localhost:4000/provider/patients/${patientID}`,
-      {
-        headers: {
-          Cookie: cookieHeader,
-        },
-      }
-    );
+    const response = await providerApi.get(`/patients/${patientID}`, {
+      headers: {
+        Cookie: cookieHeader,
+      },
+    });
     return response.data.patient;
   } catch (error) {
     return null;

@@ -1,3 +1,4 @@
+import { getCookies } from "@/lib/getCookies";
 import { fetchVitalsList, formatVitalsDateTime, Vitals } from "@/lib/vitals";
 import { AddCircleOutline } from "@mui/icons-material";
 import { Divider, Grid, List, ListItem, ListItemText } from "@mui/material";
@@ -5,8 +6,10 @@ import Link from "next/link";
 
 const VitalsPage = async ({ params }: { params: { patientID: string } }) => {
   const { patientID } = params;
+  const cookieHeader = getCookies();
   const hospitalVitalsList: Vitals[] = await fetchVitalsList({
     patientID,
+    cookieHeader,
   });
 
   console.log(hospitalVitalsList);

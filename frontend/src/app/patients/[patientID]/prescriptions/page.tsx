@@ -1,4 +1,5 @@
 "use server";
+import { getCookies } from "@/lib/getCookies";
 import { formatDateTime } from "@/lib/medicalHistory";
 import { fetchPrescriptions, Prescription } from "@/lib/prescription";
 import { AddCircleOutline } from "@mui/icons-material";
@@ -11,8 +12,10 @@ const PrescriptionsPage = async ({
   params: { patientID: string };
 }) => {
   const { patientID } = params;
+  const cookieHeader = getCookies();
   const prescriptions: Prescription[] = await fetchPrescriptions({
     patientID,
+    cookieHeader,
   });
   return (
     <Grid item xs={12} md={6}>

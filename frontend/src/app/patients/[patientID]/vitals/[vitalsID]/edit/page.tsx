@@ -1,7 +1,6 @@
-import axios from "axios";
-import { cookies } from "next/headers";
-import EditVitalsController from "./EditController";
+import { getCookies } from "@/lib/getCookies";
 import { fetchVitals, Vitals } from "@/lib/vitals";
+import EditVitalsController from "./EditController";
 
 const VitalsEditPage = async ({
   params,
@@ -9,9 +8,11 @@ const VitalsEditPage = async ({
   params: { patientID: string; vitalsID: string };
 }) => {
   const { patientID, vitalsID } = params;
+  const cookieHeader = getCookies();
   const vitals: Vitals = await fetchVitals({
     vitalsID,
     patientID,
+    cookieHeader,
   });
 
   console.log(vitals);

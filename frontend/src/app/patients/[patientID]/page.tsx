@@ -1,3 +1,4 @@
+import { getCookies } from "@/lib/getCookies";
 import { fetchPatient } from "@/lib/patientsUtils";
 import { ContactPhone } from "@mui/icons-material";
 import LocationCity from "@mui/icons-material/LocationCity";
@@ -21,7 +22,8 @@ export default async function Patient({
   params: { patientID: string };
 }) {
   const { patientID } = params;
-  const patient: Patient = await fetchPatient({ patientID });
+  const cookieHeader = getCookies();
+  const patient: Patient = await fetchPatient({ patientID, cookieHeader });
 
   return (
     <div>

@@ -1,4 +1,5 @@
 "use server";
+import { getCookies } from "@/lib/getCookies";
 import { fetchLabResultsList, Labresults } from "@/lib/labs";
 import { AddCircleOutline } from "@mui/icons-material";
 import { Divider, Grid, List, ListItem, ListItemText } from "@mui/material";
@@ -24,8 +25,10 @@ const LabResultsPage = async ({
   params: { patientID: string };
 }) => {
   const { patientID } = params;
+  const cookieHeader = getCookies();
   const hospitalLabsResultsList: Labresults[] = await fetchLabResultsList({
     patientID,
+    cookieHeader,
   });
   console.log(hospitalLabsResultsList);
   return (

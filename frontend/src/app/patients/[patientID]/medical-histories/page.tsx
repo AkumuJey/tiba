@@ -1,4 +1,5 @@
 "use server";
+import { getCookies } from "@/lib/getCookies";
 import {
   fetchHistories,
   formatDateTime,
@@ -14,8 +15,10 @@ const MedicalHistoriesPage = async ({
   params: { patientID: string };
 }) => {
   const { patientID } = params;
+  const cookieHeader = getCookies();
   const histories: MedicalHistory[] = await fetchHistories({
     patientID,
+    cookieHeader,
   });
   return (
     <Grid item xs={12} md={6}>

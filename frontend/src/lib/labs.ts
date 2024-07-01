@@ -1,5 +1,4 @@
 import providerApi from "./axios";
-import { getCookies } from "./getCookies";
 
 export interface EditedLabResults {
   bloodSugar: number;
@@ -17,11 +16,12 @@ export interface Labresults extends EditedLabResults {
   patientID: number;
 }
 
-const cookieHeader = getCookies();
 export const fetchLabResultsList = async ({
   patientID,
+  cookieHeader,
 }: {
   patientID: string;
+  cookieHeader: string;
 }) => {
   try {
     const response = await providerApi.get(
@@ -41,9 +41,11 @@ export const fetchLabResultsList = async ({
 export const fetchLabResults = async ({
   patientID,
   labsID,
+  cookieHeader,
 }: {
   patientID: string;
   labsID: string;
+  cookieHeader: string;
 }) => {
   try {
     const response = await providerApi.get(`/${patientID}/labs/${labsID}`, {
