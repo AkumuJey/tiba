@@ -3,37 +3,31 @@
 import { Delete } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface DeleteEditItemProps {
   deleteFunction: () => Promise<number | null>;
-  nextRoute: string;
-  editRoute: string;
 }
 
-const EditDeleteItem = ({
-  deleteFunction,
-  nextRoute,
-  editRoute,
-}: DeleteEditItemProps) => {
+const EditDeleteItem = ({ deleteFunction }: DeleteEditItemProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const router = useRouter();
-
+  const pathname = usePathname();
   const handleDelete = async () => {
     setError(false);
     setLoading(true);
     const results = await deleteFunction();
     setLoading(false);
     if (results) {
-      return router.replace(nextRoute);
+      return router.replace(`${pathname.slice(0, pathname.lastIndexOf("/"))}`);
     }
     setError(true);
   };
 
   const handleEdit = () => {
-    router.push(editRoute);
+    router.push(`${pathname}/edit`);
   };
 
   return (

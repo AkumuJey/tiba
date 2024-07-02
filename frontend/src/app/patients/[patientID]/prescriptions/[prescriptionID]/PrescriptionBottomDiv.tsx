@@ -15,8 +15,6 @@ const BottomDiv = ({
     <div>
       <EditDeleteItem
         deleteFunction={() => deletePrescription({ patientID, prescriptionID })}
-        editRoute={`${pathname}/edit`}
-        nextRoute={`${pathname.slice(0, pathname.lastIndexOf("/"))}`}
       />
     </div>
   );

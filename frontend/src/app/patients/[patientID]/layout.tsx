@@ -1,5 +1,5 @@
 "use server";
-import PatientLinks from "@/components/PatientLinks";
+import PatientLinks from "@/app/patients/[patientID]/PatientLinks";
 import { getCookies } from "@/lib/getCookies";
 import { fetchPatient } from "@/lib/patientsUtils";
 import { Box, Divider, Paper } from "@mui/material";

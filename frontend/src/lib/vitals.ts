@@ -110,3 +110,20 @@ export const addVitalsResults = async ({
     return null;
   }
 };
+
+export const deleteVitals = async ({
+  patientID,
+  vitalsID,
+}: {
+  patientID: string;
+  vitalsID: string;
+}) => {
+  try {
+    const response = await providerApi.delete(
+      `/${patientID}/vitals/${vitalsID}`
+    );
+    return response.data.deletedVitals;
+  } catch (error) {
+    return null;
+  }
+};

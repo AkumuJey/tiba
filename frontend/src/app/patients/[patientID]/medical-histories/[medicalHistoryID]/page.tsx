@@ -1,5 +1,3 @@
-import DeleteMedicalHistory from "@/components/DeleteHistory";
-import LinkToEdit from "@/components/LinkToEdit";
 import { getCookies } from "@/lib/getCookies";
 import { fetchHistory, MedicalHistory } from "@/lib/medicalHistory";
 import { Description, Info } from "@mui/icons-material";
@@ -12,6 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import HistoryBottomDiv from "./HistoryBottomDiv";
 
 const SingleMedicalHistoryPage = async ({
   params,
@@ -35,22 +34,9 @@ const SingleMedicalHistoryPage = async ({
             <div>Error loading medical history</div>
           ) : (
             <>
-              <Typography
-                variant="h6"
-                gutterBottom
-                className="flex justify-between"
-              >
+              <Typography variant="h6" gutterBottom>
                 Medical History
-                <LinkToEdit
-                  path={`/patients/${patientID}/medical-histories/${medicalHistoryID}/edit`}
-                />
               </Typography>
-              <div>
-                <DeleteMedicalHistory
-                  medicalHistoryID={medicalHistoryID}
-                  patientID={patientID}
-                />
-              </div>
               <List>
                 <ListItem>
                   <ListItemAvatar>
@@ -97,6 +83,10 @@ const SingleMedicalHistoryPage = async ({
                   />
                 </ListItem>
               </List>
+              <HistoryBottomDiv
+                medicalHistoryID={medicalHistoryID}
+                patientID={patientID}
+              />
             </>
           )}
         </>

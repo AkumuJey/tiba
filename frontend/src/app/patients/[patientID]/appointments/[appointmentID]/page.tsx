@@ -1,9 +1,7 @@
-import DeleteAppointment from "@/components/DeleteAppointment.tsx";
 import { AppointmentDetails, fetchAppointment } from "@/lib/appointmentUtils";
 import { getCookies } from "@/lib/getCookies";
-import { Edit } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
-import Link from "next/link";
+import AppointmentBottomDiv from "./AppointmentBottomDiv";
 
 const SingleAppointment = async ({
   params,
@@ -94,18 +92,10 @@ const SingleAppointment = async ({
               Time: {new Date(appointment.createdAt).toLocaleTimeString()}
             </Typography>
           </div>
-          <div className="flex justify-between mt-4 items-center">
-            <Link
-              href={`/patients/${appointment.patientID}/appointments/${appointment.id}/edit`}
-              className="bg-green-500 text-white text-center hover:bg-green-600 transition px-[1rem] py-[0.4rem] uppercase rounded-md"
-            >
-              <Edit className="mr-3" /> Edit
-            </Link>
-            <DeleteAppointment
-              patientID={patientID}
-              appointmentID={appointmentID}
-            />
-          </div>
+          <AppointmentBottomDiv
+            appointmentID={appointmentID}
+            patientID={appointmentID}
+          />
         </>
       )}
     </Box>

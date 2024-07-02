@@ -123,3 +123,20 @@ export const bookAppointment = async ({
     return null;
   }
 };
+
+export const deleteAppointment = async ({
+  patientID,
+  appointmentID,
+}: {
+  patientID: string;
+  appointmentID: string;
+}) => {
+  try {
+    const response = await providerApi.delete(
+      `/${patientID}/appointments/${appointmentID}`
+    );
+    return response.data.deletedAppointment;
+  } catch (error) {
+    return null;
+  }
+};

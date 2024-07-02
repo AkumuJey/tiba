@@ -1,5 +1,3 @@
-import DeleteLabResults from "@/components/DeleteLabResults";
-import LinkToEdit from "@/components/LinkToEdit";
 import { getCookies } from "@/lib/getCookies";
 import { fetchLabResults, Labresults } from "@/lib/labs";
 import { LocalHospital } from "@mui/icons-material";
@@ -12,6 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import LabsBottomDiv from "./LabsBottomDiv";
 
 const SingleLabResultPage = async ({
   params,
@@ -32,20 +31,9 @@ const SingleLabResultPage = async ({
         <div>Error loading lab results...</div>
       ) : (
         <>
-          <Typography
-            variant="h6"
-            gutterBottom
-            className="flex justify-between"
-          >
+          <Typography variant="h6" gutterBottom>
             Laboratory Results
-            <LinkToEdit
-              path={`/patients/${patientID}/labs/${labsID}/edit`}
-              query={labResults}
-            />
           </Typography>
-          <div>
-            <DeleteLabResults labsID={labsID} patientID={patientID} />
-          </div>
           <List>
             <ListItem>
               <ListItemAvatar>
@@ -111,6 +99,7 @@ const SingleLabResultPage = async ({
               />
             </ListItem>
           </List>
+          <LabsBottomDiv labsID={labsID} patientID={patientID} />
         </>
       )}
     </Box>

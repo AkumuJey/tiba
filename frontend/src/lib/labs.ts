@@ -95,3 +95,20 @@ export const postLabResults = async ({
     return null;
   }
 };
+
+export const deleteLabResults = async ({
+  patientID,
+  labsID,
+}: {
+  patientID: string;
+  labsID: string;
+}) => {
+  try {
+    const response = await providerApi.delete(
+      `http://localhost:4000/provider/${patientID}/labs/${labsID}`
+    );
+    return response.data.deletedHospitalLabs;
+  } catch (error) {
+    return null;
+  }
+};

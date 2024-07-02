@@ -150,3 +150,21 @@ export const addHistory = async ({
     return null;
   }
 };
+
+export const deleteHistory = async ({
+  patientID,
+  medicalHistoryID,
+}: {
+  patientID: string;
+  medicalHistoryID: string;
+}) => {
+  try {
+    const response = await providerApi.delete(
+      `/${patientID}/histories/${medicalHistoryID}`
+    );
+
+    return response.data.deletedMedicalHistory;
+  } catch (error) {
+    return null;
+  }
+};

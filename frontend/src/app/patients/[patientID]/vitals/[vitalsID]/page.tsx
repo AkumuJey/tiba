@@ -1,5 +1,3 @@
-import DeleteVitals from "@/components/DeleteVitals";
-import LinkToEdit from "@/components/LinkToEdit";
 import { getCookies } from "@/lib/getCookies";
 import { fetchVitals, Vitals } from "@/lib/vitals";
 import { AccessTime, Favorite, LocalHospital } from "@mui/icons-material";
@@ -12,6 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import VitalsBottomDiv from "./VitalsBottomDiv";
 
 const SingleVitalsPage = async ({
   params,
@@ -31,7 +30,6 @@ const SingleVitalsPage = async ({
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" gutterBottom className="flex justify-between">
         Vitals
-        <LinkToEdit path={`/patients/${patientID}/vitals/${vitalsID}/edit`} />
       </Typography>
       <List>
         <ListItem>
@@ -77,12 +75,8 @@ const SingleVitalsPage = async ({
           </ListItemAvatar>
           <ListItemText primary="Weight (Kg)" secondary={vitals.weightKg} />
         </ListItem>
-        <ListItem>
-          <ListItemAvatar>
-            <DeleteVitals patientID={patientID} vitalsID={vitalsID} />
-          </ListItemAvatar>
-        </ListItem>
       </List>
+      <VitalsBottomDiv patientID={patientID} vitalsID={vitalsID} />
     </Box>
   );
 };

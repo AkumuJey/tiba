@@ -1,7 +1,7 @@
 import { getCookies } from "@/lib/getCookies";
 import { fetchPrescription, Prescription } from "@/lib/prescription";
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
-import BottomDiv from "./BottomDiv";
+import PrescriptionBottomDiv from "./PrescriptionBottomDiv";
 
 const formatDateTime = (dateTimeString: string) => {
   const date = new Date(dateTimeString);
@@ -61,7 +61,10 @@ const SinglePrescriptionsPage = async ({
               </ListItem>
             ))}
         </List>
-        <BottomDiv patientID={patientID} prescriptionID={patientID} />
+        <PrescriptionBottomDiv
+          patientID={patientID}
+          prescriptionID={patientID}
+        />
       </Box>
     </>
   );
