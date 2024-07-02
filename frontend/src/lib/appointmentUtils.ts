@@ -18,17 +18,25 @@ export interface AppointmentDetails {
 export const fetchAppointments = async ({
   limit,
   cookieHeader,
+  q,
 }: {
   limit?: number;
   cookieHeader: string;
+  q?: string;
 }) => {
   try {
-    const limitQuery = limit ? `?limit=${limit}` : "";
-    const response = await providerApi.get(`/appointments/?${limitQuery}`, {
+    const limitQuery = limit ? `limit=${limit}` : "";
+    const queryString = q ? `q=${q}` : "";
+
+    const combinedQuery = [limitQuery, queryString].filter(Boolean).join("&");
+    const queryPrefix = combinedQuery ? `?${combinedQuery}` : "";
+
+    const response = await providerApi.get(`/appointments/${queryPrefix}`, {
       headers: {
         Cookie: cookieHeader,
       },
     });
+
     return response.data.appointments;
   } catch (error) {
     return null;

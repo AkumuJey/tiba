@@ -1,4 +1,5 @@
 "use server";
+import SearchInput from "@/components/SearchInput";
 import { getCookies } from "@/lib/getCookies";
 import { fetchLabResultsList, Labresults } from "@/lib/labs";
 import { AddCircleOutline } from "@mui/icons-material";

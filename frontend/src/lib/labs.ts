@@ -24,14 +24,11 @@ export const fetchLabResultsList = async ({
   cookieHeader: string;
 }) => {
   try {
-    const response = await providerApi.get(
-      `http://localhost:4000/provider/${patientID}/labs/`,
-      {
-        headers: {
-          Cookie: cookieHeader,
-        },
-      }
-    );
+    const response = await providerApi.get(`/${patientID}/labs/`, {
+      headers: {
+        Cookie: cookieHeader,
+      },
+    });
     return response.data.hospitalLabsResultsList;
   } catch (error) {
     return null;
@@ -104,9 +101,7 @@ export const deleteLabResults = async ({
   labsID: string;
 }) => {
   try {
-    const response = await providerApi.delete(
-      `http://localhost:4000/provider/${patientID}/labs/${labsID}`
-    );
+    const response = await providerApi.delete(`/${patientID}/labs/${labsID}`);
     return response.data.deletedHospitalLabs;
   } catch (error) {
     return null;

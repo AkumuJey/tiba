@@ -29,9 +29,32 @@ healthProvider.get(
       const limit = customReq.query.limit
         ? parseInt(req.query.limit as string, 10)
         : undefined;
+
+      const q = (req.query.q as string) || "";
       const appointments = await prismaClient.appointments.findMany({
         where: {
           healthProviderID: customReq.user.id,
+          OR: [
+            {
+              patient: {
+                firstName: {
+                  contains: q,
+                },
+              },
+            },
+            {
+              patient: {
+                lastName: {
+                  contains: q,
+                },
+              },
+            },
+            {
+              venue: {
+                contains: q,
+              },
+            },
+          ],
         },
         orderBy: {
           createdAt: "desc",

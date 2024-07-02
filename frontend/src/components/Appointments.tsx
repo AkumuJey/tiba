@@ -5,6 +5,7 @@ import {
 import { getCookies } from "@/lib/getCookies";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Link from "next/link";
+import SearchInput from "./SearchInput";
 
 interface PatientDetails {
   firstName: string;
@@ -23,19 +24,23 @@ interface AppointmentDetails {
   patient: PatientDetails;
 }
 
-interface AppointmentsDashProps {
+interface AppointmentsDisplayProps {
   limit?: number;
   patientID?: number;
+  searchParams?: { q?: string };
 }
 
 const AppointmentsDisplay = async ({
   limit,
   patientID,
-}: AppointmentsDashProps) => {
+  searchParams,
+}: AppointmentsDisplayProps) => {
   const cookieHeader = getCookies();
+  const q = searchParams?.q || "";
+
   const appointments: AppointmentDetails[] = patientID
     ? await fetchPatientAppointments({ cookieHeader, patientID })
-    : await fetchAppointments({ cookieHeader, limit });
+    : await fetchAppointments({ cookieHeader, limit, q });
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -59,31 +64,42 @@ const AppointmentsDisplay = async ({
           <div>Error loading appointments</div>
         ) : (
           <>
+            {!limit && (
+              <div>
+                <SearchInput placeholder="Search with names or venue..." />
+              </div>
+            )}
             {appointments.length === 0 ? (
-              <div>No appointments available</div>
+              <div>
+                {q.length > 0
+                  ? "No matches found for search query: " + q
+                  : "No appointments available"}
+              </div>
             ) : (
-              <List>
-                {appointments.map((appointment) => (
-                  <Link
-                    href={`/patients/${appointment.patientID}/appointments/${appointment.id}`}
-                    key={appointment.id}
-                  >
-                    <ListItem>
-                      <ListItemText
-                        primary={
-                          formatDateTime(appointment.appointmentTime)
-                            .formattedDate
-                        }
-                        secondary={`Time: ${
-                          formatDateTime(appointment.appointmentTime)
-                            .formattedTime
-                        }, Venue: ${appointment.venue}`}
-                      />
-                    </ListItem>
-                    <Divider variant="middle" component="li" />
-                  </Link>
-                ))}
-              </List>
+              <>
+                <List>
+                  {appointments.map((appointment) => (
+                    <Link
+                      href={`/patients/${appointment.patientID}/appointments/${appointment.id}`}
+                      key={appointment.id}
+                    >
+                      <ListItem>
+                        <ListItemText
+                          primary={
+                            formatDateTime(appointment.appointmentTime)
+                              .formattedDate
+                          }
+                          secondary={`Time: ${
+                            formatDateTime(appointment.appointmentTime)
+                              .formattedTime
+                          }, Venue: ${appointment.venue}`}
+                        />
+                      </ListItem>
+                      <Divider variant="middle" component="li" />
+                    </Link>
+                  ))}
+                </List>
+              </>
             )}
             {limit && (
               <ListItem>
