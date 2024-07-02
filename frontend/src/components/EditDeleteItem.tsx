@@ -1,6 +1,6 @@
 "use client";
 
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
@@ -35,9 +35,9 @@ const EditDeleteItem = ({ deleteFunction }: DeleteEditItemProps) => {
       <div className="flex justify-between">
         <Button
           onClick={handleEdit}
-          startIcon={<Delete />}
+          startIcon={<Edit />}
           variant="contained"
-          color="primary"
+          color="success"
         >
           Edit
         </Button>
@@ -46,7 +46,7 @@ const EditDeleteItem = ({ deleteFunction }: DeleteEditItemProps) => {
           onClick={handleDelete}
           loading={loading}
           variant="contained"
-          color="secondary"
+          className="bg-red-600 hover:bg-red-500"
           startIcon={<Delete />}
         >
           Delete

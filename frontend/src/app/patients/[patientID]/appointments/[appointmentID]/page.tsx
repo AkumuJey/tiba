@@ -94,7 +94,7 @@ const SingleAppointment = async ({
           </div>
           <AppointmentBottomDiv
             appointmentID={appointmentID}
-            patientID={appointmentID}
+            patientID={patientID}
           />
         </>
       )}

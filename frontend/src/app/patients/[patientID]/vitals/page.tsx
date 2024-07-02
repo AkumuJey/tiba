@@ -12,7 +12,6 @@ const VitalsPage = async ({ params }: { params: { patientID: string } }) => {
     cookieHeader,
   });
 
-  console.log(hospitalVitalsList);
   return (
     <Grid item xs={12} md={6}>
       <>
@@ -27,8 +26,7 @@ const VitalsPage = async ({ params }: { params: { patientID: string } }) => {
                 className="px-[1rem] py-[0.7rem] bg-[#E2D2D2] rounded-md text-lg flex gap-2 flex-col md:flex-row"
               >
                 <AddCircleOutline className="font-bold" height={5} width={5} />{" "}
-                Enter
-                <h4>New vitals reading</h4>
+                <h4>New vitals</h4>
               </Link>
             </div>
             <List>

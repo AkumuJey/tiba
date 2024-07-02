@@ -30,7 +30,6 @@ const LabResultsPage = async ({
     patientID,
     cookieHeader,
   });
-  console.log(hospitalLabsResultsList);
   return (
     <Grid item xs={12} md={6}>
       <div className="flex justify-between py-1">
@@ -40,7 +39,7 @@ const LabResultsPage = async ({
           className="px-[1rem] py-[0.7rem] bg-[#E2D2D2] rounded-md text-lg flex gap-2 flex-col md:flex-row"
         >
           <AddCircleOutline className="font-bold" height={5} width={5} />
-          <h6>Enter new lab details</h6>
+          <h6>Add lab results</h6>
         </Link>
       </div>
       <List>
