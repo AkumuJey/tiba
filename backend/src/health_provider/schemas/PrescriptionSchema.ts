@@ -15,6 +15,7 @@ export const PrescriptionSchema = z.object({
 });
 
 export const UpdateDrugSchema = z.object({
+  id: z.number().positive().optional(),
   quantity: z.number().int().positive().optional(),
   units: z.string().optional(),
   route: z.string().optional(),
@@ -25,4 +26,5 @@ export const UpdateDrugSchema = z.object({
 export const UpdatePrescriptionSchema = z.object({
   date: z.string(),
   instruction: z.string().nullable().optional(),
+  drugs: z.array(UpdateDrugSchema) || z.array(DrugSchema),
 });

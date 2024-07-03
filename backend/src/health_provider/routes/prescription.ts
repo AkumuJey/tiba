@@ -97,11 +97,9 @@ prescription.delete("/:id", async (req: Request, res: Response) => {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.id);
     const id = parseInt(customReq.params.id, 10);
-    console.log("Patient", patientID, "Here: ", id);
     const deletedPrescription = await prismaClient.prescription.delete({
       where: { id, healthcareProviderID: customReq.user.id, patientID },
     });
-    console.log("What here: ", deletedPrescription);
     if (!deletedPrescription) {
       return res.status(400).json({ message: "Deletion failed" });
     }
@@ -112,25 +110,80 @@ prescription.delete("/:id", async (req: Request, res: Response) => {
   }
 });
 
-prescription.patch("/", async (req: Request, res: Response) => {
+prescription.patch("/:id", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
-    const patientID = parseInt(customReq.params.id);
     const id = parseInt(customReq.params.id, 10);
-    const updatedPrescription = UpdatePrescriptionSchema.parse(customReq.body);
-    const prescription = await prismaClient.prescription.update({
-      where: { id, healthcareProviderID: customReq.user.id, patientID },
-      data: {
-        ...updatedPrescription,
-        date: convertToISO(updatedPrescription?.date as string),
-      },
+    console.log(id);
+    const updates = UpdatePrescriptionSchema.parse(customReq.body);
+    console.log("updates", updates);
+    const { drugs, ...updatedPrescription } = updates;
+
+    // Get the existing prescription details
+    const existingPrescriptionDetails =
+      await prismaClient.prescriptionDetail.findMany({
+        where: { prescriptionID: id },
+      });
+
+    // Start a transaction
+    await prismaClient.$transaction(async (prisma) => {
+      // Update the prescription
+      const prescription = await prisma.prescription.update({
+        where: { id },
+        data: {
+          ...updatedPrescription,
+          date: convertToISO(updatedPrescription.date as string),
+        },
+      });
+
+      // Update or create prescription details
+      for (const drug of drugs) {
+        if (drug.id) {
+          // Update existing prescription detail
+          await prisma.prescriptionDetail.update({
+            where: { id: drug.id },
+            data: {
+              quantity: drug.quantity,
+              units: drug.units,
+              route: drug.route,
+              drugName: drug.drugName,
+              durationInDays: drug.durationInDays,
+            },
+          });
+        } else {
+          // Create new prescription detail
+          await prisma.prescriptionDetail.create({
+            data: {
+              prescriptionID: prescription.id,
+              healthcareProviderID: customReq.user.id,
+              quantity: drug.quantity!,
+              units: drug.units!,
+              route: drug.route!,
+              drugName: drug.drugName!,
+              durationInDays: drug.durationInDays!,
+            },
+          });
+        }
+      }
+
+      // Delete prescription details not included in the update
+      const updatedDrugIds = drugs
+        .map((drug) => drug.id)
+        .filter(Boolean) as number[];
+      const prescriptionDetailsToDelete = existingPrescriptionDetails.filter(
+        (detail) => !updatedDrugIds.includes(detail.id)
+      );
+
+      for (const detail of prescriptionDetailsToDelete) {
+        await prisma.prescriptionDetail.delete({
+          where: { id: detail.id },
+        });
+      }
     });
-    if (!prescription) {
-      return res.status(400).json({ message: "Failed to update" });
-    }
-    return res.status(201).json({ message: "success", id: prescription.id });
+    return res.status(200).json({ message: "success", id });
   } catch (error) {
-    res.status(400).json({ error, message: "Failed to update" });
+    console.error(error);
+    return res.status(400).json({ error, message: "Failed to update" });
   }
 });
 

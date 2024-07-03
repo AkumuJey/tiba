@@ -105,15 +105,13 @@ export const updatePrescription = async ({
 }): Promise<Prescription | null> => {
   try {
     const response = await providerApi.patch(
-      `/${patientID}/appointments/${prescriptionID}/`,
-      {
-        ...updatedPresc,
-        prescriptionDetails: updatedPresc.drugs,
-      }
+      `/${patientID}/prescription/${prescriptionID}/`,
+      updatedPresc
     );
-
+    console.log("Edit here", response);
     return response.data.id;
   } catch (error) {
+    console.log(error);
     return null;
   }
 };
@@ -148,42 +146,6 @@ export const deletePrescription = async ({
       `/${patientID}/prescription/${prescriptionID}`
     );
     return response.data.deletedPrescription;
-  } catch (error) {
-    return null;
-  }
-};
-export const deleteDrug = async ({
-  patientID,
-  prescriptionID,
-  drugID,
-}: {
-  patientID: string;
-  prescriptionID: string;
-  drugID: string;
-}) => {
-  try {
-    const response = await providerApi.delete(
-      `/${patientID}/prescription/${prescriptionID}/${drugID}`
-    );
-    return response.data.deletedPrescriptionDetail;
-  } catch (error) {
-    return null;
-  }
-};
-export const editDrug = async ({
-  patientID,
-  prescriptionID,
-  drugID,
-}: {
-  patientID: string;
-  prescriptionID: string;
-  drugID: string;
-}) => {
-  try {
-    const response = await providerApi.patch(
-      `/${patientID}/prescription/${prescriptionID}/${drugID}`
-    );
-    return response.data.updatedPrescriptionDetail;
   } catch (error) {
     return null;
   }

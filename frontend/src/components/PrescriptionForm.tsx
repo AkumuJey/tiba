@@ -2,9 +2,10 @@
 import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Container, Grid, IconButton, TextField } from "@mui/material";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 
 interface Drug {
+  id?: number; // Include id for update scenarios
   quantity?: number;
   units: string;
   route: string;
@@ -48,6 +49,7 @@ const PrescriptionForm = ({
     instruction: "",
     drugs: [
       {
+        id: undefined, // Include id for update scenarios
         quantity: undefined,
         units: "",
         route: "",
@@ -61,6 +63,12 @@ const PrescriptionForm = ({
     prescription ? prescription : initialPrescription
   );
 
+  useEffect(() => {
+    if (prescription) {
+      setFormData(prescription);
+    }
+  }, [prescription]);
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>,
     index: number,
@@ -71,9 +79,13 @@ const PrescriptionForm = ({
 
     if (field === "quantity" || field === "durationInDays") {
       newDrugs[index][field] =
-        type === "number" ? (value ? valueAsNumber : undefined) : undefined;
+        type === "number"
+          ? value
+            ? valueAsNumber
+            : undefined
+          : (value as any);
     } else {
-      newDrugs[index][field] = value as any;
+      newDrugs[index][field] = value as string & number; // Ensure correct type
     }
 
     setFormData({ ...formData, drugs: newDrugs });
@@ -85,6 +97,7 @@ const PrescriptionForm = ({
       drugs: [
         ...formData.drugs,
         {
+          id: undefined, // Include id for update scenarios
           quantity: undefined,
           units: "",
           route: "",
@@ -110,7 +123,6 @@ const PrescriptionForm = ({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
     handlerFunction(formData);
   };
 

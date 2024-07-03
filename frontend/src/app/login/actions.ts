@@ -17,7 +17,7 @@ const useLogin = () => {
     setError(false);
     try {
       const data = loginDataSchema.parse({ email, password });
-      handleLogin(data.email, data.password);
+      await handleLogin(data.email, data.password);
       setIsLoading(false);
     } catch (error) {
       setError(true);
