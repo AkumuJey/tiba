@@ -44,8 +44,34 @@ appointments.get("/", async (req: Request, res: Response) => {
   try {
     const customReq = req as CustomRequest;
     const patientID = parseInt(customReq.params.patientID, 10);
+
+    const q = (req.query.q as string) || "";
     const appointments = await prismaClient.appointments.findMany({
-      where: { healthProviderID: customReq.user.id, patientID },
+      where: {
+        healthProviderID: customReq.user.id,
+        patientID,
+        OR: [
+          {
+            patient: {
+              firstName: {
+                contains: q,
+              },
+            },
+          },
+          {
+            patient: {
+              lastName: {
+                contains: q,
+              },
+            },
+          },
+          {
+            venue: {
+              contains: q,
+            },
+          },
+        ],
+      },
       include: {
         patient: true,
       },

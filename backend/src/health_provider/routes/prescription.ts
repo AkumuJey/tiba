@@ -118,7 +118,6 @@ prescription.patch("/", async (req: Request, res: Response) => {
     const patientID = parseInt(customReq.params.id);
     const id = parseInt(customReq.params.id, 10);
     const updatedPrescription = UpdatePrescriptionSchema.parse(customReq.body);
-
     const prescription = await prismaClient.prescription.update({
       where: { id, healthcareProviderID: customReq.user.id, patientID },
       data: {

@@ -5,8 +5,10 @@ import Link from "next/link";
 
 const AppointmentsPage = async ({
   params,
+  searchParams,
 }: {
   params: { patientID: string };
+  searchParams?: { q?: string };
 }) => {
   const { patientID } = params;
   return (
@@ -22,7 +24,10 @@ const AppointmentsPage = async ({
         </Link>
       </div>
       <div className="w-full">
-        <AppointmentsDisplay patientID={Number(patientID)} />
+        <AppointmentsDisplay
+          patientID={Number(patientID)}
+          searchParams={searchParams}
+        />
       </div>
     </Grid>
   );

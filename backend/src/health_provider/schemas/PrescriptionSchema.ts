@@ -25,5 +25,4 @@ export const UpdateDrugSchema = z.object({
 export const UpdatePrescriptionSchema = z.object({
   date: z.string(),
   instruction: z.string().nullable().optional(),
-  drugs: z.array(DrugSchema).optional(),
 });

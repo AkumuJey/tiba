@@ -46,16 +46,22 @@ export const fetchAppointments = async ({
 export const fetchPatientAppointments = async ({
   patientID,
   cookieHeader,
+  q,
 }: {
   patientID?: number;
   cookieHeader: string;
+  q?: string;
 }) => {
   try {
-    const response = await providerApi.get(`/${patientID}/appointments/`, {
-      headers: {
-        Cookie: cookieHeader,
-      },
-    });
+    const queryString = q ? `?q=${q}` : "";
+    const response = await providerApi.get(
+      `/${patientID}/appointments/${queryString}`,
+      {
+        headers: {
+          Cookie: cookieHeader,
+        },
+      }
+    );
     return response.data.appointments;
   } catch (error) {
     return null;

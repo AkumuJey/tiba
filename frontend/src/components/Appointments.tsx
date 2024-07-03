@@ -39,7 +39,7 @@ const AppointmentsDisplay = async ({
   const q = searchParams?.q || "";
 
   const appointments: AppointmentDetails[] = patientID
-    ? await fetchPatientAppointments({ cookieHeader, patientID })
+    ? await fetchPatientAppointments({ cookieHeader, patientID, q })
     : await fetchAppointments({ cookieHeader, limit, q });
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);

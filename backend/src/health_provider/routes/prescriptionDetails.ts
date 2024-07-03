@@ -1,11 +1,7 @@
 import { HealthcareProvider } from "@prisma/client";
 import { Request, Response, Router } from "express";
 import { prismaClient } from "../../server";
-import {
-  PrescriptionSchema,
-  UpdateDrugSchema,
-  UpdatePrescriptionSchema,
-} from "../schemas/PrescriptionSchema";
+import { UpdateDrugSchema } from "../schemas/PrescriptionSchema";
 
 interface CustomRequest extends Request {
   user: HealthcareProvider;

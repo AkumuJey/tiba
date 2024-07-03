@@ -152,3 +152,39 @@ export const deletePrescription = async ({
     return null;
   }
 };
+export const deleteDrug = async ({
+  patientID,
+  prescriptionID,
+  drugID,
+}: {
+  patientID: string;
+  prescriptionID: string;
+  drugID: string;
+}) => {
+  try {
+    const response = await providerApi.delete(
+      `/${patientID}/prescription/${prescriptionID}/${drugID}`
+    );
+    return response.data.deletedPrescriptionDetail;
+  } catch (error) {
+    return null;
+  }
+};
+export const editDrug = async ({
+  patientID,
+  prescriptionID,
+  drugID,
+}: {
+  patientID: string;
+  prescriptionID: string;
+  drugID: string;
+}) => {
+  try {
+    const response = await providerApi.patch(
+      `/${patientID}/prescription/${prescriptionID}/${drugID}`
+    );
+    return response.data.updatedPrescriptionDetail;
+  } catch (error) {
+    return null;
+  }
+};
