@@ -6,6 +6,7 @@ import { getCookies } from "@/lib/getCookies";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Link from "next/link";
 import SearchInput from "./SearchInput";
+import DateRangePicker from "./DateRangePicker";
 
 interface PatientDetails {
   firstName: string;
@@ -27,7 +28,7 @@ interface AppointmentDetails {
 interface AppointmentsDisplayProps {
   limit?: number;
   patientID?: number;
-  searchParams?: { q?: string };
+  searchParams?: { q?: string; start?: string; end?: string };
 }
 
 const AppointmentsDisplay = async ({
@@ -38,9 +39,18 @@ const AppointmentsDisplay = async ({
   const cookieHeader = getCookies();
   const q = searchParams?.q || "";
 
+  const startDate = searchParams?.start ? searchParams.start : undefined;
+  const endDate = searchParams?.end ? searchParams.end : undefined;
+
   const appointments: AppointmentDetails[] = patientID
-    ? await fetchPatientAppointments({ cookieHeader, patientID, q })
-    : await fetchAppointments({ cookieHeader, limit, q });
+    ? await fetchPatientAppointments({
+        cookieHeader,
+        patientID,
+        q,
+        startDate,
+        endDate,
+      })
+    : await fetchAppointments({ cookieHeader, limit, q, startDate, endDate });
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -60,6 +70,7 @@ const AppointmentsDisplay = async ({
     <>
       <List>
         <h5 className="font-bol text-xl">Appointments</h5>
+        <DateRangePicker />
         {!appointments ? (
           <div>Error loading appointments</div>
         ) : (

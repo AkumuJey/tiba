@@ -46,10 +46,16 @@ appointments.get("/", async (req: Request, res: Response) => {
     const patientID = parseInt(customReq.params.patientID, 10);
 
     const q = (req.query.q as string) || "";
+    const startDate = (req.query.startDate as string) || "";
+    const endDate = (req.query.endDate as string) || "";
     const appointments = await prismaClient.appointments.findMany({
       where: {
         healthProviderID: customReq.user.id,
         patientID,
+        appointmentTime: {
+          gte: startDate ? new Date(startDate) : undefined,
+          lte: endDate ? new Date(endDate) : undefined,
+        },
         OR: [
           {
             patient: {
