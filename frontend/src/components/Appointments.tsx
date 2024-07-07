@@ -96,14 +96,15 @@ const AppointmentsDisplay = async ({
                     >
                       <ListItem>
                         <ListItemText
-                          primary={
+                          primary={`${appointment.patient.firstName} ${appointment.patient.lastName}`}
+                          secondary={`Date: ${
                             formatDateTime(appointment.appointmentTime)
                               .formattedDate
-                          }
-                          secondary={`Time: ${
-                            formatDateTime(appointment.appointmentTime)
-                              .formattedTime
-                          }, Venue: ${appointment.venue}`}
+                          }, 
+                    Time: ${
+                      formatDateTime(appointment.appointmentTime).formattedTime
+                    }, 
+                    Venue: ${appointment.venue}`}
                         />
                       </ListItem>
                       <Divider variant="middle" component="li" />

@@ -45,7 +45,6 @@ export const fetchAppointments = async ({
         Cookie: cookieHeader,
       },
     });
-    console.log(response);
     return response.data.appointments;
   } catch (error) {
     return null;
@@ -106,7 +105,6 @@ export const fetchAppointment = async ({
         },
       }
     );
-    console.log(response.data);
     return response.data.appointment;
   } catch (error) {
     return null;
